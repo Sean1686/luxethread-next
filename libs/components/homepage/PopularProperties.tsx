@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack, Box } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -21,6 +21,11 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
 	const [popularProperties, setPopularProperties] = useState<Property[]>([]);
+	const [isMounted, setIsMounted] = useState(false);
+
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
 
 	/** APOLLO REQUESTS **/
 		const {
@@ -38,7 +43,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 		});
 	/** HANDLERS **/
 
-	if (!popularProperties) return null;
+	if (!isMounted) return null;
 
 	if (device === 'mobile') {
 		return (

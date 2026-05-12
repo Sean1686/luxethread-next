@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import React, { useState, useEffect } from 'react';
 import { Stack, Box } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -8,6 +7,9 @@ import { Autoplay, Navigation, Pagination } from 'swiper';
 import TopAgentCard from './TopAgentCard';
 import { Member } from '../../types/member/member';
 import { AgentsInquiry } from '../../types/member/member.input';
+import { GET_AGENTS } from '../../../apollo/user/query';
+import { useQuery } from '@apollo/client';
+import { T } from '../../types/common';
 
 interface TopAgentsProps {
 	initialInput: AgentsInquiry;
@@ -16,11 +18,30 @@ interface TopAgentsProps {
 const TopAgents = (props: TopAgentsProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
-	const router = useRouter();
 	const [topAgents, setTopAgents] = useState<Member[]>([]);
+	const [isMounted, setIsMounted] = useState(false);
+
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
 
 	/** APOLLO REQUESTS **/
+	const {
+			loading: getAgentsLoading,
+			data: getAgentsData,
+			error: getAgentsError,
+			refetch: getAgentsRefetch,
+		} = useQuery(GET_AGENTS, {
+			fetchPolicy: "cache-and-network",
+			variables: {input: initialInput},
+			notifyOnNetworkStatusChange: true,
+			onCompleted: (data: T) => {
+				setTopAgents(data?.getAgents?.list ?? []);
+			},
+		});
 	/** HANDLERS **/
+
+	if (!isMounted) return null;
 
 	if (device === 'mobile') {
 		return (
