@@ -1,4 +1,4 @@
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'; //@ts-ignore
 import 'animate.css';
 import { Messages } from './config';
 
