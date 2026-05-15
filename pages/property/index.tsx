@@ -11,9 +11,12 @@ import { Property } from '../../libs/types/property/property';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { Direction } from '../../libs/enums/common.enum';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { GET_PROPERTIES } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
+import { LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
+import { Messages } from '../../libs/config';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -38,11 +41,14 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	const paginationCount = Math.max(1, Math.ceil(safeTotal / safeLimit));
 
 	/** APOLLO REQUESTS **/
+		const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+	
 
 	const {
 		loading: getPorpertiesLoading,
 		data: getPropertiesData,
 		error: getPropertiesError,
+		refetch: getPropertiesRefetch
 	} = useQuery(GET_PROPERTIES, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
@@ -78,6 +84,22 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 		);
 		setCurrentPage(value);
 	};
+
+		const likePropertyHandler = async (user: T, id: string) => {
+			try {
+				if (!id) return;
+				if (!user._id) throw new Error(Messages.error2);
+	
+				// execute likeTargetProperty Mutation
+				await likeTargetProperty({ variables: { input: id } });
+				await getPropertiesRefetch({ input: initialInput });
+	
+				await sweetTopSmallSuccessAlert('succes', 700);
+			} catch (err: any) {
+				console.log('ERROR, likePropertyHandler:', err.message);
+				sweetMixinErrorAlert(err.message).then();
+			}
+		};
 
 	const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
 		setAnchorEl(e.currentTarget);
@@ -172,7 +194,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 									</div>
 								) : (
 									properties.map((property: Property) => {
-										return <PropertyCard property={property} key={property?._id} />;
+										return <PropertyCard property={property} likePropertyHandler={likePropertyHandler} key={property?._id} />;
 									})
 								)}
 							</Stack>
@@ -225,3 +247,7 @@ PropertyList.defaultProps = {
 };
 
 export default withLayoutBasic(PropertyList);
+function getPropertiesRefetch(arg0: { input: any; }) {
+	throw new Error('Function not implemented.');
+}
+
