@@ -11,6 +11,9 @@ import { Property } from '../../libs/types/property/property';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { Direction } from '../../libs/enums/common.enum';
+import { useQuery } from '@apollo/client';
+import { GET_PROPERTIES } from '../../apollo/user/query';
+import { T } from '../../libs/types/common';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -30,9 +33,25 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [filterSortName, setFilterSortName] = useState('New');
+	const safeLimit = Number(searchFilter?.limit) > 0 ? Number(searchFilter?.limit) : 1;
+	const safeTotal = Number(total) >= 0 ? Number(total) : 0;
+	const paginationCount = Math.max(1, Math.ceil(safeTotal / safeLimit));
 
 	/** APOLLO REQUESTS **/
 
+	const {
+		loading: getPorpertiesLoading,
+		data: getPropertiesData,
+		error: getPropertiesError,
+	} = useQuery(GET_PROPERTIES, {
+		fetchPolicy: 'network-only',
+		variables: { input: searchFilter },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setProperties(data?.getProperties?.list ?? []);
+			setTotal(data?.getProperties?.metaCounter?.[0]?.total ?? 0);
+		},
+	});
 	/** LIFECYCLES **/
 	useEffect(() => {
 		if (router.query.input) {
@@ -43,14 +62,16 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
 	}, [router]);
 
-	useEffect(() => {}, [searchFilter]);
+	useEffect(() => {
+		console.log('searchFilter:', searchFilter)
+	}, [searchFilter])
 
 	/** HANDLERS **/
 	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
-		searchFilter.page = value;
+		const nextFilter = { ...searchFilter, page: value };
 		await router.push(
-			`/property?input=${JSON.stringify(searchFilter)}`,
-			`/property?input=${JSON.stringify(searchFilter)}`,
+			`/property?input=${JSON.stringify(nextFilter)}`,
+			`/property?input=${JSON.stringify(nextFilter)}`,
 			{
 				scroll: false,
 			},
@@ -68,20 +89,31 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 		setAnchorEl(null);
 	};
 
-	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
+	const sortingHandler = async (e: React.MouseEvent<HTMLLIElement>) => {
+		let nextFilter = { ...searchFilter };
+
 		switch (e.currentTarget.id) {
 			case 'new':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: Direction.ASC });
+				nextFilter = { ...searchFilter, sort: 'createdAt', direction: Direction.DESC };
 				setFilterSortName('New');
 				break;
 			case 'lowest':
-				setSearchFilter({ ...searchFilter, sort: 'propertyPrice', direction: Direction.ASC });
+				nextFilter = { ...searchFilter, sort: 'propertyPrice', direction: Direction.ASC };
 				setFilterSortName('Lowest Price');
 				break;
 			case 'highest':
-				setSearchFilter({ ...searchFilter, sort: 'propertyPrice', direction: Direction.DESC });
+				nextFilter = { ...searchFilter, sort: 'propertyPrice', direction: Direction.DESC };
 				setFilterSortName('Highest Price');
 		}
+
+		setSearchFilter(nextFilter);
+		await router.push(
+			`/property?input=${JSON.stringify(nextFilter)}`,
+			`/property?input=${JSON.stringify(nextFilter)}`,
+			{
+				scroll: false,
+			},
+		);
 		setSortingOpen(false);
 		setAnchorEl(null);
 	};
@@ -149,7 +181,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 									<Stack className="pagination-box">
 										<Pagination
 											page={currentPage}
-											count={Math.ceil(total / searchFilter.limit)}
+											count={paginationCount}
 											onChange={handlePaginationChange}
 											shape="circular"
 											color="primary"

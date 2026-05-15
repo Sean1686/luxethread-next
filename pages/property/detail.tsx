@@ -11,12 +11,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import WestIcon from '@mui/icons-material/West';
 import EastIcon from '@mui/icons-material/East';
-import { useReactiveVar } from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Property } from '../../libs/types/property/property';
 import moment from 'moment';
 import { formatterStr } from '../../libs/utils';
-import { REACT_APP_API_URL } from '../../libs/config';
+import { Messages, REACT_APP_API_URL } from '../../libs/config';
 import { userVar } from '../../apollo/store';
 import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.input';
 import { Comment } from '../../libs/types/comment/comment';
@@ -27,6 +27,10 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { GET_PROPERTY } from '../../apollo/user/query';
+import { LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
+import { T } from '../../libs/types/common';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -54,6 +58,19 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 	});
 
 	/** APOLLO REQUESTS **/
+	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+
+	const { refetch: getPropertyRefetch } = useQuery(GET_PROPERTY, {
+		skip: !propertyId,
+		fetchPolicy: 'network-only',
+		variables: { input: propertyId },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			const fetchedProperty = data?.getProperty ?? null;
+			setProperty(fetchedProperty);
+			setSlideImage(fetchedProperty?.propertyImages?.[0] ?? '');
+		},
+	});
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -82,6 +99,20 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 	const commentPaginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
 		commentInquiry.page = value;
 		setCommentInquiry({ ...commentInquiry });
+	};
+
+	const likePropertyHandler = async (viewer: T, id?: string) => {
+		try {
+			if (!id) return;
+			if (!viewer?._id) throw new Error(Messages.error2);
+
+			await likeTargetProperty({ variables: { input: id } });
+			await getPropertyRefetch({ input: id });
+			await sweetTopSmallSuccessAlert('success', 700);
+		} catch (err: any) {
+			console.log('ERROR, likePropertyHandler:', err.message);
+			sweetMixinErrorAlert(err.message).then();
+		}
 	};
 
 	if (device === 'mobile') {
