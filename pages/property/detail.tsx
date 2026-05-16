@@ -62,43 +62,45 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
 	const {
-				loading: getPorpertyLoading,
-				data: getPropertyData,
-				error: getPropertyError,
-				refetch: getPropertyRefetch,
-			} = useQuery(GET_PROPERTY, {
-				fetchPolicy: "cache-and-network",
-				variables: {input: propertyId},
-				skip: !propertyId,
-				notifyOnNetworkStatusChange: true,
-				onCompleted: (data: T) => {
-					if (data?.getProperty) setProperty(data?.getProperty);
-					if (data?.getProperty) setSlideImage(data?.getProperty?.propertyImages[0]);
-				},
-			});
+		loading: getPorpertyLoading,
+		data: getPropertyData,
+		error: getPropertyError,
+		refetch: getPropertyRefetch,
+	} = useQuery(GET_PROPERTY, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: propertyId },
+		skip: !propertyId,
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			if (data?.getProperty) setProperty(data?.getProperty);
+			if (data?.getProperty) setSlideImage(data?.getProperty?.propertyImages[0]);
+		},
+	});
 
-			const {
-						loading: getPorpertiesLoading,
-						data: getPropertiesData,
-						error: getPropertiesError,
-						refetch: getPropertiesRefetch,
-					} = useQuery(GET_PROPERTIES, {
-						fetchPolicy: "cache-and-network",
-						variables: {input: {
-							page: 1,
-							limit: 4,
-							sort: "createdAt",
-							direction: Direction.DESC,
-							search: {
-								locationList: [property?.propertyLocation]
-							}
-						}},
-						skip: !propertyId && !property,
-						notifyOnNetworkStatusChange: true,
-						onCompleted: (data: T) => {
-							if (data?.getProperties?.list) setDestinationProperties(data?.getProperties?.list)
-						},
-					});
+	const {
+		loading: getPorpertiesLoading,
+		data: getPropertiesData,
+		error: getPropertiesError,
+		refetch: getPropertiesRefetch,
+	} = useQuery(GET_PROPERTIES, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: {
+				page: 1,
+				limit: 4,
+				sort: 'createdAt',
+				direction: Direction.DESC,
+				search: {
+					locationList: [property?.propertyLocation],
+				},
+			},
+		},
+		skip: !propertyId && !property,
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			if (data?.getProperties?.list) setDestinationProperties(data?.getProperties?.list);
+		},
+	});
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -129,14 +131,27 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 		setCommentInquiry({ ...commentInquiry });
 	};
 
-	const likePropertyHandler = async (viewer: T, id?: string) => {
+	const likePropertyHandler = async (user: T, id: string) => {
 		try {
 			if (!id) return;
-			if (!viewer?._id) throw new Error(Messages.error2);
+			if (!user._id) throw new Error(Messages.error2);
 
+			// execute likeTargetProperty Mutation
 			await likeTargetProperty({ variables: { input: id } });
-			await getPropertyRefetch({ input: id });
-			await sweetTopSmallSuccessAlert('success', 700);
+			await getPropertyRefetch({ input: propertyId });
+			await getPropertiesRefetch({
+				input: {
+					page: 1,
+					limit: 4,
+					sort: 'createdAt',
+					direction: Direction.DESC,
+					search: {
+						locationList: [property?.propertyLocation],
+					},
+				},
+			});
+
+			await sweetTopSmallSuccessAlert('succes', 700);
 		} catch (err: any) {
 			console.log('ERROR, likePropertyHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
@@ -220,7 +235,12 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 										</Stack>
 										<Stack className="button-box">
 											{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
-												<FavoriteIcon color="primary" fontSize={'medium'} />
+												<FavoriteIcon
+													color="primary"
+													fontSize={'medium'}
+													// @ts-ignore
+													onClick={() => likePropertyHandler(user, property?._id)}
+												/>
 											) : (
 												<FavoriteBorderIcon
 													fontSize={'medium'}
@@ -576,7 +596,11 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 										{destinationProperties.map((property: Property) => {
 											return (
 												<SwiperSlide className={'similar-homes-slide'} key={property.propertyTitle}>
-													<PropertyBigCard property={property} key={property?._id} />
+													<PropertyBigCard
+														property={property}
+														likePropertyHandler={likePropertyHandler}
+														key={property?._id}
+													/>
 												</SwiperSlide>
 											);
 										})}
