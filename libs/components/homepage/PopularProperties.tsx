@@ -42,6 +42,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 			},
 		});
 	/** HANDLERS **/
+	
 
 	if (!isMounted) return null;
 

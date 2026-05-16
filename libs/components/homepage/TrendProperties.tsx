@@ -64,6 +64,8 @@ const TrendProperties = (props: TrendPropertiesProps) => {
 		}
 	};
 
+	
+
 	if (!isMounted) return null;
 
 	if (device === 'mobile') {
