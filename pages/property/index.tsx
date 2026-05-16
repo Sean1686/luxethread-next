@@ -27,8 +27,20 @@ export const getStaticProps = async ({ locale }: any) => ({
 const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const normalizeSearchFilter = (input?: Partial<PropertiesInquiry>): PropertiesInquiry => {
+		return {
+			...initialInput,
+			...input,
+			limit: initialInput.limit,
+			search: {
+				...initialInput.search,
+				...(input?.search ?? {}),
+			},
+		};
+	};
+
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
-		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
+		router?.query?.input ? normalizeSearchFilter(JSON.parse(router?.query?.input as string)) : initialInput,
 	);
 	const [properties, setProperties] = useState<Property[]>([]);
 	const [total, setTotal] = useState<number>(0);
@@ -61,16 +73,14 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	/** LIFECYCLES **/
 	useEffect(() => {
 		if (router.query.input) {
-			const inputObj = JSON.parse(router?.query?.input as string);
+			const inputObj = normalizeSearchFilter(JSON.parse(router?.query?.input as string));
 			setSearchFilter(inputObj);
+			setCurrentPage(inputObj.page === undefined ? 1 : inputObj.page);
+		} else {
+			setSearchFilter(initialInput);
+			setCurrentPage(initialInput.page === undefined ? 1 : initialInput.page);
 		}
-
-		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
-	}, [router]);
-
-	useEffect(() => {
-		console.log('searchFilter:', searchFilter)
-	}, [searchFilter])
+	}, [router, initialInput]);
 
 	/** HANDLERS **/
 	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
@@ -92,7 +102,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	
 				// execute likeTargetProperty Mutation
 				await likeTargetProperty({ variables: { input: id } });
-				await getPropertiesRefetch({ input: initialInput });
+				await getPropertiesRefetch({ input: searchFilter });
 	
 				await sweetTopSmallSuccessAlert('succes', 700);
 			} catch (err: any) {
@@ -247,7 +257,4 @@ PropertyList.defaultProps = {
 };
 
 export default withLayoutBasic(PropertyList);
-function getPropertiesRefetch(arg0: { input: any; }) {
-	throw new Error('Function not implemented.');
-}
 

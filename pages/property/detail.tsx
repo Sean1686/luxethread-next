@@ -24,13 +24,14 @@ import { CommentGroup } from '../../libs/enums/comment.enum';
 import { Pagination as MuiPagination } from '@mui/material';
 import Link from 'next/link';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import 'swiper/css';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'; // @ts-ignore
+import 'swiper/css'; // @ts-ignore
 import 'swiper/css/pagination';
-import { GET_PROPERTY } from '../../apollo/user/query';
+import { GET_PROPERTIES, GET_PROPERTY } from '../../apollo/user/query';
 import { LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
 import { T } from '../../libs/types/common';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { Direction } from '../../libs/enums/common.enum';
 
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -47,7 +48,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 	const [propertyId, setPropertyId] = useState<string | null>(null);
 	const [property, setProperty] = useState<Property | null>(null);
 	const [slideImage, setSlideImage] = useState<string>('');
-	const [destinationProperty, setDestinationProperty] = useState<Property[]>([]);
+	const [destinationProperties, setDestinationProperties] = useState<Property[]>([]);
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
 	const [propertyComments, setPropertyComments] = useState<Comment[]>([]);
 	const [commentTotal, setCommentTotal] = useState<number>(0);
@@ -60,17 +61,44 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 	/** APOLLO REQUESTS **/
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
-	const { refetch: getPropertyRefetch } = useQuery(GET_PROPERTY, {
-		skip: !propertyId,
-		fetchPolicy: 'network-only',
-		variables: { input: propertyId },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			const fetchedProperty = data?.getProperty ?? null;
-			setProperty(fetchedProperty);
-			setSlideImage(fetchedProperty?.propertyImages?.[0] ?? '');
-		},
-	});
+	const {
+				loading: getPorpertyLoading,
+				data: getPropertyData,
+				error: getPropertyError,
+				refetch: getPropertyRefetch,
+			} = useQuery(GET_PROPERTY, {
+				fetchPolicy: "cache-and-network",
+				variables: {input: propertyId},
+				skip: !propertyId,
+				notifyOnNetworkStatusChange: true,
+				onCompleted: (data: T) => {
+					if (data?.getProperty) setProperty(data?.getProperty);
+					if (data?.getProperty) setSlideImage(data?.getProperty?.propertyImages[0]);
+				},
+			});
+
+			const {
+						loading: getPorpertiesLoading,
+						data: getPropertiesData,
+						error: getPropertiesError,
+						refetch: getPropertiesRefetch,
+					} = useQuery(GET_PROPERTIES, {
+						fetchPolicy: "cache-and-network",
+						variables: {input: {
+							page: 1,
+							limit: 4,
+							sort: "createdAt",
+							direction: Direction.DESC,
+							search: {
+								locationList: [property?.propertyLocation]
+							}
+						}},
+						skip: !propertyId && !property,
+						notifyOnNetworkStatusChange: true,
+						onCompleted: (data: T) => {
+							if (data?.getProperties?.list) setDestinationProperties(data?.getProperties?.list)
+						},
+					});
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -518,7 +546,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 								</Stack>
 							</Stack>
 						</Stack>
-						{destinationProperty.length !== 0 && (
+						{destinationProperties.length !== 0 && (
 							<Stack className={'similar-properties-config'}>
 								<Stack className={'title-pagination-box'}>
 									<Stack className={'title-box'}>
@@ -545,7 +573,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 											el: '.swiper-similar-pagination',
 										}}
 									>
-										{destinationProperty.map((property: Property) => {
+										{destinationProperties.map((property: Property) => {
 											return (
 												<SwiperSlide className={'similar-homes-slide'} key={property.propertyTitle}>
 													<PropertyBigCard property={property} key={property?._id} />
