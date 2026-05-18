@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Member } from '../../libs/types/member/member';
 import { useMutation, useQuery } from '@apollo/client';
-import { LIKE_TARGET_MEMBER } from '../../apollo/user/mutation';
+import { CREATE_COMMENT, LIKE_TARGET_MEMBER } from '../../apollo/user/mutation';
 import { GET_AGENTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import { Messages } from '../../libs/config';
@@ -25,19 +25,19 @@ export const getStaticProps = async ({ locale }: any) => ({
 const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const [isMounted, setIsMounted] = useState(false);
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
 	const [filterSortName, setFilterSortName] = useState('Recent');
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [searchFilter, setSearchFilter] = useState<any>(
-		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
-	);
+	const [searchFilter, setSearchFilter] = useState<any>(initialInput);
 	const [agents, setAgents] = useState<Member[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [searchText, setSearchText] = useState<string>('');
 
 	/** APOLLO REQUESTS **/
+	
 	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
 
 	const {
@@ -50,20 +50,29 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setAgents(data?.getAgents?.agents);
-			setTotal(data?.getAgents?.metaCounter[0]?.total);
+			setAgents(data?.getAgents?.list ?? []);
+			setTotal(data?.getAgents?.metaCounter?.[0]?.total ?? 0);
 		},
 	});
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (router.query.input) {
-			const input_obj = JSON.parse(router?.query?.input as string);
-			setSearchFilter(input_obj);
-		} else
-			router.replace(`/agent?input=${JSON.stringify(searchFilter)}`, `/agent?input=${JSON.stringify(searchFilter)}`);
+		setIsMounted(true);
+	}, []);
 
-		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
-	}, [router]);
+	useEffect(() => {
+		if (!router.isReady) return;
+
+		if (typeof router.query.input === 'string') {
+			const inputObj = JSON.parse(router.query.input);
+			setSearchFilter(inputObj);
+			setCurrentPage(inputObj.page === undefined ? 1 : inputObj.page);
+			return;
+		}
+
+		setSearchFilter(initialInput);
+		setCurrentPage(initialInput.page === undefined ? 1 : initialInput.page);
+		router.replace(`/agent?input=${JSON.stringify(initialInput)}`, `/agent?input=${JSON.stringify(initialInput)}`);
+	}, [router.isReady, router.query.input, initialInput]);
 
 	/** HANDLERS **/
 	const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
@@ -122,6 +131,8 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
+
+	if (!isMounted) return null;
 
 	if (device === 'mobile') {
 		return <h1>AGENTS PAGE MOBILE</h1>;
