@@ -21,20 +21,19 @@ const MyFavorites: NextPage = () => {
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
 	const {
-			loading: getFavoritesLoading,
-			data: getFavoritesData,
-			error: getFavoritesError,
-			refetch: getFavoritesRefetch,
-		} = useQuery(GET_FAVORITES, {
-			fetchPolicy: 'network-only',
-			variables: { input: searchFavorites },
-			notifyOnNetworkStatusChange: true,
-			onCompleted: (data: T) => {
-				setMyFavorites(data?.getFavorites?.list);
-				setTotal(data?.getFavorites?.metaCounter[0]?.total ?? 0);
-			},
-		});
-	
+		loading: getFavoritesLoading,
+		data: getFavoritesData,
+		error: getFavoritesError,
+		refetch: getFavoritesRefetch,
+	} = useQuery(GET_FAVORITES, {
+		fetchPolicy: 'network-only',
+		variables: { input: searchFavorites },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setMyFavorites(data?.getFavorites?.list);
+			setTotal(data?.getFavorites?.metaCounter[0]?.total ?? 0);
+		},
+	});
 
 	/** HANDLERS **/
 	const paginationHandler = (e: T, value: number) => {
@@ -42,19 +41,19 @@ const MyFavorites: NextPage = () => {
 	};
 
 	const likePropertyHandler = async (user: T, id: string) => {
-			try {
-				if (!id) return;
-				if (!user._id) throw new Error(Messages.error2);
-	
-				await likeTargetProperty({ variables: { input: id } });
-				await getFavoritesRefetch({ input: searchFavorites });
-	
-				await sweetTopSmallSuccessAlert('succes', 700);
-			} catch (err: any) {
-				console.log('ERROR, likePropertyHandler:', err.message);
-				sweetMixinErrorAlert(err.message).then();
-			}
-		};
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Messages.error2);
+
+			await likeTargetProperty({ variables: { input: id } });
+			await getFavoritesRefetch({ input: searchFavorites });
+
+			await sweetTopSmallSuccessAlert('succes', 700);
+		} catch (err: any) {
+			console.log('ERROR, likePropertyHandler:', err.message);
+			sweetMixinErrorAlert(err.message).then();
+		}
+	};
 
 	if (device === 'mobile') {
 		return <div>NESTAR MY FAVORITES MOBILE</div>;
@@ -70,7 +69,14 @@ const MyFavorites: NextPage = () => {
 				<Stack className="favorites-list-box">
 					{myFavorites?.length ? (
 						myFavorites?.map((property: Property) => {
-							return <PropertyCard property={property} myFavorites={true} likePropertyHandler={likePropertyHandler} />;
+							return (
+								<PropertyCard
+									key={property._id}
+									property={property}
+									myFavorites={true}
+									likePropertyHandler={likePropertyHandler}
+								/>
+							);
 						})
 					) : (
 						<div className={'no-data'}>
