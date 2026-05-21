@@ -11,6 +11,7 @@ export interface BoardArticleInput {
 
 interface BAISearch {
 	articleCategory: BoardArticleCategory;
+	memberId?: string;
 	text?: string;
 }
 
