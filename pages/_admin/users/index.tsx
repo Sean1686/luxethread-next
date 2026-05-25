@@ -224,7 +224,8 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 														});
 														await getAllMembersByAdminRefetch({ input: membersInquiry})
 													}}
-												/>
+
+													/>
 											)}
 											<InputAdornment position="end" onClick={() => searchTextHandler()}>
 												<img src="/img/icons/search_icon.png" alt={'searchIcon'} />
