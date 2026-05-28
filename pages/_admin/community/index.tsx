@@ -228,11 +228,4 @@ AdminCommunity.defaultProps = {
 };
 
 export default withAdminLayout(AdminCommunity);
-function UPDATE_ARTICLE_BY_ADMIN(UPDATE_ARTICLE_BY_ADMIN: any): [any] {
-	throw new Error('Function not implemented.');
-}
-
-function REMOVE_ARTICLE_BY_ADMIN(REMOVE_ARTICLE_BY_ADMIN: any): [any] {
-	throw new Error('Function not implemented.');
-}
 

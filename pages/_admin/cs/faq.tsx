@@ -13,13 +13,19 @@ import TablePagination from '@mui/material/TablePagination';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { FaqArticlesPanelList } from '../../../libs/components/admin/cs/FaqList';
+import { useRouter } from 'next/router';
 
-const FaqArticles: NextPage = (props: any) => {
+const FaqArticles: NextPage = ({ initialInquiry, ...props }: any) => {
 	const [anchorEl, setAnchorEl] = useState<[] | HTMLElement[]>([]);
+		const router = useRouter();
+
 
 	/** APOLLO REQUESTS **/
 	/** LIFECYCLES **/
 	/** HANDLERS **/
+	const handleTabChange = async(event: any, newPage: number) => {
+
+	}
 
 	return (
 		// @ts-ignore
@@ -30,7 +36,7 @@ const FaqArticles: NextPage = (props: any) => {
 					className="btn_add"
 					variant={'contained'}
 					size={'medium'}
-					// onClick={() => router.push(`/_admin/cs/faq_create`)}
+					onClick={() => router.push(`/_admin/cs/faq_create`)}
 				>
 					<AddRoundedIcon sx={{ mr: '8px' }} />
 					ADD
@@ -42,7 +48,7 @@ const FaqArticles: NextPage = (props: any) => {
 						<Box component={'div'}>
 							<List className={'tab-menu'}>
 								<ListItem
-									// onClick={(e) => handleTabChange(e, 'all')}
+									onClick={(e) => handleTabChange(e, 'all')}
 									value="all"
 									className={'all' === 'all' ? 'li on' : 'li'}
 								>
@@ -122,6 +128,16 @@ const FaqArticles: NextPage = (props: any) => {
 			</Box>
 		</Box>
 	);
+};
+
+FaqArticles.defaultProps = {
+	initialInquiry: {
+		page: 1,
+		limit: 10,
+		sort: 'createdAt',
+		direction: 'DESC',
+		search: {},
+	},
 };
 
 export default withAdminLayout(FaqArticles);
