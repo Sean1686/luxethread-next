@@ -2,36 +2,36 @@ import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { PropertyCard } from '../mypage/PropertyCard';
-import { Property } from '../../types/property/property';
-import { PropertiesInquiry } from '../../types/property/property.input';
+import { ProductCard } from '../mypage/ProductCard';
+import { Product } from '../../types/property/product';
+import { ProductsInquiry } from '../../types/property/product.input';
 import { T } from '../../types/common';
 import { useRouter } from 'next/router';
 import { GET_PROPERTIES } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 
-const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
+const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const { memberId } = router.query;
-	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>({ ...initialInput });
-	const [agentProperties, setAgentProperties] = useState<Property[]>([]);
+	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>({ ...initialInput });
+	const [agentProducts, setAgentProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 
 	/** APOLLO REQUESTS **/
 
 	const {
-				loading: getPropertiesLoading,
-				data: getPropertiesData,
-				error: getPropertiesError,
-				refetch: getPropertiesRefetch,
+				loading: getProductsLoading,
+				data: getProductsData,
+				error: getProductsError,
+				refetch: getProductsRefetch,
 			} = useQuery(GET_PROPERTIES, {
 				fetchPolicy: 'network-only',
 				variables: { input: searchFilter },
 				skip: !searchFilter?.search?.memberId,
 				notifyOnNetworkStatusChange: true,
 				onCompleted: (data: T) => {
-					setAgentProperties(data?.getPropertis?.list ?? []);
+					setAgentProducts(data?.getPropertis?.list ?? []);
 					setTotal(data?.getPropertis?.metaCounter[0]?.total ?? 0);
 				},
 			});
@@ -53,15 +53,15 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 		return <div>NESTAR PROPERTIES MOBILE</div>;
 	} else {
 		return (
-			<div id="member-properties-page">
+			<div id="member-products-page">
 				<Stack className="main-title-box">
 					<Stack className="right-box">
-						<Typography className="main-title">Properties</Typography>
+						<Typography className="main-title">Products</Typography>
 					</Stack>
 				</Stack>
-				<Stack className="properties-list-box">
+				<Stack className="products-list-box">
 					<Stack className="list-box">
-						{agentProperties?.length > 0 && (
+						{agentProducts?.length > 0 && (
 							<Stack className="listing-title-box">
 								<Typography className="title-text">Listing title</Typography>
 								<Typography className="title-text">Date Published</Typography>
@@ -69,17 +69,17 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 								<Typography className="title-text">View</Typography>
 							</Stack>
 						)}
-						{agentProperties?.length === 0 && (
+						{agentProducts?.length === 0 && (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No Property found!</p>
+								<p>No Product found!</p>
 							</div>
 						)}
-						{agentProperties?.map((property: Property) => {
-							return <PropertyCard property={property} memberPage={true} key={property?._id} />;
+						{agentProducts?.map((product: Product) => {
+							return <ProductCard product={product} memberPage={true} key={product?._id} />;
 						})}
 
-						{agentProperties.length !== 0 && (
+						{agentProducts.length !== 0 && (
 							<Stack className="pagination-config">
 								<Stack className="pagination-box">
 									<Pagination
@@ -91,7 +91,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 									/>
 								</Stack>
 								<Stack className="total-result">
-									<Typography>{total} property available</Typography>
+									<Typography>{total} product available</Typography>
 								</Stack>
 							</Stack>
 						)}
@@ -102,7 +102,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	}
 };
 
-MyProperties.defaultProps = {
+MyProducts.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 5,
@@ -113,4 +113,4 @@ MyProperties.defaultProps = {
 	},
 };
 
-export default MyProperties;
+export default MyProducts;

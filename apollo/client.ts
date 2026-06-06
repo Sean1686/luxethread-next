@@ -3,6 +3,7 @@ import { ApolloClient, ApolloLink, InMemoryCache, from, NormalizedCacheObject } 
 import createUploadLink from 'apollo-upload-client/public/createUploadLink.js';
 import { onError } from '@apollo/client/link/error';
 import { getJwtToken } from '../libs/auth';
+import { socketVar } from './store';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import { sweetErrorAlert } from '../libs/sweetAlert';
 
@@ -39,7 +40,7 @@ class AppWebSocketClient {
 	private listeners = new Set<SocketListener>();
 	private url: string;
 
-	constructor(url = process.env.REACT_APP_API_WS ?? 'ws://127.0.0.1:3007') {
+	constructor(url = process.env.REACT_APP_API_WS ?? 'ws://127.0.0.1:3007/graphql') {
 		this.url = url;
 	}
 
@@ -49,6 +50,7 @@ class AppWebSocketClient {
 		const token = getJwtToken();
 		const socketUrl = token ? `${this.url}?token=${encodeURIComponent(token)}` : this.url;
 		this.socket = new WebSocket(socketUrl);
+		socketVar(this.socket);
 
 		this.socket.onopen = () => {
 			console.log('WebSocket connection!');
@@ -69,12 +71,14 @@ class AppWebSocketClient {
 
 		this.socket.onclose = () => {
 			this.socket = null;
+			socketVar(null);
 		};
 	}
 
 	disconnect() {
 		this.socket?.close();
 		this.socket = null;
+		socketVar(null);
 	}
 
 	send(data: string | SocketEventPayload) {
@@ -84,7 +88,9 @@ class AppWebSocketClient {
 
 	subscribe(listener: SocketListener) {
 		this.listeners.add(listener);
-		return () => this.listeners.delete(listener);
+		return () => {
+			this.listeners.delete(listener);
+		};
 	}
 }
 

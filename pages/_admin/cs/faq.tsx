@@ -23,7 +23,7 @@ const FaqArticles: NextPage = ({ initialInquiry, ...props }: any) => {
 	/** APOLLO REQUESTS **/
 	/** LIFECYCLES **/
 	/** HANDLERS **/
-	const handleTabChange = async(event: any, newPage: number) => {
+	const handleTabChange = async(event: any, newPage: string) => {
 
 	}
 
@@ -49,7 +49,6 @@ const FaqArticles: NextPage = ({ initialInquiry, ...props }: any) => {
 							<List className={'tab-menu'}>
 								<ListItem
 									onClick={(e) => handleTabChange(e, 'all')}
-									value="all"
 									className={'all' === 'all' ? 'li on' : 'li'}
 								>
 									All (0)

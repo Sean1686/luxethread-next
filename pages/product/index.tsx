@@ -1,0 +1,260 @@
+import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
+import { NextPage } from 'next';
+import { Box, Button, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
+import ProductCard from '../../libs/components/property/ProductCard';
+import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
+import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
+import Filter from '../../libs/components/property/Filter';
+import { useRouter } from 'next/router';
+import { ProductsInquiry } from '../../libs/types/property/product.input';
+import { Product } from '../../libs/types/property/product';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import { Direction } from '../../libs/enums/common.enum';
+import { useMutation, useQuery } from '@apollo/client';
+import { GET_PROPERTIES } from '../../apollo/user/query';
+import { T } from '../../libs/types/common';
+import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
+import { Messages } from '../../libs/config';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+
+export const getStaticProps = async ({ locale }: any) => ({
+	props: {
+		...(await serverSideTranslations(locale, ['common'])),
+	},
+});
+
+const ProductList: NextPage = ({ initialInput, ...props }: any) => {
+	const device = useDeviceDetect();
+	const router = useRouter();
+	const normalizeSearchFilter = (input?: Partial<ProductsInquiry>): ProductsInquiry => {
+		return {
+			...initialInput,
+			...input,
+			limit: initialInput.limit,
+			search: {
+				...initialInput.search,
+				...(input?.search ?? {}),
+			},
+		};
+	};
+
+	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(
+		router?.query?.input ? normalizeSearchFilter(JSON.parse(router?.query?.input as string)) : initialInput,
+	);
+	const [products, setProducts] = useState<Product[]>([]);
+	const [total, setTotal] = useState<number>(0);
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [sortingOpen, setSortingOpen] = useState(false);
+	const [filterSortName, setFilterSortName] = useState('New');
+	const safeLimit = Number(searchFilter?.limit) > 0 ? Number(searchFilter?.limit) : 1;
+	const safeTotal = Number(total) >= 0 ? Number(total) : 0;
+	const paginationCount = Math.max(1, Math.ceil(safeTotal / safeLimit));
+
+	/** APOLLO REQUESTS **/
+		const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+	
+
+	const {
+		loading: getPorpertiesLoading,
+		data: getProductsData,
+		error: getProductsError,
+		refetch: getProductsRefetch
+	} = useQuery(GET_PROPERTIES, {
+		fetchPolicy: 'network-only',
+		variables: { input: searchFilter },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setProducts(data?.getProducts?.list ?? []);
+			setTotal(data?.getProducts?.metaCounter?.[0]?.total ?? 0);
+		},
+	});
+	/** LIFECYCLES **/
+	useEffect(() => {
+		if (router.query.input) {
+			const inputObj = normalizeSearchFilter(JSON.parse(router?.query?.input as string));
+			setSearchFilter(inputObj);
+			setCurrentPage(inputObj.page === undefined ? 1 : inputObj.page);
+		} else {
+			setSearchFilter(initialInput);
+			setCurrentPage(initialInput.page === undefined ? 1 : initialInput.page);
+		}
+	}, [router, initialInput]);
+
+	/** HANDLERS **/
+	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
+		const nextFilter = { ...searchFilter, page: value };
+		await router.push(
+			`/product?input=${JSON.stringify(nextFilter)}`,
+			`/product?input=${JSON.stringify(nextFilter)}`,
+			{
+				scroll: false,
+			},
+		);
+		setCurrentPage(value);
+	};
+
+		const likeProductHandler = async (user: T, id: string) => {
+			try {
+				if (!id) return;
+				if (!user._id) throw new Error(Messages.error2);
+	
+				// execute likeTargetProduct Mutation
+				await likeTargetProduct({ variables: { input: id } });
+				await getProductsRefetch({ input: searchFilter });
+	
+				await sweetTopSmallSuccessAlert('succes', 700);
+			} catch (err: any) {
+				console.log('ERROR, likeProductHandler:', err.message);
+				sweetMixinErrorAlert(err.message).then();
+			}
+		};
+
+	const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
+		setAnchorEl(e.currentTarget);
+		setSortingOpen(true);
+	};
+
+	const sortingCloseHandler = () => {
+		setSortingOpen(false);
+		setAnchorEl(null);
+	};
+
+	const sortingHandler = async (e: React.MouseEvent<HTMLLIElement>) => {
+		let nextFilter = { ...searchFilter };
+
+		switch (e.currentTarget.id) {
+			case 'new':
+				nextFilter = { ...searchFilter, sort: 'createdAt', direction: Direction.DESC };
+				setFilterSortName('New');
+				break;
+			case 'lowest':
+				nextFilter = { ...searchFilter, sort: 'productPrice', direction: Direction.ASC };
+				setFilterSortName('Lowest Price');
+				break;
+			case 'highest':
+				nextFilter = { ...searchFilter, sort: 'productPrice', direction: Direction.DESC };
+				setFilterSortName('Highest Price');
+		}
+
+		setSearchFilter(nextFilter);
+		await router.push(
+			`/product?input=${JSON.stringify(nextFilter)}`,
+			`/product?input=${JSON.stringify(nextFilter)}`,
+			{
+				scroll: false,
+			},
+		);
+		setSortingOpen(false);
+		setAnchorEl(null);
+	};
+
+	if (device === 'mobile') {
+		return <h1>PROPERTIES MOBILE</h1>;
+	} else {
+		return (
+			<div id="product-list-page" style={{ position: 'relative' }}>
+				<div className="container">
+					<Box component={'div'} className={'right'}>
+						<span>Sort by</span>
+						<div>
+							<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
+								{filterSortName}
+							</Button>
+							<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
+								<MenuItem
+									onClick={sortingHandler}
+									id={'new'}
+									disableRipple
+									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+								>
+									New
+								</MenuItem>
+								<MenuItem
+									onClick={sortingHandler}
+									id={'lowest'}
+									disableRipple
+									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+								>
+									Lowest Price
+								</MenuItem>
+								<MenuItem
+									onClick={sortingHandler}
+									id={'highest'}
+									disableRipple
+									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+								>
+									Highest Price
+								</MenuItem>
+							</Menu>
+						</div>
+					</Box>
+					<Stack className={'product-page'}>
+						<Stack className={'filter-config'}>
+							{/* @ts-ignore */}
+							<Filter searchFilter={searchFilter} setSearchFilter={setSearchFilter} initialInput={initialInput} />
+						</Stack>
+						<Stack className="main-config" mb={'76px'}>
+							<Stack className={'list-config'}>
+								{products?.length === 0 ? (
+									<div className={'no-data'}>
+										<img src="/img/icons/icoAlert.svg" alt="" />
+										<p>No Products found!</p>
+									</div>
+								) : (
+									products.map((product: Product) => {
+										return <ProductCard product={product} likeProductHandler={likeProductHandler} key={product?._id} />;
+									})
+								)}
+							</Stack>
+							<Stack className="pagination-config">
+								{products.length !== 0 && (
+									<Stack className="pagination-box">
+										<Pagination
+											page={currentPage}
+											count={paginationCount}
+											onChange={handlePaginationChange}
+											shape="circular"
+											color="primary"
+										/>
+									</Stack>
+								)}
+
+								{products.length !== 0 && (
+									<Stack className="total-result">
+										<Typography>
+											Total {total} propert{total > 1 ? 'ies' : 'y'} available
+										</Typography>
+									</Stack>
+								)}
+							</Stack>
+						</Stack>
+					</Stack>
+				</div>
+			</div>
+		);
+	}
+};
+
+ProductList.defaultProps = {
+	initialInput: {
+		page: 1,
+		limit: 9,
+		sort: 'createdAt',
+		direction: 'DESC',
+		search: {
+			squaresRange: {
+				start: 0,
+				end: 500,
+			},
+			pricesRange: {
+				start: 0,
+				end: 2000000,
+			},
+		},
+	},
+};
+
+export default withLayoutBasic(ProductList);
+

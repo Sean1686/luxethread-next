@@ -114,23 +114,32 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 interface PropertyPanelListType {
-	properties: Property[];
+	properties?: Property[];
+	products?: Property[];
 	anchorEl: any;
 	menuIconClickHandler: any;
 	menuIconCloseHandler: any;
-	updatePropertyHandler: any;
-	removePropertyHandler: any;
+	updatePropertyHandler?: any;
+	updateProductHandler?: any;
+	removePropertyHandler?: any;
+	removeProductHandler?: any;
 }
 
 export const PropertyPanelList = (props: PropertyPanelListType) => {
 	const {
 		properties,
+		products,
 		anchorEl,
 		menuIconClickHandler,
 		menuIconCloseHandler,
 		updatePropertyHandler,
+		updateProductHandler,
 		removePropertyHandler,
+		removeProductHandler,
 	} = props;
+	const handleUpdateProduct = updateProductHandler ?? updatePropertyHandler;
+	const handleRemoveProduct = removeProductHandler ?? removePropertyHandler;
+	const productList = products ?? properties ?? [];
 
 	return (
 		<Stack>
@@ -139,7 +148,7 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 					{/*@ts-ignore*/}
 					<EnhancedTableHead />
 					<TableBody>
-						{properties.length === 0 && (
+						{productList.length === 0 && (
 							<TableRow>
 								<TableCell align="center" colSpan={8}>
 									<span className={'no-data'}>data not found!</span>
@@ -147,9 +156,9 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 							</TableRow>
 						)}
 
-						{properties.length !== 0 &&
-							properties.map((property: Property, index: number) => {
-								const propertyImage = `${REACT_APP_API_URL}/${property?.propertyImages[0]}`;
+						{productList.length !== 0 &&
+							productList.map((property: Property, index: number) => {
+								const propertyImage = `${REACT_APP_API_URL}/${property?.propertyImages?.[0] ?? property?.productImages?.[0] ?? ''}`;
 
 								return (
 									<TableRow hover key={property?._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -184,7 +193,7 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 												<Button
 													variant="outlined"
 													sx={{ p: '3px', border: 'none', ':hover': { border: '1px solid #000000' } }}
-													onClick={() => removePropertyHandler(property._id)}
+													onClick={() => handleRemoveProduct(property._id)}
 												>
 													<DeleteIcon fontSize="small" />
 												</Button>
@@ -215,7 +224,7 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 															.filter((ele) => ele !== property.propertyStatus)
 															.map((status: string) => (
 																<MenuItem
-																	onClick={() => updatePropertyHandler({ _id: property._id, propertyStatus: status })}
+																	onClick={() => handleUpdateProduct({ _id: property._id, productStatus: status, propertyStatus: status })}
 																	key={status}
 																>
 																	<Typography variant={'subtitle1'} component={'span'}>
@@ -236,3 +245,5 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 		</Stack>
 	);
 };
+
+export const ProductPanelList = PropertyPanelList;

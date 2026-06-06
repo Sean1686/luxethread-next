@@ -3,28 +3,44 @@ import { Stack, Box, Divider, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Property } from '../../types/property/property';
+import { Product } from '../../types/property/product';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { REACT_APP_API_URL } from '../../config';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 
+const getProductImageUrl = (image?: string) => {
+	if (!image) return '/img/banner/header1.svg';
+	if (image.startsWith('/img/') || image.startsWith('img/')) return image.startsWith('/') ? image : `/${image}`;
+	return `${REACT_APP_API_URL}/${image}`;
+};
+
 interface TopPropertyCardProps {
-	property: Property;
+	property: Product;
+	product?: Product;
 	likePropertyHandler?: any;
+	likeProductHandler?: any;
 }
 
 const TopPropertyCard = (props: TopPropertyCardProps) => {
-	const { property, likePropertyHandler } = props;
+	const product = props.product ?? props.property;
+	const likePropertyHandler = props.likePropertyHandler ?? props.likeProductHandler;
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
+	const productImage = product?.productImages?.[0] ?? product?.propertyImages?.[0] ?? 'img/banner/header1.svg';
+	const productTitle = product?.productTitle ?? product?.propertyTitle ?? 'Untitled product';
+	const productDesc = product?.productDesc ?? product?.propertyDesc ?? product?.productMaterial ?? '';
+	const productPrice = product?.productPrice ?? product?.propertyPrice ?? 0;
+	const productViews = product?.productViews ?? product?.propertyViews ?? 0;
+	const productLikes = product?.productLikes ?? product?.propertyLikes ?? 0;
 
 	/** HANDLERS **/
-	const pushDetailHandler = async (propertyId: string) => {
-		console.log('ID:', propertyId);
-		await router.push({ pathname: '/property/detail', query: { id: propertyId } });
+	const pushDetailHandler = async (productId: string) => {
+		if (!productId) return;
+		console.log('ID:', productId);
+		await router.push({ pathname: '/product/detail', query: { id: productId } });
 	};
 
 	if (device === 'mobile') {
@@ -33,57 +49,50 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 				<Box
 					component={'div'}
 					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${property?.propertyImages[0]})` }}
+					style={{ backgroundImage: `url(${getProductImageUrl(productImage)})` }}
 					onClick={() => {
-						pushDetailHandler(property._id);
+						pushDetailHandler(product?._id);
 					}}
 				>
-					<div>${property?.propertyPrice}</div>
+					<div>${productPrice}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong
 						className={'title'}
 						onClick={() => {
-							pushDetailHandler(property._id);
+							pushDetailHandler(product?._id);
 						}}
 					>
-						{property?.propertyTitle}
+						{productTitle}
 					</strong>
-					<p className={'desc'}>{property?.propertyAddress}</p>
+					<p className={'desc'}>{productDesc}</p>
 					<div className={'options'}>
 						<div>
-							<img src="/img/icons/bed.svg" alt="" />
-							<span>{property?.propertyBeds} bed</span>
+							<span>{product?.productCategory}</span>
 						</div>
 						<div>
-							<img src="/img/icons/room.svg" alt="" />
-							<span>{property?.propertyRooms} rooms</span>
+							<span>{product?.productType}</span>
 						</div>
 						<div>
-							<img src="/img/icons/expand.svg" alt="" />
-							<span>{property?.propertySquare} m2</span>
+							<span>{product?.productFit}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
 					<div className={'bott'}>
-						<p>
-							{' '}
-							{property.propertyRent ? 'Rent' : ''} {property.propertyRent && property.propertyBarter && '/'}{' '}
-							{property.propertyBarter ? 'Barter' : ''}
-						</p>
+						<p>{product?.productOrigin ? `Made in ${product.productOrigin}` : product?.productMaterial}</p>
 						<div className="view-like-box">
 							<IconButton color={'default'}>
 								<RemoveRedEyeIcon />
 							</IconButton>
-							<Typography className="view-cnt">{property?.propertyViews}</Typography>
-							<IconButton color={'default'} onClick={() => likePropertyHandler?.(user, property?._id)}>
-								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
+							<Typography className="view-cnt">{productViews}</Typography>
+							<IconButton color={'default'} onClick={() => likePropertyHandler?.(user, product?._id)}>
+								{product?.meLiked && product?.meLiked[0]?.myFavorite ? (
 									<FavoriteIcon style={{ color: 'red' }} />
 								) : (
 									<FavoriteIcon />
 								)}
 							</IconButton>
-							<Typography className="view-cnt">{property?.propertyLikes}</Typography>
+							<Typography className="view-cnt">{productLikes}</Typography>
 						</div>
 					</div>
 				</Box>
@@ -95,57 +104,50 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 				<Box
 					component={'div'}
 					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${property?.propertyImages[0]})` }}
+					style={{ backgroundImage: `url(${getProductImageUrl(productImage)})` }}
 					onClick={() => {
-						pushDetailHandler(property._id);
+						pushDetailHandler(product?._id);
 					}}
 				>
-					<div>${property?.propertyPrice}</div>
+					<div>${productPrice}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong
 						className={'title'}
 						onClick={() => {
-							pushDetailHandler(property._id);
+							pushDetailHandler(product?._id);
 						}}
 					>
-						{property?.propertyTitle}
+						{productTitle}
 					</strong>
-					<p className={'desc'}>{property?.propertyAddress}</p>
+					<p className={'desc'}>{productDesc}</p>
 					<div className={'options'}>
 						<div>
-							<img src="/img/icons/bed.svg" alt="" />
-							<span>{property?.propertyBeds} bed</span>
+							<span>{product?.productCategory}</span>
 						</div>
 						<div>
-							<img src="/img/icons/room.svg" alt="" />
-							<span>{property?.propertyRooms} rooms</span>
+							<span>{product?.productType}</span>
 						</div>
 						<div>
-							<img src="/img/icons/expand.svg" alt="" />
-							<span>{property?.propertySquare} m2</span>
+							<span>{product?.productFit}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
 					<div className={'bott'}>
-						<p>
-							{' '}
-							{property.propertyRent ? 'Rent' : ''} {property.propertyRent && property.propertyBarter && '/'}{' '}
-							{property.propertyBarter ? 'Barter' : ''}
-						</p>
+						<p>{product?.productOrigin ? `Made in ${product.productOrigin}` : product?.productMaterial}</p>
 						<div className="view-like-box">
 							<IconButton color={'default'}>
 								<RemoveRedEyeIcon />
 							</IconButton>
-							<Typography className="view-cnt">{property?.propertyViews}</Typography>
-							<IconButton color={'default'} onClick={() => likePropertyHandler?.(user, property?._id)}>
-								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
+							<Typography className="view-cnt">{productViews}</Typography>
+							<IconButton color={'default'} onClick={() => likePropertyHandler?.(user, product?._id)}>
+								{product?.meLiked && product?.meLiked[0]?.myFavorite ? (
 									<FavoriteIcon style={{ color: 'red' }} />
 								) : (
 									<FavoriteIcon />
 								)}
 							</IconButton>
-							<Typography className="view-cnt">{property?.propertyLikes}</Typography>
+							<Typography className="view-cnt">{productLikes}</Typography>
 						</div>
 					</div>
 				</Box>

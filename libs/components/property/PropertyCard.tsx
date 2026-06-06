@@ -13,18 +13,21 @@ import IconButton from '@mui/material/IconButton';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 interface PropertyCardType {
-	property: Property;
+	property?: Property;
+	product?: Property;
 	likePropertyHandler?: any;
+	likeProductHandler?: any;
 	myFavorites?: boolean;
 	recentlyVisited?: boolean;
 }
 
 const PropertyCard = (props: PropertyCardType) => {
-	const { property, likePropertyHandler, myFavorites, recentlyVisited } = props;
+	const { likePropertyHandler, likeProductHandler, myFavorites, recentlyVisited } = props;
+	const property = props.property ?? props.product;
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
-	const imagePath: string = property?.propertyImages[0]
-		? `${REACT_APP_API_URL}/${property?.propertyImages[0]}`
+	const imagePath: string = property?.propertyImages?.[0] || property?.productImages?.[0]
+		? `${REACT_APP_API_URL}/${property?.propertyImages?.[0] ?? property?.productImages?.[0]}`
 		: '/img/banner/header1.svg';
 
 	if (device === 'mobile') {
@@ -41,14 +44,14 @@ const PropertyCard = (props: PropertyCardType) => {
 					>
 						<img src={imagePath} alt="" />
 					</Link>
-					{property && property?.propertyRank > topPropertyRank && (
+					{property && (property?.propertyRank ?? property?.productRank) > topPropertyRank && (
 						<Box component={'div'} className={'top-badge'}>
 							<img src="/img/icons/electricity.svg" alt="" />
 							<Typography>TOP</Typography>
 						</Box>
 					)}
 					<Box component={'div'} className={'price-box'}>
-						<Typography>${formatterStr(property?.propertyPrice)}</Typography>
+						<Typography>${formatterStr(property?.propertyPrice ?? property?.productPrice)}</Typography>
 					</Box>
 				</Stack>
 				<Stack className="bottom">
@@ -60,24 +63,24 @@ const PropertyCard = (props: PropertyCardType) => {
 									query: { id: property?._id },
 								}}
 							>
-								<Typography>{property.propertyTitle}</Typography>
+								<Typography>{property?.propertyTitle ?? property?.productTitle}</Typography>
 							</Link>
 						</Stack>
 						<Stack className="address">
 							<Typography>
-								{property.propertyAddress}, {property.propertyLocation}
+								{property?.productOrigin ? `Made in ${property.productOrigin}` : `${property?.propertyAddress ?? ''}, ${property?.propertyLocation ?? ''}`}
 							</Typography>
 						</Stack>
 					</Stack>
 					<Stack className="options">
 						<Stack className="option">
-							<img src="/img/icons/bed.svg" alt="" /> <Typography>{property.propertyBeds} bed</Typography>
+							<Typography>{property?.productSizes?.join(', ') ?? `${property?.propertyBeds ?? ''} bed`}</Typography>
 						</Stack>
 						<Stack className="option">
-							<img src="/img/icons/room.svg" alt="" /> <Typography>{property.propertyRooms} room</Typography>
+							<Typography>{property?.productColors?.join(', ') ?? `${property?.propertyRooms ?? ''} room`}</Typography>
 						</Stack>
 						<Stack className="option">
-							<img src="/img/icons/expand.svg" alt="" /> <Typography>{property.propertySquare} m2</Typography>
+							<Typography>{property?.productMaterial ?? `${property?.propertySquare ?? ''} m2`}</Typography>
 						</Stack>
 					</Stack>
 					<Stack className="divider"></Stack>
@@ -85,13 +88,13 @@ const PropertyCard = (props: PropertyCardType) => {
 						<Stack className="type">
 							<Typography
 								sx={{ fontWeight: 500, fontSize: '13px' }}
-								className={property.propertyRent ? '' : 'disabled-type'}
+								className={property?.productFit || property?.propertyRent ? '' : 'disabled-type'}
 							>
 								Rent
 							</Typography>
 							<Typography
 								sx={{ fontWeight: 500, fontSize: '13px' }}
-								className={property.propertyBarter ? '' : 'disabled-type'}
+								className={property?.productCategory || property?.propertyBarter ? '' : 'disabled-type'}
 							>
 								Barter
 							</Typography>
@@ -101,8 +104,8 @@ const PropertyCard = (props: PropertyCardType) => {
 								<IconButton color={'default'}>
 									<RemoveRedEyeIcon />
 								</IconButton>
-								<Typography className="view-cnt">{property?.propertyViews}</Typography>
-								<IconButton color={'default'} onClick={() => likePropertyHandler(user, property?._id)}>
+								<Typography className="view-cnt">{property?.propertyViews ?? property?.productViews}</Typography>
+								<IconButton color={'default'} onClick={() => (likeProductHandler ?? likePropertyHandler)?.(user, property?._id)}>
 									{myFavorites ? (
 										<FavoriteIcon color="primary" />
 									) : property?.meLiked && property?.meLiked[0]?.myFavorite ? (
@@ -111,7 +114,7 @@ const PropertyCard = (props: PropertyCardType) => {
 										<FavoriteBorderIcon />
 									)}
 								</IconButton>
-								<Typography className="view-cnt">{property?.propertyLikes}</Typography>
+								<Typography className="view-cnt">{property?.propertyLikes ?? property?.productLikes}</Typography>
 							</Stack>
 						)}
 					</Stack>

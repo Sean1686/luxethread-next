@@ -123,7 +123,7 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 
 			await likeTargetMember({ variables: { input: id } });
 
-			// execute likeTargetProperty Mutation
+			// execute likeTargetProduct Mutation
 			await getAgentsRefetch({ input: searchFilter });
 			await sweetTopSmallSuccessAlert('success', 700);
 		} catch (err: any) {

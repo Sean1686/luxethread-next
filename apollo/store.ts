@@ -14,6 +14,7 @@ export const userVar = makeVar<CustomJwtPayload>({
 	memberImage: '',
 	memberAddress: '',
 	memberDesc: '',
+	memberProducts: 0,
 	memberProperties: 0,
 	memberRank: 0,
 	memberArticles: 0,
@@ -24,5 +25,4 @@ export const userVar = makeVar<CustomJwtPayload>({
 	memberBlocks: 0,
 });
 
-//@ts-ignore
-export const socketVar = makeVar<WebSocket>();
+export const socketVar = makeVar<WebSocket | null>(null);

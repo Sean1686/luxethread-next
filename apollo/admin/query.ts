@@ -1,35 +1,63 @@
 import { gql } from '@apollo/client';
 
-/**************************
- *         MEMBER         *
- *************************/
+const MEMBER_FIELDS = `
+	_id
+	memberType
+	memberStatus
+	memberAuthType
+	memberPhone
+	memberNick
+	memberFullName
+	memberImage
+	memberAddress
+	memberDesc
+	memberWarnings
+	memberBlocks
+	memberProducts
+	memberRank
+	memberArticles
+	memberPoints
+	memberLikes
+	memberViews
+	memberComments
+	memberFollowings
+	memberFollowers
+	deletedAt
+	createdAt
+	updatedAt
+	accessToken
+`;
+
+const PRODUCT_FIELDS = `
+	_id
+	productCategory
+	productType
+	productStatus
+	productSizes
+	productColors
+	productMaterial
+	productFit
+	productOrigin
+	productTitle
+	productPrice
+	productViews
+	productLikes
+	productComments
+	productRank
+	productImages
+	productDesc
+	memberId
+	soldAt
+	deletedAt
+	createdAt
+	updatedAt
+`;
 
 export const GET_ALL_MEMBERS_BY_ADMIN = gql`
 	query GetAllMembersByAdmin($input: MembersInquiry!) {
 		getAllMembersByAdmin(input: $input) {
 			list {
-				_id
-				memberType
-				memberStatus
-				memberAuthType
-				memberPhone
-				memberNick
-				memberFullName
-				memberImage
-				memberAddress
-				memberDesc
-				memberWarnings
-				memberBlocks
-				memberProperties
-				memberRank
-				memberArticles
-				memberPoints
-				memberLikes
-				memberViews
-				deletedAt
-				createdAt
-				updatedAt
-				accessToken
+				${MEMBER_FIELDS}
 			}
 			metaCounter {
 				total
@@ -38,58 +66,13 @@ export const GET_ALL_MEMBERS_BY_ADMIN = gql`
 	}
 `;
 
-/**************************
- *        PROPERTY        *
- *************************/
-
-export const GET_ALL_PROPERTIES_BY_ADMIN = gql`
-	query GetAllPropertiesByAdmin($input: AllPropertiesInquiry!) {
-		getAllPropertiesByAdmin(input: $input) {
+export const GET_ALL_PRODUCTS_BY_ADMIN = gql`
+	query GetAllProductsByAdmin($input: AllProductsInquiry!) {
+		getAllProductsByAdmin(input: $input) {
 			list {
-				_id
-				propertyType
-				propertyStatus
-				propertyLocation
-				propertyAddress
-				propertyTitle
-				propertyPrice
-				propertySquare
-				propertyBeds
-				propertyRooms
-				propertyViews
-				propertyLikes
-				propertyImages
-				propertyDesc
-				propertyBarter
-				propertyRent
-				memberId
-				soldAt
-				deletedAt
-				constructedAt
-				createdAt
-				updatedAt
+				${PRODUCT_FIELDS}
 				memberData {
-					_id
-					memberType
-					memberStatus
-					memberAuthType
-					memberPhone
-					memberNick
-					memberFullName
-					memberImage
-					memberAddress
-					memberDesc
-					memberWarnings
-					memberBlocks
-					memberProperties
-					memberRank
-					memberPoints
-					memberLikes
-					memberViews
-					deletedAt
-					createdAt
-					updatedAt
-					accessToken
+					${MEMBER_FIELDS}
 				}
 			}
 			metaCounter {
@@ -98,10 +81,6 @@ export const GET_ALL_PROPERTIES_BY_ADMIN = gql`
 		}
 	}
 `;
-
-/**************************
- *      BOARD-ARTICLE     *
- *************************/
 
 export const GET_ALL_BOARD_ARTICLES_BY_ADMIN = gql`
 	query GetAllBoardArticlesByAdmin($input: AllBoardArticlesInquiry!) {
@@ -119,27 +98,7 @@ export const GET_ALL_BOARD_ARTICLES_BY_ADMIN = gql`
 				createdAt
 				updatedAt
 				memberData {
-					_id
-					memberType
-					memberStatus
-					memberAuthType
-					memberPhone
-					memberNick
-					memberFullName
-					memberImage
-					memberAddress
-					memberDesc
-					memberWarnings
-					memberBlocks
-					memberProperties
-					memberRank
-					memberPoints
-					memberLikes
-					memberViews
-					deletedAt
-					createdAt
-					updatedAt
-					accessToken
+					${MEMBER_FIELDS}
 				}
 			}
 			metaCounter {
@@ -148,10 +107,6 @@ export const GET_ALL_BOARD_ARTICLES_BY_ADMIN = gql`
 		}
 	}
 `;
-
-/**************************
- *         COMMENT        *
- *************************/
 
 export const GET_COMMENTS = gql`
 	query GetComments($input: CommentsInquiry!) {
@@ -166,27 +121,7 @@ export const GET_COMMENTS = gql`
 				createdAt
 				updatedAt
 				memberData {
-					_id
-					memberType
-					memberStatus
-					memberAuthType
-					memberPhone
-					memberNick
-					memberFullName
-					memberImage
-					memberAddress
-					memberDesc
-					memberWarnings
-					memberBlocks
-					memberProperties
-					memberRank
-					memberPoints
-					memberLikes
-					memberViews
-					deletedAt
-					createdAt
-					updatedAt
-					accessToken
+					${MEMBER_FIELDS}
 				}
 			}
 			metaCounter {
@@ -195,3 +130,5 @@ export const GET_COMMENTS = gql`
 		}
 	}
 `;
+
+export const GET_ALL_PROPERTIES_BY_ADMIN = GET_ALL_PRODUCTS_BY_ADMIN;

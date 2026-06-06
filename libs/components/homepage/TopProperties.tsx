@@ -42,7 +42,7 @@ const TopProperties = (props: TopPropertiesProps) => {
 			variables: {input: initialInput},
 			notifyOnNetworkStatusChange: true,
 			onCompleted: (data: T) => {
-				setTopProperties(data?.getProperties?.list);
+				setTopProperties(data?.listProducts?.list ?? []);
 			},
 		});
 	/** HANDLERS **/
@@ -70,7 +70,7 @@ const TopProperties = (props: TopPropertiesProps) => {
 			<Stack className={'top-properties'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Top properties</span>
+						<span>Top products</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						<Swiper
@@ -98,8 +98,8 @@ const TopProperties = (props: TopPropertiesProps) => {
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
-							<span>Top properties</span>
-							<p>Check out our Top Properties</p>
+							<span>Top products</span>
+							<p>Check out our Top Products</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
 							<div className={'pagination-box'}>
@@ -142,7 +142,7 @@ TopProperties.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 8,
-		sort: 'propertyRank',
+		sort: 'productRank',
 		direction: 'DESC',
 		search: {},
 	},

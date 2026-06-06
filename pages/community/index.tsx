@@ -94,7 +94,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 
 			await sweetTopSmallSuccessAlert('succes', 700);
 		} catch (err: any) {
-			console.log('ERROR, likePropertyHandler:', err.message);
+			console.log('ERROR, likeProductHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
@@ -111,7 +111,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 								<Stack className={'image-info'}>
 									<img src={'/img/logo/logoText.svg'} />
 									<Stack className={'community-name'}>
-										<Typography className={'name'}>Nestar Community</Typography>
+										<Typography className={'name'}>Luxethread Community</Typography>
 									</Stack>
 								</Stack>
 

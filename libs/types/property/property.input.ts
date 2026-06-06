@@ -1,70 +1,103 @@
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/property.enum';
+import {
+	ProductCategory,
+	ProductColor,
+	ProductFit,
+	ProductMaterial,
+	ProductSize,
+	ProductStatus,
+	ProductType,
+} from '../../enums/property.enum';
 import { Direction } from '../../enums/common.enum';
 
-
-export interface PropertyInput {
+export interface ProductInput {
 	_id?: string;
-	propertyType: PropertyType;
-	propertyLocation: PropertyLocation;
-	propertyAddress: string;
-	propertyTitle: string;
-	propertyPrice: number;
-	propertySquare: number;
-	propertyBeds: number;
-	propertyRooms: number;
-	propertyImages: string[];
-	propertyDesc?: string;
-	propertyBarter?: boolean;
-	propertyRent?: boolean;
+	productCategory: ProductCategory | '';
+	productType: ProductType | '';
+	productSizes: ProductSize[];
+	productColors: ProductColor[];
+	productMaterial: ProductMaterial | '';
+	productFit: ProductFit | '';
+	productOrigin: string;
+	productTitle: string;
+	productPrice: number;
+	productImages: string[];
+	productDesc?: string;
+	productLocation?: string;
+	productAddress?: string;
+	productSquare?: number;
+	productBeds?: number;
+	productRooms?: number;
+	productRent?: boolean;
+	productBarter?: boolean;
 	memberId?: string;
-	constructedAt?: Date;
 }
 
-interface PISearch {
+interface ProductSearch {
 	memberId?: string;
-	locationList?: PropertyLocation[];
-	typeList?: PropertyType[];
+	productCategory?: ProductCategory[];
+	productType?: ProductType[];
+	productSizes?: ProductSize[];
+	productColors?: ProductColor[];
+	productMaterial?: ProductMaterial[];
+	productFit?: ProductFit[];
+	productOrigin?: string;
+	minPrice?: number;
+	maxPrice?: number;
+	text?: string;
+	locationList?: string[];
+	typeList?: ProductType[];
 	roomsList?: Number[];
 	options?: string[];
 	bedsList?: Number[];
 	pricesRange?: Range;
 	periodsRange?: PeriodsRange;
 	squaresRange?: Range;
-	text?: string;
 }
 
-export interface PropertiesInquiry {
+export interface ProductsInquiry {
 	page: number;
 	limit: number;
 	sort?: string;
 	direction?: Direction;
-	search: PISearch;
+	search: ProductSearch;
 }
 
-interface APISearch {
-	propertyStatus?: PropertyStatus;
+interface AgentProductSearch {
+	productStatus?: ProductStatus;
+	propertyStatus?: ProductStatus;
 }
 
-export interface AgentPropertiesInquiry {
+export interface AgentProductsInquiry {
 	page: number;
 	limit: number;
 	sort?: string;
 	direction?: Direction;
-	search: APISearch;
+	search: AgentProductSearch;
 }
 
-interface ALPISearch {
-	propertyStatus?: PropertyStatus;
-	propertyLocationList?: PropertyLocation[];
+interface AdminProductSearch {
+	productStatus?: ProductStatus;
+	productCategory?: ProductCategory[];
+	productLocationList?: string[];
 }
 
-export interface AllPropertiesInquiry {
+export interface AllProductsInquiry {
 	page: number;
 	limit: number;
 	sort?: string;
 	direction?: Direction;
-	search: ALPISearch;
+	search: AdminProductSearch;
 }
+
+export interface OrdinaryInquiry {
+	page: number;
+	limit: number;
+}
+
+export type PropertyInput = ProductInput;
+export type PropertiesInquiry = ProductsInquiry;
+export type AgentPropertiesInquiry = AgentProductsInquiry;
+export type AllPropertiesInquiry = AllProductsInquiry;
 
 interface Range {
 	start: number;

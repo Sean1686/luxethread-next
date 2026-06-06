@@ -1,4 +1,12 @@
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/property.enum';
+import {
+	ProductCategory,
+	ProductColor,
+	ProductFit,
+	ProductMaterial,
+	ProductSize,
+	ProductStatus,
+	ProductType,
+} from '../../enums/property.enum';
 import { Member } from '../member/member';
 
 export interface MeLiked {
@@ -11,37 +19,62 @@ export interface TotalCounter {
 	total: number;
 }
 
-export interface Property {
+export interface Product {
 	_id: string;
-	propertyType: PropertyType;
-	propertyStatus: PropertyStatus;
-	propertyLocation: PropertyLocation;
-	propertyAddress: string;
+	productCategory: ProductCategory;
+	productType: ProductType;
+	productStatus: ProductStatus;
+	productSizes: ProductSize[];
+	productColors: ProductColor[];
+	productMaterial: ProductMaterial;
+	productFit: ProductFit;
+	productOrigin: string;
+	productTitle: string;
+	productPrice: number;
+	productViews: number;
+	productLikes: number;
+	productComments: number;
+	productRank: number;
+	productImages: string[];
+	productDesc?: string;
+	productLocation: string;
+	productAddress: string;
+	productSquare: number;
+	productBeds: number;
+	productRooms: number;
+	productRent: boolean;
+	productBarter: boolean;
+	propertyType: ProductType;
+	propertyStatus: ProductStatus;
 	propertyTitle: string;
 	propertyPrice: number;
-	propertySquare: number;
-	propertyBeds: number;
-	propertyRooms: number;
 	propertyViews: number;
 	propertyLikes: number;
 	propertyComments: number;
 	propertyRank: number;
 	propertyImages: string[];
-	propertyDesc?: string;
-	propertyBarter: boolean;
+	propertyDesc: string;
+	propertyLocation: string;
+	propertyAddress: string;
+	propertySquare: number;
+	propertyBeds: number;
+	propertyRooms: number;
 	propertyRent: boolean;
+	propertyBarter: boolean;
+	constructedAt?: Date;
 	memberId: string;
 	soldAt?: Date;
 	deletedAt?: Date;
-	constructedAt?: Date;
 	createdAt: Date;
 	updatedAt: Date;
-	/** from aggregation **/
 	meLiked?: MeLiked[];
 	memberData?: Member;
 }
 
-export interface Properties {
-	list: Property[];
+export interface Products {
+	list: Product[];
 	metaCounter: TotalCounter[];
 }
+
+export type Property = Product;
+export type Properties = Products;
