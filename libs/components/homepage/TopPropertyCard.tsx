@@ -29,7 +29,7 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
-	const productImage = product?.productImages?.[0] ?? product?.propertyImages?.[0] ?? 'img/banner/header1.svg';
+	const productImage = product?.productImages?.[0] ?? product?.propertyImages?.[0] ?? '/img/banner/header1.svg';
 	const productTitle = product?.productTitle ?? product?.propertyTitle ?? 'Untitled product';
 	const productDesc = product?.productDesc ?? product?.propertyDesc ?? product?.productMaterial ?? '';
 	const productPrice = product?.productPrice ?? product?.propertyPrice ?? 0;

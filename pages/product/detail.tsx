@@ -298,7 +298,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 							<Stack className={'images'}>
 								<Stack className={'main-image'}>
 									<img
-										src={slideImage ? `${REACT_APP_API_URL}/${slideImage}` : '/img/product/bigImage.png'}
+										src={slideImage ? `${REACT_APP_API_URL}/${slideImage}` : '/img/property/bigImage.png'}
 										alt={'main-image'}
 									/>
 								</Stack>
@@ -450,7 +450,7 @@ const ProductDetail: NextPage = ({ initialComment, ...props }: any) => {
 								<Stack className={'floor-plans-config'}>
 									<Typography className={'title'}>Floor Plans</Typography>
 									<Stack className={'image-box'}>
-										<img src={'/img/product/floorPlan.png'} alt={'image'} />
+										<img src={'/img/property/floorPlan.png'} alt={'image'} />
 									</Stack>
 								</Stack>
 								<Stack className={'address-config'}>
