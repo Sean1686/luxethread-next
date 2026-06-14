@@ -16,4 +16,4 @@ DO NOT:
 - Rewrite the architecture or logic of the app
 - change GraphQL/Apollo integration
 - change backend integration
-- change the working logic of the app unless replaced safely
+- Do not change application logic, state management, event handling, or data-flow behavior. If a UI change cannot be completed without one of these changes, stop and ask for approval before modifying code.
