@@ -5,7 +5,26 @@ $ next dev -p 3001
   - Environments: .env.local, .env.development
 
  ✓ Starting...
- ✓ Ready in 3.7s
+ ✓ Ready in 3.4s
  ○ Compiling / ...
- ✓ Compiled / in 20.2s (3255 modules)
- GET / 200 in 25011ms
+ ✓ Compiled / in 16.5s (3254 modules)
+ GET / 200 in 19242ms
+ GET / 200 in 43ms
+ GET / 200 in 33ms
+ ○ Compiling /product ...
+ ✓ Compiled /product in 10.7s (3412 modules)
+ GET /product 200 in 14801ms
+ GET /_next/data/development/en/product.json 200 in 281ms
+ GET /_next/data/development/en.json 200 in 59ms
+ GET / 200 in 24ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 890ms (3414 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 974ms
+ ✓ Compiled in 1255ms (3412 modules)
+ ✓ Compiled in 2.6s (3412 modules)
+ ✓ Compiled in 767ms (3412 modules)
+ ✓ Compiled in 584ms (3412 modules)
+ GET / 200 in 135ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1577ms (3414 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1643ms

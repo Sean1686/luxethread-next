@@ -51,7 +51,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 			<Stack className={'popular-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Popular products</span>
+						<span>Most Viewed</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						<Swiper
@@ -79,13 +79,13 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
-							<span>Popular products</span>
-							<p>Popularity is based on views</p>
+							<span>Most Viewed</span>
+							<p>The products shoppers keep opening</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
 							<div className={'more-box'}>
 								<Link href={'/product'}>
-									<span>See All Categories</span>
+									<span>See All Products</span>
 								</Link>
 								<img src="/img/icons/rightup.svg" alt="" />
 							</div>

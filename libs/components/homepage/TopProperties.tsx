@@ -70,7 +70,7 @@ const TopProperties = (props: TopPropertiesProps) => {
 			<Stack className={'top-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Top products</span>
+						<span>Ranked Products</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						<Swiper
@@ -98,8 +98,8 @@ const TopProperties = (props: TopPropertiesProps) => {
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
-							<span>Top products</span>
-							<p>Check out our Top Products</p>
+							<span>Ranked Products</span>
+							<p>High-ranking pieces from the Luxethread catalog</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
 							<div className={'pagination-box'}>
