@@ -1,0 +1,11 @@
+yarn run v1.22.22
+$ next dev -p 3001
+  ▲ Next.js 14.2.0
+  - Local:        http://localhost:3001
+  - Environments: .env.local, .env.development
+
+ ✓ Starting...
+ ✓ Ready in 3.7s
+ ○ Compiling / ...
+ ✓ Compiled / in 20.2s (3255 modules)
+ GET / 200 in 25011ms

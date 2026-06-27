@@ -1,6 +1,338 @@
 @import '/scss/variables.scss';
 
 #mobile-wrap {
+  .luxethread-home {
+    background: #fbfaf8;
+    overflow: hidden;
+
+    .lux-eyebrow {
+      display: inline-flex;
+      color: #7b1f2a;
+      font-family: $font;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .lux-hero {
+      position: relative;
+      min-height: 640px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .lux-hero-media,
+    .lux-hero-slide,
+    .lux-hero-shade {
+      position: absolute;
+      inset: 0;
+    }
+
+    .lux-hero-slide {
+      background-position: center;
+      background-size: cover;
+      opacity: 0;
+      animation: luxHeroFade 15s infinite;
+    }
+
+    .lux-hero-shade {
+      background:
+        linear-gradient(0deg, rgba(9, 10, 12, 0.88) 0%, rgba(9, 10, 12, 0.38) 58%, rgba(9, 10, 12, 0.12) 100%),
+        linear-gradient(90deg, rgba(9, 10, 12, 0.42), rgba(9, 10, 12, 0));
+      z-index: 1;
+    }
+
+    .lux-hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 22px 34px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      .lux-eyebrow {
+        color: #f2d6b4;
+      }
+
+      h1 {
+        margin: 18px 0;
+        color: #fffaf4;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 46px;
+        font-weight: 400;
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      p {
+        color: rgba(255, 250, 244, 0.82);
+        font-family: $font;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1.65;
+      }
+    }
+
+    .lux-hero-actions {
+      margin-top: 28px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .lux-btn {
+      padding: 0 18px;
+      width: 100%;
+      height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.54);
+      color: #fffaf4;
+      font-family: $font;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+
+      svg {
+        width: 17px;
+        height: 17px;
+      }
+    }
+
+    .lux-btn-primary {
+      background: #fffaf4;
+      color: #111;
+      border-color: #fffaf4;
+    }
+
+    .lux-hero-meta {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      span {
+        padding: 8px 10px;
+        border: 1px solid rgba(255, 250, 244, 0.28);
+        color: rgba(255, 250, 244, 0.78);
+        font-family: $font;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    .lux-discovery,
+    .lux-category-grid,
+    .lux-editorial {
+      padding: 54px 18px;
+    }
+
+    .lux-section-head {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      h2 {
+        margin: 0;
+        color: #171717;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 1.16;
+        letter-spacing: 0;
+      }
+    }
+
+    .lux-signal-row {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      a {
+        padding: 11px 13px;
+        border: 1px solid #d7d0c7;
+        background: #fff;
+        color: #2f3130;
+        font-family: $font;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    .lux-category-cards {
+      margin-top: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .lux-category-card {
+      position: relative;
+      height: 390px;
+      display: block;
+      overflow: hidden;
+      background: #111;
+
+      img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(0deg, rgba(7, 8, 10, 0.78) 0%, rgba(7, 8, 10, 0.08) 60%);
+      }
+
+      div {
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+        z-index: 1;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        color: #fffaf4;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 31px;
+        font-weight: 400;
+        line-height: 1.12;
+        letter-spacing: 0;
+      }
+
+      p {
+        color: rgba(255, 250, 244, 0.78);
+        font-family: $font;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      span {
+        margin-top: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #fffaf4;
+        font-family: $font;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+
+        svg {
+          width: 15px;
+          height: 15px;
+        }
+      }
+    }
+
+    .lux-editorial {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      background: #f1f0ed;
+    }
+
+    .lux-editorial-image {
+      height: 330px;
+      overflow: hidden;
+      background: #111;
+
+      img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+    }
+
+    .lux-editorial-copy {
+      h2 {
+        margin: 16px 0;
+        color: #171717;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 1.16;
+        letter-spacing: 0;
+      }
+
+      p {
+        color: #5d5b57;
+        font-family: $font;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+    }
+
+    .lux-text-link {
+      margin-top: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #7b1f2a;
+      font-family: $font;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .trend-products,
+    .popular-products,
+    .top-products,
+    .top-agents {
+      padding: 46px 10px;
+      background: #fbfaf8;
+    }
+
+    .popular-products,
+    .top-agents {
+      background: #f1f0ed;
+    }
+
+    .trend-card-box,
+    .popular-card-box,
+    .top-card-box {
+      border-radius: 0;
+      overflow: hidden;
+
+      .card-img {
+        border-radius: 0;
+        background-position: center;
+      }
+
+      .info {
+        border-radius: 0;
+      }
+    }
+  }
+
   .top {
     height: 100px;
     display: flex;

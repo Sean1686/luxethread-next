@@ -73,7 +73,7 @@ const Join: NextPage = () => {
 						<Stack className={'left'}>
 							{/* @ts-ignore */}
 							<Box className={'logo'}>
-								<img src="/img/logo/logoText.svg" alt="" />
+								<img src="/img/logo/luxethreadText.svg" alt="Luxethread" />
 								<span>Luxethread</span>
 							</Box>
 							<Box className={'info'}>

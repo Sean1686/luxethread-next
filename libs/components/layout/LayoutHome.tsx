@@ -13,12 +13,15 @@ import Chat from '../Chat'; //@ts-ignore
 import 'swiper/css'; //@ts-ignore
 import 'swiper/css/pagination'; //@ts-ignore
 import 'swiper/css/navigation';
+import { useRouter } from 'next/router';
 
 const withLayoutMain = (Component: any) => {
 	return (props: any) => {
 		const device = useDeviceDetect();
 		const user = useReactiveVar(userVar);
+		const router = useRouter();
 		const [isMounted, setIsMounted] = React.useState(false);
+		const isHomePage = router.pathname === '/';
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -35,8 +38,8 @@ const withLayoutMain = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>Luxethread</title>
+						<meta name={'title'} content={`Luxethread`} />
 					</Head>
 					<Stack id="mobile-wrap">
 						<Stack id={'top'}>
@@ -57,20 +60,22 @@ const withLayoutMain = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>Luxethread</title>
+						<meta name={'title'} content={`Luxethread`} />
 					</Head>
 					<Stack id="pc-wrap">
 						<Stack id={'top'}>
 							<Top />
 						</Stack>
 
-						<Stack className={'header-main'}>
-							<FiberContainer />
-							<Stack className={'container'}>
-								<HeaderFilter />
+						{!isHomePage && (
+							<Stack className={'header-main'}>
+								<FiberContainer />
+								<Stack className={'container'}>
+									<HeaderFilter />
+								</Stack>
 							</Stack>
-						</Stack>
+						)}
 
 						<Stack id={'main'}>
 							<Component {...props} />

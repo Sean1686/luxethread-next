@@ -48,14 +48,14 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 
 	if (device === 'mobile') {
 		return (
-			<Stack className={'popular-properties'}>
+			<Stack className={'popular-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<span>Popular products</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						<Swiper
-							className={'popular-property-swiper'}
+							className={'popular-product-swiper'}
 							slidesPerView={'auto'}
 							centeredSlides={true}
 							spaceBetween={25}
@@ -63,7 +63,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 						>
 							{popularProperties.map((property: Property) => {
 								return (
-									<SwiperSlide key={property._id} className={'popular-property-slide'}>
+									<SwiperSlide key={property._id} className={'popular-product-slide'}>
 										<PopularPropertyCard property={property} />
 									</SwiperSlide>
 								);
@@ -75,7 +75,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 		);
 	} else {
 		return (
-			<Stack className={'popular-properties'}>
+			<Stack className={'popular-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
@@ -93,7 +93,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 					</Stack>
 					<Stack className={'card-box'}>
 						<Swiper
-							className={'popular-property-swiper'}
+							className={'popular-product-swiper'}
 							slidesPerView={'auto'}
 							spaceBetween={25}
 							modules={[Autoplay, Navigation, Pagination]}
@@ -107,7 +107,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 						>
 							{popularProperties.map((property: Property) => {
 								return (
-									<SwiperSlide key={property._id} className={'popular-property-slide'}>
+									<SwiperSlide key={property._id} className={'popular-product-slide'}>
 										<PopularPropertyCard property={property} />
 									</SwiperSlide>
 								);

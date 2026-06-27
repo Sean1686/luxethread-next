@@ -145,11 +145,11 @@ const Top = () => {
 				<Link href={'/'}>
 					<div>{t('Home')}</div>
 				</Link>
-				<Link href={'/property'}>
-					<div>{t('Properties')}</div>
+				<Link href={'/product'}>
+					<div>Products</div>
 				</Link>
 				<Link href={'/agent'}>
-					<div> {t('Agents')} </div>
+					<div>Sellers</div>
 				</Link>
 				<Link href={'/community?articleCategory=FREE'}>
 					<div> {t('Community')} </div>
@@ -166,18 +166,18 @@ const Top = () => {
 					<Stack className={'container'}>
 						<Box component={'div'} className={'logo-box'}>
 							<Link href={'/'}>
-								<img src="/img/logo/logoWhite.svg" alt="" />
+								<img src="/img/logo/luxethreadWhite.svg" alt="Luxethread" />
 							</Link>
 						</Box>
 						<Box component={'div'} className={'router-box'}>
 							<Link href={'/'}>
 								<div>{t('Home')}</div>
 							</Link>
-							<Link href={'/property'}>
-								<div>{t('Properties')}</div>
+							<Link href={'/product'}>
+								<div>Products</div>
 							</Link>
 							<Link href={'/agent'}>
-								<div> {t('Agents')} </div>
+								<div>Sellers</div>
 							</Link>
 							<Link href={'/community?articleCategory=FREE'}>
 								<div> {t('Community')} </div>

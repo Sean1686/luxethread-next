@@ -972,3 +972,488 @@
 		}
 	}
 }
+
+#pc-wrap {
+	.luxethread-home {
+		background: #fbfaf8;
+		color: #171717;
+		overflow: hidden;
+
+		.lux-eyebrow {
+			display: inline-flex;
+			align-items: center;
+			color: #7b1f2a;
+			font-family: $font;
+			font-size: 12px;
+			font-weight: 700;
+			line-height: 1.2;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+		}
+
+		.lux-hero {
+			position: relative;
+			width: 100%;
+			height: 820px;
+			min-height: 720px;
+			display: flex;
+			align-items: center;
+			overflow: hidden;
+			background: #111;
+		}
+
+		.lux-hero-media,
+		.lux-hero-slide,
+		.lux-hero-shade {
+			position: absolute;
+			inset: 0;
+		}
+
+		.lux-hero-slide {
+			background-position: center;
+			background-size: cover;
+			opacity: 0;
+			transform: scale(1);
+			animation: luxHeroFade 15s infinite;
+		}
+
+		.lux-hero-shade {
+			background:
+				linear-gradient(90deg, rgba(9, 10, 12, 0.82) 0%, rgba(9, 10, 12, 0.52) 35%, rgba(9, 10, 12, 0.12) 76%),
+				linear-gradient(0deg, rgba(9, 10, 12, 0.58) 0%, rgba(9, 10, 12, 0) 38%);
+			z-index: 1;
+		}
+
+		.lux-hero-content {
+			position: relative;
+			z-index: 2;
+			margin-left: calc((100% - 1300px) / 2);
+			padding-top: 80px;
+			width: 585px;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+
+			.lux-eyebrow {
+				color: #f2d6b4;
+			}
+
+			h1 {
+				margin: 24px 0 24px;
+				color: #fffaf4;
+				font-family: Georgia, 'Times New Roman', serif;
+				font-size: 76px;
+				font-weight: 400;
+				line-height: 1.05;
+				letter-spacing: 0;
+			}
+
+			p {
+				width: 520px;
+				color: rgba(255, 250, 244, 0.82);
+				font-family: $font;
+				font-size: 18px;
+				font-weight: 400;
+				line-height: 1.7;
+			}
+		}
+
+		.lux-hero-actions {
+			margin-top: 42px;
+			display: flex;
+			flex-direction: row;
+			gap: 14px;
+		}
+
+		.lux-btn {
+			padding: 0 24px;
+			height: 52px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			border: 1px solid rgba(255, 255, 255, 0.56);
+			color: #fffaf4;
+			font-family: $font;
+			font-size: 13px;
+			font-weight: 700;
+			line-height: 1;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+			transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+
+			svg {
+				width: 18px;
+				height: 18px;
+			}
+		}
+
+		.lux-btn-primary {
+			background: #fffaf4;
+			color: #111;
+			border-color: #fffaf4;
+
+			&:hover {
+				background: #7b1f2a;
+				border-color: #7b1f2a;
+				color: #fff;
+			}
+		}
+
+		.lux-btn-ghost:hover {
+			background: #fffaf4;
+			color: #111;
+		}
+
+		.lux-hero-meta {
+			margin-top: 78px;
+			display: flex;
+			flex-direction: row;
+			gap: 22px;
+			flex-wrap: wrap;
+
+			span {
+				padding-top: 12px;
+				width: 140px;
+				border-top: 1px solid rgba(255, 250, 244, 0.38);
+				color: rgba(255, 250, 244, 0.72);
+				font-family: $font;
+				font-size: 12px;
+				font-weight: 600;
+				line-height: 1.4;
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+			}
+		}
+
+		.lux-discovery,
+		.lux-category-grid,
+		.lux-editorial {
+			width: 1300px;
+			margin: 0 auto;
+		}
+
+		.lux-discovery {
+			padding: 96px 0 36px;
+			display: grid;
+			grid-template-columns: 470px 1fr;
+			gap: 80px;
+			align-items: end;
+		}
+
+		.lux-section-head {
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+
+			h2 {
+				margin: 0;
+				color: #171717;
+				font-family: Georgia, 'Times New Roman', serif;
+				font-size: 44px;
+				font-weight: 400;
+				line-height: 1.15;
+				letter-spacing: 0;
+			}
+		}
+
+		.lux-signal-row {
+			display: flex;
+			justify-content: flex-end;
+			gap: 10px;
+			flex-wrap: wrap;
+
+			a {
+				padding: 12px 17px;
+				border: 1px solid #d7d0c7;
+				color: #2f3130;
+				font-family: $font;
+				font-size: 13px;
+				font-weight: 700;
+				line-height: 1;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+				background: #fff;
+				transition: color 0.2s ease, border-color 0.2s ease;
+
+				&:hover {
+					color: #7b1f2a;
+					border-color: #7b1f2a;
+				}
+			}
+		}
+
+		.lux-category-grid {
+			padding: 104px 0 94px;
+		}
+
+		.lux-category-cards {
+			margin-top: 36px;
+			display: grid;
+			grid-template-columns: 1.2fr 1fr 1fr;
+			gap: 22px;
+		}
+
+		.lux-category-card {
+			position: relative;
+			height: 520px;
+			display: block;
+			overflow: hidden;
+			background: #111;
+
+			img {
+				width: 100%;
+				height: 100%;
+				display: block;
+				object-fit: cover;
+				transition: transform 0.8s ease;
+			}
+
+			&:after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(0deg, rgba(7, 8, 10, 0.72) 0%, rgba(7, 8, 10, 0.08) 58%);
+			}
+
+			div {
+				position: absolute;
+				left: 28px;
+				right: 28px;
+				bottom: 28px;
+				z-index: 1;
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+			}
+
+			h3 {
+				margin: 0;
+				color: #fffaf4;
+				font-family: Georgia, 'Times New Roman', serif;
+				font-size: 38px;
+				font-weight: 400;
+				line-height: 1.1;
+				letter-spacing: 0;
+			}
+
+			p {
+				width: 86%;
+				color: rgba(255, 250, 244, 0.78);
+				font-family: $font;
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 1.6;
+			}
+
+			span {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				color: #fffaf4;
+				font-family: $font;
+				font-size: 12px;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+
+				svg {
+					width: 16px;
+					height: 16px;
+				}
+			}
+
+			&:hover img {
+				transform: scale(1.05);
+			}
+		}
+
+		.lux-editorial {
+			padding: 112px 0;
+			display: grid;
+			grid-template-columns: 1.05fr 0.95fr;
+			gap: 70px;
+			align-items: center;
+		}
+
+		.lux-editorial-image {
+			height: 560px;
+			overflow: hidden;
+			background: #111;
+
+			img {
+				width: 100%;
+				height: 100%;
+				display: block;
+				object-fit: cover;
+			}
+		}
+
+		.lux-editorial-copy {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+
+			h2 {
+				margin: 18px 0 22px;
+				color: #171717;
+				font-family: Georgia, 'Times New Roman', serif;
+				font-size: 48px;
+				font-weight: 400;
+				line-height: 1.12;
+				letter-spacing: 0;
+			}
+
+			p {
+				color: #5d5b57;
+				font-family: $font;
+				font-size: 16px;
+				font-weight: 400;
+				line-height: 1.8;
+			}
+		}
+
+		.lux-text-link {
+			margin-top: 28px;
+			display: inline-flex;
+			align-items: center;
+			gap: 9px;
+			color: #7b1f2a;
+			font-family: $font;
+			font-size: 13px;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+
+			svg {
+				width: 18px;
+				height: 18px;
+			}
+		}
+
+		.trend-products,
+		.popular-products,
+		.top-products,
+		.top-agents,
+		.community-board {
+			height: auto;
+		}
+
+		.trend-products,
+		.top-products {
+			padding: 76px 0 88px;
+			background: #fbfaf8;
+
+			.container {
+				width: 1300px;
+			}
+		}
+
+		.popular-products,
+		.top-agents {
+			padding: 96px 0;
+			background: #f1f0ed;
+
+			.container {
+				width: 1300px;
+			}
+		}
+
+		.info-box {
+			align-items: flex-end;
+
+			.left {
+				span {
+					color: #171717;
+					font-family: Georgia, 'Times New Roman', serif;
+					font-size: 44px;
+					font-weight: 400;
+					line-height: 1.15;
+					letter-spacing: 0;
+				}
+
+				p {
+					margin-top: 10px;
+					color: #68635d;
+					font-size: 14px;
+					line-height: 1.7;
+				}
+			}
+		}
+
+		.trend-card-box,
+		.popular-card-box,
+		.top-card-box {
+			border-radius: 0;
+			background: #fff;
+			box-shadow: none;
+			overflow: hidden;
+
+			&:hover {
+				transform: translateY(-6px);
+			}
+
+			.card-img {
+				height: 245px;
+				border-radius: 0;
+				background-position: center;
+
+				div,
+				div.price {
+					border-radius: 0;
+					background: #fffaf4;
+					color: #171717;
+				}
+			}
+
+			.info {
+				border-radius: 0;
+				border-color: #e2ddd5;
+				box-shadow: none;
+
+				.title {
+					font-size: 16px;
+					letter-spacing: 0;
+				}
+
+				.options {
+					gap: 8px;
+
+					div {
+						padding: 6px 9px;
+						border: 1px solid #e2ddd5;
+						background: #fbfaf8;
+
+						span {
+							font-size: 11px;
+							font-weight: 700;
+							text-transform: uppercase;
+							letter-spacing: 0.04em;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@keyframes luxHeroFade {
+	0% {
+		opacity: 0;
+		transform: scale(1);
+	}
+	5% {
+		opacity: 1;
+	}
+	33% {
+		opacity: 1;
+	}
+	43% {
+		opacity: 0;
+		transform: scale(1.06);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(1.06);
+	}
+}
