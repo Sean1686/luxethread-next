@@ -18,26 +18,50 @@ export const getStaticProps = async ({ locale }: any) => ({
 
 const heroSlides = [
 	{
-		image: '/img/luxethread/campaign-boutique.png',
+		image: '/img/luxethread/hero-boutique-edit.png',
 		label: 'Boutique Drops',
+		position: 'center center',
 	},
 	{
-		image: '/img/luxethread/campaign-streetwear.png',
-		label: 'Streetwear Edit',
+		image: '/img/luxethread/hero-material-edit.png',
+		label: 'Material Edit',
+		position: 'center center',
 	},
 	{
-		image: '/img/luxethread/campaign-atelier.png',
-		label: 'Material Stories',
+		image: '/img/luxethread/hero-accessories-edit.png',
+		label: 'Detail Stories',
+		position: 'center center',
+	},
+	{
+		image: '/img/luxethread/vecteezy_ai-generated-fashion-store-advertisment-background-with-copy_37245905.jpg',
+		label: 'Showroom Mood',
+		position: 'center center',
+	},
+	{
+		image: '/img/luxethread/shimabdinzade-woman-8380758.jpg',
+		label: 'Modest Edit',
+		position: 'center top',
+	},
+	{
+		image: '/img/luxethread/vecteezy_pair-of-brown-leather-wingtip-shoes_1257146.jpeg',
+		label: 'Heritage Menswear',
+		position: 'center center',
 	},
 ];
 
 const categoryCards = [
-	{ title: 'Womenswear', copy: 'Elegant layers, dresses, accessories, and everyday statements.', image: '/img/luxethread/campaign-boutique.png' },
-	{ title: 'Menswear', copy: 'Clean tailoring, denim, knits, and refined street essentials.', image: '/img/luxethread/campaign-streetwear.png' },
-	{ title: 'Accessories', copy: 'Bags, shoes, belts, and details that finish the silhouette.', image: '/img/luxethread/campaign-accessories.png' },
+	{ title: 'Womenswear', copy: 'Elegant layers, dresses, accessories, and everyday statements.', image: '/img/luxethread/beigebydandy-women-8747913_1920.jpg' },
+	{ title: 'Menswear', copy: 'Clean tailoring, denim, knits, and refined street essentials.', image: '/img/luxethread/campaign-menswear-editorial.png' },
+	{ title: 'Accessories', copy: 'Bags, shoes, belts, and details that finish the silhouette.', image: '/img/luxethread/campaign-accessories-editorial.png' },
 ];
 
 const shopSignals = ['Made in Italy', 'Made in Turkey', 'Cotton', 'Denim', 'Leather', 'Oversized Fit'];
+
+const runwayNotes = [
+	{ label: '01', title: 'Clean Silhouettes', copy: 'Minimal shapes, precise layers, and pieces that hold their line.' },
+	{ label: '02', title: 'Warm Utility', copy: 'Everyday denim, relaxed shirting, and bags made for movement.' },
+	{ label: '03', title: 'Soft Luxury', copy: 'Wool, linen, leather, and cotton edited by touch and origin.' },
+];
 
 const Home: NextPage = () => {
 	return (
@@ -50,6 +74,7 @@ const Home: NextPage = () => {
 							key={slide.image}
 							style={{
 								backgroundImage: `url(${slide.image})`,
+								backgroundPosition: slide.position,
 								animationDelay: `${index * 5}s`,
 							}}
 						/>
@@ -94,6 +119,16 @@ const Home: NextPage = () => {
 				</div>
 			</section>
 
+			<section className={'lux-runway-notes'}>
+				{runwayNotes.map((note) => (
+					<div className={'lux-runway-note'} key={note.label}>
+						<span>{note.label}</span>
+						<h3>{note.title}</h3>
+						<p>{note.copy}</p>
+					</div>
+				))}
+			</section>
+
 			<TrendProducts />
 
 			<section className={'lux-category-grid'}>
@@ -115,6 +150,21 @@ const Home: NextPage = () => {
 							</div>
 						</Link>
 					))}
+				</div>
+			</section>
+
+			<section className={'lux-atelier-strip'}>
+				<div className={'lux-atelier-copy'}>
+					<span className={'lux-eyebrow'}>The Luxethread edit</span>
+					<h2>Campaign mood, marketplace clarity.</h2>
+					<p>
+						Editorial discovery is paired with practical product signals: price, origin, fit, color,
+						material, seller activity, and shopper interest.
+					</p>
+				</div>
+				<div className={'lux-atelier-gallery'} aria-hidden="true">
+					<img src={'/img/luxethread/campaign-accessories.png'} alt={''} />
+					<img src={'/img/luxethread/campaign-streetwear.png'} alt={''} />
 				</div>
 			</section>
 

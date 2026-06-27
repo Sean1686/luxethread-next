@@ -1,30 +1,70 @@
 yarn run v1.22.22
-$ next dev -p 3001
+$ next dev
   ▲ Next.js 14.2.0
-  - Local:        http://localhost:3001
+  - Local:        http://localhost:3000
   - Environments: .env.local, .env.development
 
  ✓ Starting...
- ✓ Ready in 3.4s
+ ✓ Ready in 2.6s
  ○ Compiling / ...
- ✓ Compiled / in 16.5s (3254 modules)
- GET / 200 in 19242ms
- GET / 200 in 43ms
- GET / 200 in 33ms
+ ✓ Compiled / in 5.4s (3256 modules)
+ GET /_next/static/webpack/91f91b76b6d1e360.webpack.hot-update.json 404 in 6646ms
+ GET / 200 in 1237ms
+ GET / 200 in 176ms
+ GET / 200 in 29ms
  ○ Compiling /product ...
- ✓ Compiled /product in 10.7s (3412 modules)
- GET /product 200 in 14801ms
- GET /_next/data/development/en/product.json 200 in 281ms
- GET /_next/data/development/en.json 200 in 59ms
- GET / 200 in 24ms
+ ✓ Compiled /product in 2.2s (3414 modules)
+ GET /_next/data/development/en/product.json 200 in 2581ms
+ GET /_next/data/development/en.json 200 in 38ms
+ GET /_next/data/development/en/product.json 200 in 90ms
+ GET /_next/data/development/en.json 200 in 14ms
+ GET /_next/data/development/en/product.json 200 in 72ms
+ GET /_next/data/development/en.json 200 in 21ms
+ GET /_next/data/development/en/product.json 200 in 113ms
+ GET /_next/data/development/en.json 200 in 18ms
+ ✓ Compiled in 2.9s (3413 modules)
+ GET / 200 in 647ms
+ ✓ Compiled in 5.5s (2979 modules)
+ ✓ Compiled in 4.2s (3413 modules)
+ GET / 200 in 151ms
+ GET /_next/data/development/en/product.json 200 in 197ms
+ GET /_next/data/development/en.json 200 in 16ms
+ ✓ Compiled in 1896ms (3413 modules)
+ GET / 200 in 925ms
+ ✓ Compiled in 2.1s (2979 modules)
+ ✓ Compiled in 760ms (3413 modules)
+ GET /_next/data/development/en/product.json 200 in 268ms
+ GET / 200 in 48ms
+ GET /_next/data/development/en.json 200 in 24ms
+ ✓ Compiled in 1733ms (3413 modules)
+ GET / 200 in 819ms
+ ✓ Compiled in 1828ms (3413 modules)
+ GET / 200 in 276ms
+ GET / 200 in 23ms
+ ✓ Compiled in 1069ms (3413 modules)
+ GET / 200 in 249ms
+ ✓ Compiled in 2.5s (2979 modules)
+ ✓ Compiled in 1523ms (3413 modules)
+ GET / 200 in 139ms
  ○ Compiling /_error ...
- ✓ Compiled /_error in 890ms (3414 modules)
- GET /.well-known/appspecific/com.chrome.devtools.json 404 in 974ms
- ✓ Compiled in 1255ms (3412 modules)
- ✓ Compiled in 2.6s (3412 modules)
- ✓ Compiled in 767ms (3412 modules)
- ✓ Compiled in 584ms (3412 modules)
- GET / 200 in 135ms
- ○ Compiling /_error ...
- ✓ Compiled /_error in 1577ms (3414 modules)
- GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1643ms
+ ✓ Compiled /_error in 755ms (3414 modules)
+ GET / 404 in 771ms
+ GET / 404 in 13ms
+ GET / 404 in 8ms
+ GET / 404 in 9ms
+ GET / 404 in 8ms
+ GET / 404 in 9ms
+ GET / 404 in 8ms
+ GET / 404 in 8ms
+ GET / 404 in 8ms
+ GET / 404 in 12ms
+ GET / 404 in 8ms
+ GET / 404 in 8ms
+ GET / 404 in 14ms
+ GET / 404 in 8ms
+ GET / 404 in 7ms
+ GET / 404 in 9ms
+ GET / 404 in 23ms
+ GET / 404 in 8ms
+ GET / 404 in 9ms
+ GET / 404 in 11ms
