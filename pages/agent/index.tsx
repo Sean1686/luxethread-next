@@ -163,7 +163,13 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 								<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
 									{filterSortName}
 								</Button>
-								<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
+								<Menu
+									anchorEl={anchorEl}
+									open={sortingOpen}
+									onClose={sortingCloseHandler}
+									disableScrollLock
+									sx={{ paddingTop: '5px' }}
+								>
 									<MenuItem onClick={sortingHandler} id={'recent'} disableRipple>
 										Recent
 									</MenuItem>

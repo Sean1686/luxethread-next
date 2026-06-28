@@ -9,6 +9,9 @@ import TopProducts from '../libs/components/homepage/TopProducts';
 import { Stack } from '@mui/material';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Direction } from '../libs/enums/common.enum';
+import { ProductCategory, ProductFit, ProductMaterial, ProductType } from '../libs/enums/property.enum';
+import type { ProductsInquiry } from '../libs/types/property/property.input';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -49,13 +52,52 @@ const heroSlides = [
 	},
 ];
 
+const baseProductInquiry: ProductsInquiry = {
+	page: 1,
+	limit: 9,
+	sort: 'createdAt',
+	direction: Direction.DESC,
+	search: {},
+};
+
+const productFilterHref = (search: ProductsInquiry['search']) => {
+	const input: ProductsInquiry = {
+		...baseProductInquiry,
+		search,
+	};
+
+	return `/product?input=${encodeURIComponent(JSON.stringify(input))}`;
+};
+
 const categoryCards = [
-	{ title: 'Womenswear', copy: 'Elegant layers, dresses, accessories, and everyday statements.', image: '/img/luxethread/beigebydandy-women-8747913_1920.jpg' },
-	{ title: 'Menswear', copy: 'Clean tailoring, denim, knits, and refined street essentials.', image: '/img/luxethread/campaign-menswear-editorial.png' },
-	{ title: 'Accessories', copy: 'Bags, shoes, belts, and details that finish the silhouette.', image: '/img/luxethread/campaign-accessories-editorial.png' },
+	{
+		title: 'Womenswear',
+		copy: 'Elegant layers, dresses, accessories, and everyday statements.',
+		image: '/img/luxethread/beigebydandy-women-8747913_1920.jpg',
+		href: productFilterHref({ productCategory: [ProductCategory.WOMEN] }),
+	},
+	{
+		title: 'Menswear',
+		copy: 'Clean tailoring, denim, knits, and refined street essentials.',
+		image: '/img/luxethread/campaign-menswear-editorial.png',
+		href: productFilterHref({ productCategory: [ProductCategory.MEN] }),
+	},
+	{
+		title: 'Accessories',
+		copy: 'Bags, shoes, belts, and details that finish the silhouette.',
+		image: '/img/luxethread/campaign-accessories-editorial.png',
+		href: productFilterHref({ productType: [ProductType.ACCESSORY, ProductType.BAG, ProductType.SHOES] }),
+	},
 ];
 
-const shopSignals = ['Made in Italy', 'Made in Turkey', 'Cotton', 'Denim', 'Leather', 'Oversized Fit'];
+const shopSignals = [
+	{ label: 'Made in Italy', href: productFilterHref({ productOrigin: 'Italy' }) },
+	{ label: 'Made in Turkey', href: productFilterHref({ productOrigin: 'Turkey' }) },
+	{ label: 'Cotton', href: productFilterHref({ productMaterial: [ProductMaterial.COTTON] }) },
+	{ label: 'Denim', href: productFilterHref({ productMaterial: [ProductMaterial.DENIM] }) },
+	{ label: 'Leather', href: productFilterHref({ productMaterial: [ProductMaterial.LEATHER] }) },
+	{ label: 'Oversized Fit', href: productFilterHref({ productFit: [ProductFit.OVERSIZED] }) },
+];
 
 const runwayNotes = [
 	{ label: '01', title: 'Clean Silhouettes', copy: 'Minimal shapes, precise layers, and pieces that hold their line.' },
@@ -112,8 +154,8 @@ const Home: NextPage = () => {
 				</div>
 				<div className={'lux-signal-row'}>
 					{shopSignals.map((signal) => (
-						<Link href={'/product'} key={signal}>
-							{signal}
+						<Link href={signal.href} key={signal.label}>
+							{signal.label}
 						</Link>
 					))}
 				</div>
@@ -138,7 +180,7 @@ const Home: NextPage = () => {
 				</div>
 				<div className={'lux-category-cards'}>
 					{categoryCards.map((category) => (
-						<Link href={'/product'} className={'lux-category-card'} key={category.title}>
+						<Link href={category.href} className={'lux-category-card'} key={category.title}>
 							<img src={category.image} alt={category.title} />
 							<div>
 								<h3>{category.title}</h3>

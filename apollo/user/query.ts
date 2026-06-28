@@ -80,6 +80,11 @@ export const GET_MEMBER = gql`
 	query GetMember($input: String!) {
 		getMember(memberId: $input) {
 			${MEMBER_FIELDS}
+			meLiked {
+				memberId
+				likeRefId
+				myFavorite
+			}
 			meFollowed {
 				followingId
 				followerId

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { Box, Button, Checkbox, CircularProgress, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
@@ -669,4 +669,470 @@ ProductDetail.defaultProps = {
 	},
 };
 
-export default withLayoutFull(ProductDetail);
+const productColorHex: Record<string, string> = {
+	BLACK: '#171717',
+	WHITE: '#f7f4ef',
+	YELLOW: '#d4ae38',
+	GRAY: '#777572',
+	RED: '#8e2424',
+	BLUE: '#263f75',
+	GREEN: '#355743',
+	BEIGE: '#d8c2a2',
+	BROWN: '#6f4a32',
+	PINK: '#d8a7ad',
+};
+
+const formatProductLabel = (value?: string) => {
+	if (!value) return 'Not specified';
+	return value
+		.toLowerCase()
+		.split('_')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+};
+
+const productImageUrl = (image?: string) => {
+	if (!image) return '/img/luxethread/campaign-atelier.png';
+	return image.startsWith('http') ? image : `${REACT_APP_API_URL}/${image}`;
+};
+
+const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
+	const router = useRouter();
+	const user = useReactiveVar(userVar);
+	const [productId, setProductId] = useState<string | null>(null);
+	const [product, setProduct] = useState<Product | null>(null);
+	const [productResolved, setProductResolved] = useState<boolean>(false);
+	const [likeUpdating, setLikeUpdating] = useState<boolean>(false);
+	const [slideImage, setSlideImage] = useState<string>('');
+	const [destinationProducts, setDestinationProducts] = useState<Product[]>([]);
+	const [activeAccordion, setActiveAccordion] = useState<string>('details');
+	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
+	const [productComments, setProductComments] = useState<Comment[]>([]);
+	const [commentTotal, setCommentTotal] = useState<number>(0);
+	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
+		commentGroup: CommentGroup.PRODUCT,
+		commentContent: '',
+		commentRefId: '',
+	});
+
+	const productImages = useMemo(() => product?.productImages ?? [], [product?.productImages]);
+	const activeImage = slideImage || productImages[0];
+	const sizes = product?.productSizes ?? [];
+	const colors = product?.productColors ?? [];
+	const sellerName = product?.memberData?.memberNick ?? product?.memberData?.memberFullName ?? 'Luxethread seller';
+	const relatedInput = useMemo(
+		() => ({
+			page: 1,
+			limit: 5,
+			sort: 'createdAt',
+			direction: Direction.DESC,
+			search: {
+				...(product?.productCategory ? { productCategory: [product.productCategory] } : {}),
+				...(product?.productType ? { productType: [product.productType] } : {}),
+				...(product?.productMaterial ? { productMaterial: [product.productMaterial] } : {}),
+			},
+		}),
+		[product?.productCategory, product?.productMaterial, product?.productType],
+	);
+
+	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+	const [createComment] = useMutation(CREATE_COMMENT);
+
+	const { loading: getProductLoading, refetch: getProductRefetch } = useQuery(GET_PRODUCT, {
+		fetchPolicy: 'network-only',
+		variables: { input: productId },
+		skip: !productId,
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			if (data?.getProduct) {
+				setProduct(data.getProduct);
+				setSlideImage(data.getProduct?.productImages?.[0] ?? '');
+			} else {
+				setProduct(null);
+			}
+			setProductResolved(true);
+		},
+		onError: () => {
+			setProduct(null);
+			setProductResolved(true);
+		},
+	});
+
+	const { refetch: getProductsRefetch } = useQuery(GET_PROPERTIES, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: relatedInput },
+		skip: !product,
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			const products = data?.listProducts?.list ?? [];
+			setDestinationProducts(products.filter((item: Product) => item?._id !== product?._id).slice(0, 4));
+		},
+	});
+
+	const { refetch: getCommentsRefetch } = useQuery(GET_COMMENTS, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: commentInquiry },
+		skip: !commentInquiry.search.commentRefId,
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setProductComments(data?.getComments?.list ?? []);
+			setCommentTotal(data?.getComments?.metaCounter?.[0]?.total ?? 0);
+		},
+	});
+
+	useEffect(() => {
+		if (!router.isReady) return;
+
+		const rawId = router.query.id ?? router.query.productId ?? router.query.product;
+		const id = Array.isArray(rawId) ? rawId[0] : rawId;
+
+		if (id) {
+			setProductResolved(false);
+			setProduct(null);
+			setProductId(id);
+			setCommentInquiry({ ...initialComment, search: { commentRefId: id } });
+			setInsertCommentData({ commentGroup: CommentGroup.PRODUCT, commentContent: '', commentRefId: id });
+		} else {
+			setProductId(null);
+			setProduct(null);
+			setProductResolved(true);
+		}
+	}, [router.isReady, router.query.id, router.query.productId, router.query.product, initialComment]);
+
+	useEffect(() => {
+		if (commentInquiry.search.commentRefId) {
+			getCommentsRefetch({ input: commentInquiry });
+		}
+	}, [commentInquiry, getCommentsRefetch]);
+
+	const likeProductHandler = async (user: T, id?: string) => {
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Messages.error2);
+			if (likeUpdating) return;
+
+			setLikeUpdating(true);
+			const wasFavorite = Boolean(product?.meLiked?.[0]?.myFavorite);
+			const result = await likeTargetProduct({ variables: { input: id } });
+			const updatedProduct = result?.data?.likeTargetProduct;
+
+			setProduct((prev) => {
+				if (!prev) return prev;
+				return {
+					...prev,
+					...(updatedProduct ?? {}),
+					memberData: prev.memberData,
+					meLiked: [
+						{
+							memberId: user._id,
+							likeRefId: id,
+							myFavorite: !wasFavorite,
+						},
+					],
+				};
+			});
+		} catch (err: any) {
+			console.log('ERROR, likeProductHandler:', err.message);
+			sweetMixinErrorAlert(err.message).then();
+		} finally {
+			setLikeUpdating(false);
+		}
+	};
+
+	const createCommentHandler = async () => {
+		try {
+			if (!user._id) throw new Error(Messages.error2);
+			await createComment({ variables: { input: insertCommentData } });
+			setInsertCommentData({ ...insertCommentData, commentContent: '' });
+			await getCommentsRefetch({ input: commentInquiry });
+		} catch (err: any) {
+			await sweetErrorHandling(err);
+		}
+	};
+
+	const commentPaginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
+		setCommentInquiry({ ...commentInquiry, page: value });
+	};
+
+	const accordionButton = (id: string, title: string, content: React.ReactNode) => (
+		<div className={'detail-accordion-item'}>
+			<button type="button" onClick={() => setActiveAccordion(activeAccordion === id ? '' : id)}>
+				<span>{title}</span>
+				<strong>{activeAccordion === id ? '-' : '+'}</strong>
+			</button>
+			<div className={`detail-accordion-content ${activeAccordion === id ? 'active' : ''}`}>{content}</div>
+		</div>
+	);
+
+	if (!router.isReady || (productId && (!productResolved || getProductLoading))) {
+		return (
+			<Stack sx={{ display: 'flex', justifyContent: 'center', width: '100%', height: '640px' }}>
+				<CircularProgress size={'4rem'} />
+			</Stack>
+		);
+	}
+
+	if (!product) {
+		return (
+			<div id={'product-detail-page'}>
+				<div className={'container'}>
+					<div className={'no-data'}>
+						<img src="/img/icons/icoAlert.svg" alt="" />
+						<p>Product not found.</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div id={'product-detail-page'}>
+			<div className={'product-detail-shell'}>
+				<section className={'product-detail-main'}>
+					<div className={'detail-gallery'}>
+						<div className={'detail-thumbnails'}>
+							{productImages.map((image) => (
+								<button
+									type="button"
+									className={activeImage === image ? 'active' : ''}
+									onClick={() => setSlideImage(image)}
+									key={image}
+								>
+									<img src={productImageUrl(image)} alt={product.productTitle} />
+								</button>
+							))}
+						</div>
+
+						<div className={'detail-image-stack'}>
+							{(productImages.length ? productImages : [activeImage]).map((image, index) => (
+								<div className={'detail-image-frame'} key={`${image}-${index}`}>
+									<img src={productImageUrl(image)} alt={`${product.productTitle} ${index + 1}`} />
+									{index === 0 && (
+										<button
+											type="button"
+											className={'floating-like'}
+											onClick={() => likeProductHandler(user, product._id)}
+											disabled={likeUpdating}
+											aria-label="Save product"
+										>
+											{product?.meLiked?.[0]?.myFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+										</button>
+									)}
+								</div>
+							))}
+						</div>
+					</div>
+
+					<aside className={'detail-sticky-panel'}>
+						<div className={'detail-panel-card'}>
+							<div className={'detail-heading'}>
+								<span>{formatProductLabel(product.productCategory)}</span>
+								<h1>{product.productTitle}</h1>
+								<strong>${formatterStr(product.productPrice)}</strong>
+								<p>{product.productOrigin ? `Made in ${product.productOrigin}` : 'Origin available from seller'}</p>
+							</div>
+
+							<p className={'detail-description'}>
+								{product.productDesc ??
+									'A curated Luxethread piece selected for its material, fit, and everyday styling potential.'}
+							</p>
+
+							<div className={'detail-meta-grid'}>
+								<div>
+									<span>Type</span>
+									<strong>{formatProductLabel(product.productType)}</strong>
+								</div>
+								<div>
+									<span>Material</span>
+									<strong>{formatProductLabel(product.productMaterial)}</strong>
+								</div>
+								<div>
+									<span>Fit</span>
+									<strong>{formatProductLabel(product.productFit)}</strong>
+								</div>
+								<div>
+									<span>Status</span>
+									<strong>{formatProductLabel(product.productStatus)}</strong>
+								</div>
+							</div>
+
+							<div className={'detail-selectors'}>
+								<div className={'selector-block'}>
+									<div className={'selector-title'}>
+										<span>Color</span>
+										<em>{colors.map(formatProductLabel).join(', ') || 'Ask seller'}</em>
+									</div>
+									<div className={'color-swatch-row'}>
+										{colors.length ? (
+											colors.map((color) => (
+												<span
+													key={color}
+													title={formatProductLabel(color)}
+													style={{ background: productColorHex[color] ?? '#d8cfc5' }}
+													className={color === 'WHITE' ? 'light' : ''}
+												/>
+											))
+										) : (
+											<span className={'light'} />
+										)}
+									</div>
+								</div>
+
+								<div className={'selector-block'}>
+									<div className={'selector-title'}>
+										<span>Size</span>
+										<button type="button">Size Guide</button>
+									</div>
+									<div className={'size-grid'}>
+										{sizes.length ? (
+											sizes.map((size, index) => (
+												<button type="button" className={index === 0 ? 'selected' : ''} key={size}>
+													{size}
+												</button>
+											))
+										) : (
+											<button type="button" className={'selected'}>
+												Ask
+											</button>
+										)}
+									</div>
+								</div>
+							</div>
+
+							<div className={'detail-actions'}>
+								<Button className={'add-bag-btn'}>
+									<span>Add to Bag</span>
+									<EastIcon />
+								</Button>
+								<div className={'detail-social'}>
+									<span>
+										<RemoveRedEyeIcon /> {product.productViews ?? 0}
+									</span>
+									<button type="button" onClick={() => likeProductHandler(user, product._id)} disabled={likeUpdating}>
+										{product?.meLiked?.[0]?.myFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+										{product.productLikes ?? 0}
+									</button>
+								</div>
+								<p>Complimentary seller support and easy marketplace inquiry.</p>
+							</div>
+
+							<div className={'detail-accordions'}>
+								{accordionButton(
+									'details',
+									'Details & Fit',
+									<ul>
+										<li>{formatProductLabel(product.productFit)} fit</li>
+										<li>{formatProductLabel(product.productType)} silhouette</li>
+										<li>Available sizes: {sizes.join(', ') || 'ask seller'}</li>
+										<li>Listed as {formatProductLabel(product.productStatus)}</li>
+									</ul>,
+								)}
+								{accordionButton(
+									'care',
+									'Composition & Care',
+									<div>
+										<p>{formatProductLabel(product.productMaterial)} construction.</p>
+										<p>Follow the seller care label for washing, ironing, and storage.</p>
+									</div>,
+								)}
+								{accordionButton(
+									'shipping',
+									'Shipping & Returns',
+									<div>
+										<p>Coordinate delivery, pickup, or return questions directly with the seller.</p>
+										<p>Luxethread keeps product origin, material, and fit visible before checkout.</p>
+									</div>,
+								)}
+								{accordionButton(
+									'seller',
+									'Seller',
+									<div className={'seller-mini'}>
+										<img
+											src={
+												product.memberData?.memberImage
+													? `${REACT_APP_API_URL}/${product.memberData.memberImage}`
+													: '/img/profile/defaultUser.svg'
+											}
+											alt={sellerName}
+										/>
+										<div>
+											<Link href={`/member?memberId=${product.memberData?._id}`}>{sellerName}</Link>
+											<span>{product.memberData?.memberProducts ?? 0} products on Luxethread</span>
+										</div>
+									</div>,
+								)}
+							</div>
+						</div>
+					</aside>
+				</section>
+
+				<section className={'detail-review-section'}>
+					<div className={'detail-section-head'}>
+						<span>Community notes</span>
+						<h2>{commentTotal} review{commentTotal === 1 ? '' : 's'}</h2>
+					</div>
+
+					{commentTotal !== 0 && (
+						<div className={'review-list'}>
+							{productComments.map((comment: Comment) => (
+								<Review comment={comment} key={comment?._id} />
+							))}
+							<div className={'pagination-box'}>
+								<MuiPagination
+									page={commentInquiry.page}
+									count={Math.max(1, Math.ceil(commentTotal / commentInquiry.limit))}
+									onChange={commentPaginationChangeHandler}
+									shape="circular"
+									color="primary"
+								/>
+							</div>
+						</div>
+					)}
+
+					<div className={'leave-review-config'}>
+						<Typography className={'main-title'}>Leave A Review</Typography>
+						<textarea
+							onChange={({ target: { value } }: any) => {
+								setInsertCommentData({ ...insertCommentData, commentContent: value });
+							}}
+							value={insertCommentData.commentContent}
+							placeholder={'Share your note about fit, material, seller communication, or styling.'}
+						/>
+						<Button
+							className={'submit-review'}
+							disabled={insertCommentData.commentContent === '' || user?._id === ''}
+							onClick={createCommentHandler}
+						>
+							Submit Review
+						</Button>
+					</div>
+				</section>
+
+				{destinationProducts.length !== 0 && (
+					<section className={'similar-products-config'}>
+						<div className={'detail-section-head centered'}>
+							<span>Marketplace discovery</span>
+							<h2>You May Also Like</h2>
+						</div>
+						<div className={'related-product-grid'}>
+							{destinationProducts.map((item: Product) => (
+								<Link href={`/product/detail?id=${item._id}`} className={'related-product-card'} key={item._id}>
+									<div>
+										<img src={productImageUrl(item.productImages?.[0])} alt={item.productTitle} />
+									</div>
+									<strong>{item.productTitle}</strong>
+									<span>${formatterStr(item.productPrice)}</span>
+									<p>{item.productOrigin ? `Made in ${item.productOrigin}` : formatProductLabel(item.productMaterial)}</p>
+								</Link>
+							))}
+						</div>
+					</section>
+				)}
+			</div>
+		</div>
+	);
+};
+
+ProductDetailRedesign.defaultProps = ProductDetail.defaultProps;
+
+export default withLayoutFull(ProductDetailRedesign);

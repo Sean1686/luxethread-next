@@ -6,6 +6,11 @@ import ProductBigCard from '../../libs/components/common/ProductBigCard';
 import ReviewCard from '../../libs/components/agent/ReviewCard';
 import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Product } from '../../libs/types/property/product';
@@ -20,7 +25,7 @@ import { Messages, REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GET_COMMENTS, GET_MEMBER, GET_PROPERTIES } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
-import { CREATE_COMMENT, LIKE_TARGET_MEMBER, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
+import { CREATE_COMMENT, LIKE_TARGET_MEMBER, LIKE_TARGET_PRODUCT, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -32,6 +37,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
+	const [isMounted, setIsMounted] = useState(false);
 	const [agentId, setAgentId] = useState<string | null>(null);
 	const [agent, setAgent] = useState<Member | null>(null);
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(initialInput);
@@ -40,6 +46,8 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
 	const [agentComments, setAgentComments] = useState<Comment[]>([]);
 	const [commentTotal, setCommentTotal] = useState<number>(0);
+	const [followUpdating, setFollowUpdating] = useState<boolean>(false);
+	const [likeUpdating, setLikeUpdating] = useState<boolean>(false);
 	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
 		commentGroup: CommentGroup.MEMBER,
 		commentContent: '',
@@ -48,7 +56,10 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 
 	/** APOLLO REQUESTS **/
 	const [createComment] = useMutation(CREATE_COMMENT);
-	const [likeTargetMember] = useMutation(LIKE_TARGET_PRODUCT);
+	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
+	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+	const [subscribe] = useMutation(SUBSCRIBE);
+	const [unsubscribe] = useMutation(UNSUBSCRIBE);
 
 	const {
 		loading: getMemberLoading,
@@ -91,8 +102,8 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 		skip: !searchFilter.search.memberId,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setAgentProducts(data?.getProducts?.list);
-			setProductTotal(data?.getProducts?.metaCounter[0]?.total ?? 0);
+			setAgentProducts(data?.listProducts?.list ?? []);
+			setProductTotal(data?.listProducts?.metaCounter?.[0]?.total ?? 0);
 		},
 	});
 
@@ -114,8 +125,16 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (router.query.agentId) setAgentId(router.query.agentId as string);
-	}, [router]);
+		setIsMounted(true);
+	}, []);
+
+	useEffect(() => {
+		if (!router.isReady) return;
+
+		const rawId = router.query.agentId ?? router.query.memberId ?? router.query.id;
+		const id = Array.isArray(rawId) ? rawId[0] : rawId;
+		if (id) setAgentId(id);
+	}, [router.isReady, router.query.agentId, router.query.memberId, router.query.id]);
 
 	useEffect(() => {
 		if (searchFilter.search.memberId) {
@@ -164,12 +183,99 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 			await sweetErrorHandling(err);
 		}
 	};
+
+	const likeAgentHandler = async () => {
+		try {
+			if (!agent?._id) return;
+			if (!user._id) throw new Error(Messages.error2);
+			if (user._id === agent._id) throw new Error('You cannot like yourself');
+			if (likeUpdating) return;
+
+			setLikeUpdating(true);
+			const wasLiked = Boolean(agent?.meLiked?.[0]?.myFavorite);
+			const result = await likeTargetMember({ variables: { input: agent._id } });
+			const updatedAgent = result?.data?.likeTargetMember;
+			setAgent((prev) =>
+				prev
+					? {
+							...prev,
+							...(updatedAgent ?? {}),
+							memberLikes: updatedAgent?.memberLikes ?? Math.max(0, (prev.memberLikes ?? 0) + (wasLiked ? -1 : 1)),
+							meLiked: [{ memberId: user._id, likeRefId: agent._id, myFavorite: !wasLiked }],
+					  }
+					: prev,
+			);
+			await getMemberRefetch({ input: agent._id });
+			await sweetTopSmallSuccessAlert('success', 700);
+		} catch (err: any) {
+			console.log('ERROR, likeAgentHandler:', err.message);
+			sweetMixinErrorAlert(err.message).then();
+		} finally {
+			setLikeUpdating(false);
+		}
+	};
+
+	const followAgentHandler = async () => {
+		try {
+			if (!agent?._id) return;
+			if (!user._id) throw new Error(Messages.error2);
+			if (user._id === agent._id) throw new Error('You cannot follow yourself');
+			if (followUpdating) return;
+
+			setFollowUpdating(true);
+			await subscribe({ variables: { input: agent._id } });
+			setAgent((prev) =>
+				prev
+					? {
+							...prev,
+							memberFollowers: (prev.memberFollowers ?? 0) + 1,
+							meFollowed: [{ followingId: agent._id, followerId: user._id, myFollowing: true }],
+					  }
+					: prev,
+			);
+			await getMemberRefetch({ input: agent._id });
+			await sweetTopSmallSuccessAlert('Subscribed!', 700);
+		} catch (err: any) {
+			console.log('ERROR, followAgentHandler:', err.message);
+			sweetMixinErrorAlert(err.message).then();
+		} finally {
+			setFollowUpdating(false);
+		}
+	};
+
+	const unfollowAgentHandler = async () => {
+		try {
+			if (!agent?._id) return;
+			if (!user._id) throw new Error(Messages.error2);
+			if (followUpdating) return;
+
+			setFollowUpdating(true);
+			await unsubscribe({ variables: { input: agent._id } });
+			setAgent((prev) =>
+				prev
+					? {
+							...prev,
+							memberFollowers: Math.max(0, (prev.memberFollowers ?? 0) - 1),
+							meFollowed: [{ followingId: agent._id, followerId: user._id, myFollowing: false }],
+					  }
+					: prev,
+			);
+			await getMemberRefetch({ input: agent._id });
+			await sweetTopSmallSuccessAlert('Unsubscribed!', 700);
+		} catch (err: any) {
+			console.log('ERROR, unfollowAgentHandler:', err.message);
+			sweetMixinErrorAlert(err.message).then();
+		} finally {
+			setFollowUpdating(false);
+		}
+	};
+
 	const likeProductHandler = async (user: T, id: string) => {
 		try {
 			if (!id) return;
 			if (!user._id) throw new Error(Messages.error2);
 
-			await likeTargetMember({ variables: { input: id } });
+			await likeTargetProduct({ variables: { input: id } });
 
 			// execute likeTargetProduct Mutation
 			await getProductsRefetch({ input: searchFilter });
@@ -180,9 +286,15 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 		}
 	};
 
+	if (!isMounted) return null;
+
 	if (device === 'mobile') {
 		return <div>AGENT DETAIL PAGE MOBILE</div>;
 	} else {
+		const agentLiked = Boolean(agent?.meLiked?.[0]?.myFavorite);
+		const agentFollowed = Boolean(agent?.meFollowed?.[0]?.myFollowing);
+		const isOwnProfile = Boolean(user?._id && agent?._id && user._id === agent._id);
+
 		return (
 			<Stack className={'agent-detail-page'}>
 				<Stack className={'container'}>
@@ -198,6 +310,40 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 								<span>{agent?.memberPhone}</span>
 							</div>
 						</Box>
+						<Stack className={'agent-profile-actions'}>
+							<div className={'agent-stat-row'}>
+								<span>
+									<strong>{agent?.memberProducts ?? 0}</strong>
+									Products
+								</span>
+								<span>
+									<strong>{agent?.memberFollowers ?? 0}</strong>
+									Followers
+								</span>
+								<span>
+									<strong>{agent?.memberLikes ?? 0}</strong>
+									Likes
+								</span>
+							</div>
+							<div className={'agent-action-row'}>
+								<Button
+									className={`agent-action-btn primary ${agentFollowed ? 'following' : ''}`}
+									onClick={agentFollowed ? unfollowAgentHandler : followAgentHandler}
+									disabled={isOwnProfile || followUpdating}
+								>
+									{agentFollowed ? <PersonRemoveIcon /> : <PersonAddAlt1Icon />}
+									{isOwnProfile ? 'Your Shop' : agentFollowed ? 'Unfollow' : 'Follow'}
+								</Button>
+								<Button className={'agent-action-btn'} onClick={likeAgentHandler} disabled={isOwnProfile || likeUpdating}>
+									{agentLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+									{agentLiked ? 'Liked' : 'Like'}
+								</Button>
+								<Button className={'agent-action-btn'} disabled={!agent?.memberPhone}>
+									<ChatBubbleOutlineIcon />
+									Message
+								</Button>
+							</div>
+						</Stack>
 					</Stack>
 					<Stack className={'agent-home-list'}>
 						<Stack className={'card-wrap'}>
@@ -280,7 +426,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 									disabled={insertCommentData.commentContent === '' || user?._id === ''}
 									onClick={createCommentHandler}
 								>
-									<Typography className={'title'}>Submit Review</Typography>
+									<span className={'title'}>Submit Review</span>
 									<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
 										<g clipPath="url(#clip0_6975_3642)">
 											<path

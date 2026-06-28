@@ -15,7 +15,7 @@ import Link from 'next/link';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
-import { Logout } from '@mui/icons-material';
+import { Logout, Menu as MenuIcon } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
 
 const Top = () => {
@@ -89,6 +89,10 @@ const Top = () => {
 		setAnchorEl(null);
 	};
 
+	const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+
 	const handleHover = (event: any) => {
 		if (anchorEl !== event.currentTarget) {
 			setAnchorEl(event.currentTarget);
@@ -141,22 +145,42 @@ const Top = () => {
 
 	if (device == 'mobile') {
 		return (
-			<Stack className={'top'}>
+			<Stack className={'top minimal-top'}>
+				<button className={'top-icon-btn'} onClick={handleMenuOpen} aria-label="Open navigation">
+					<MenuIcon />
+				</button>
 				<Link href={'/'}>
-					<div>{t('Home')}</div>
+					<div className={'top-brand'}>LUXETHREAD</div>
 				</Link>
-				<Link href={'/product'}>
-					<div>Products</div>
-				</Link>
-				<Link href={'/agent'}>
-					<div>Sellers</div>
-				</Link>
-				<Link href={'/community?articleCategory=FREE'}>
-					<div> {t('Community')} </div>
-				</Link>
-				<Link href={'/cs'}>
-					<div> {t('CS')} </div>
-				</Link>
+				<Menu anchorEl={anchorEl} open={open} onClose={handleClose} disableScrollLock sx={{ mt: '8px' }}>
+					<MenuItem onClick={handleClose} component={Link} href={'/'}>
+						{t('Home')}
+					</MenuItem>
+					<MenuItem onClick={handleClose} component={Link} href={'/product'}>
+						Shop
+					</MenuItem>
+					<MenuItem onClick={handleClose} component={Link} href={'/agent'}>
+						Sellers
+					</MenuItem>
+					<MenuItem onClick={handleClose} component={Link} href={'/community?articleCategory=FREE'}>
+						{t('Community')}
+					</MenuItem>
+					{user?._id && (
+						<MenuItem onClick={handleClose} component={Link} href={'/mypage'}>
+							{t('My Page')}
+						</MenuItem>
+					)}
+					<MenuItem onClick={handleClose} component={Link} href={'/cs'}>
+						Support
+					</MenuItem>
+					{user?._id ? (
+						<MenuItem onClick={() => logOut()}>Logout</MenuItem>
+					) : (
+						<MenuItem onClick={handleClose} component={Link} href={'/account/join'}>
+							{t('Login')} / {t('Register')}
+						</MenuItem>
+					)}
+				</Menu>
 			</Stack>
 		);
 	} else {
@@ -164,31 +188,43 @@ const Top = () => {
 			<Stack className={'navbar'}>
 				<Stack className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''}`}>
 					<Stack className={'container'}>
-						<Box component={'div'} className={'logo-box'}>
-							<Link href={'/'}>
-								<img src="/img/logo/luxethreadWhite.svg" alt="Luxethread" />
-							</Link>
+						<Box component={'div'} className={'menu-box'}>
+							<button onClick={handleMenuOpen} aria-label="Open navigation">
+								<MenuIcon />
+							</button>
+							<Menu anchorEl={anchorEl} open={open} onClose={handleClose} disableScrollLock sx={{ mt: '12px' }}>
+								<MenuItem onClick={handleClose} component={Link} href={'/'}>
+									{t('Home')}
+								</MenuItem>
+								<MenuItem onClick={handleClose} component={Link} href={'/product'}>
+									Shop
+								</MenuItem>
+								<MenuItem onClick={handleClose} component={Link} href={'/agent'}>
+									Sellers
+								</MenuItem>
+								<MenuItem onClick={handleClose} component={Link} href={'/community?articleCategory=FREE'}>
+									{t('Community')}
+								</MenuItem>
+								{user?._id && (
+									<MenuItem onClick={handleClose} component={Link} href={'/mypage'}>
+										{t('My Page')}
+									</MenuItem>
+								)}
+								<MenuItem onClick={handleClose} component={Link} href={'/cs'}>
+									Support
+								</MenuItem>
+								{user?._id ? (
+									<MenuItem onClick={() => logOut()}>Logout</MenuItem>
+								) : (
+									<MenuItem onClick={handleClose} component={Link} href={'/account/join'}>
+										{t('Login')} / {t('Register')}
+									</MenuItem>
+								)}
+							</Menu>
 						</Box>
-						<Box component={'div'} className={'router-box'}>
+						<Box component={'div'} className={'brand-box'}>
 							<Link href={'/'}>
-								<div>{t('Home')}</div>
-							</Link>
-							<Link href={'/product'}>
-								<div>Products</div>
-							</Link>
-							<Link href={'/agent'}>
-								<div>Sellers</div>
-							</Link>
-							<Link href={'/community?articleCategory=FREE'}>
-								<div> {t('Community')} </div>
-							</Link>
-							{user?._id && (
-								<Link href={'/mypage'}>
-									<div> {t('My Page')} </div>
-								</Link>
-							)}
-							<Link href={'/cs'}>
-								<div> {t('CS')} </div>
+								LUXETHREAD
 							</Link>
 						</Box>
 						<Box component={'div'} className={'user-box'}>
@@ -210,6 +246,7 @@ const Top = () => {
 										onClose={() => {
 											setLogoutAnchor(null);
 										}}
+										disableScrollLock
 										sx={{ mt: '5px' }}
 									>
 										<MenuItem onClick={() => logOut()}>
@@ -246,7 +283,13 @@ const Top = () => {
 									</Box>
 								</Button>
 
-								<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose} sx={{ position: 'absolute' }}>
+								<StyledMenu
+									anchorEl={anchorEl2}
+									open={drop}
+									onClose={langClose}
+									disableScrollLock
+									sx={{ position: 'absolute' }}
+								>
 									<MenuItem disableRipple onClick={langChoice} id="en">
 										<img
 											className="img-flag"

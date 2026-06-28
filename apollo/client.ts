@@ -105,7 +105,6 @@ function createIsomorphicLink() {
 					...getHeaders(),
 				},
 			}));
-			console.warn('requesting.. ', operation);
 			return forward(operation);
 		});
 
@@ -135,7 +134,54 @@ function createApolloClient() {
 	return new ApolloClient({
 		ssrMode: typeof window === 'undefined',
 		link: createIsomorphicLink(),
-		cache: new InMemoryCache(),
+		cache: new InMemoryCache({
+			typePolicies: {
+				Query: {
+					fields: {
+						getProduct: {
+							merge: false,
+						},
+						listProducts: {
+							merge: false,
+						},
+						getComments: {
+							merge: false,
+						},
+					},
+				},
+				Product: {
+					keyFields: ['_id'],
+					fields: {
+						memberData: {
+							merge: true,
+						},
+						meLiked: {
+							merge: false,
+						},
+						productImages: {
+							merge: false,
+						},
+						productSizes: {
+							merge: false,
+						},
+						productColors: {
+							merge: false,
+						},
+					},
+				},
+				Member: {
+					keyFields: ['_id'],
+				},
+				Comment: {
+					keyFields: ['_id'],
+					fields: {
+						memberData: {
+							merge: true,
+						},
+					},
+				},
+			},
+		}),
 		resolvers: {},
 	});
 }

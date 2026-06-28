@@ -5,66 +5,82 @@ $ next dev
   - Environments: .env.local, .env.development
 
  ✓ Starting...
- ✓ Ready in 2.6s
- ○ Compiling / ...
- ✓ Compiled / in 5.4s (3256 modules)
- GET /_next/static/webpack/91f91b76b6d1e360.webpack.hot-update.json 404 in 6646ms
- GET / 200 in 1237ms
- GET / 200 in 176ms
- GET / 200 in 29ms
+ ✓ Ready in 2.4s
+ ○ Compiling /product/detail ...
+ ✓ Compiled /product/detail in 15.6s (2748 modules)
+ GET /product/detail 200 in 18332ms
+ GET /product/detail?id=6a2421998c8ed074a692793e 200 in 291ms
+ ✓ Compiled in 1203ms (2748 modules)
+ GET /product/detail?id=6a2421998c8ed074a692793e 200 in 191ms
+ ✓ Compiled in 812ms (2748 modules)
+ GET /product/detail?productId=6a2421998c8ed074a692793e 200 in 185ms
+ GET /product/detail?id=6a2421998c8ed074a692793e 200 in 186ms
+ ✓ Compiled in 643ms (874 modules)
+ ✓ Compiled in 2.4s (874 modules)
+ ○ Compiling /product/detail ...
+ ✓ Compiled /product/detail in 6.5s (2748 modules)
+ GET /product/detail?id=6a2421998c8ed074a692793e 200 in 7062ms
+ ✓ Compiled in 336ms (874 modules)
+ ✓ Compiled in 1766ms (771 modules)
+ ✓ Compiled in 1533ms (771 modules)
+ ✓ Compiled in 3.5s (874 modules)
+ ○ Compiling /product/detail ...
+ ✓ Compiled /product/detail in 10.3s (2748 modules)
+ GET /product/detail?id=6a2421998c8ed074a692793e 200 in 10725ms
  ○ Compiling /product ...
- ✓ Compiled /product in 2.2s (3414 modules)
- GET /_next/data/development/en/product.json 200 in 2581ms
- GET /_next/data/development/en.json 200 in 38ms
- GET /_next/data/development/en/product.json 200 in 90ms
- GET /_next/data/development/en.json 200 in 14ms
- GET /_next/data/development/en/product.json 200 in 72ms
- GET /_next/data/development/en.json 200 in 21ms
- GET /_next/data/development/en/product.json 200 in 113ms
- GET /_next/data/development/en.json 200 in 18ms
- ✓ Compiled in 2.9s (3413 modules)
- GET / 200 in 647ms
- ✓ Compiled in 5.5s (2979 modules)
- ✓ Compiled in 4.2s (3413 modules)
- GET / 200 in 151ms
- GET /_next/data/development/en/product.json 200 in 197ms
- GET /_next/data/development/en.json 200 in 16ms
- ✓ Compiled in 1896ms (3413 modules)
- GET / 200 in 925ms
- ✓ Compiled in 2.1s (2979 modules)
- ✓ Compiled in 760ms (3413 modules)
- GET /_next/data/development/en/product.json 200 in 268ms
- GET / 200 in 48ms
- GET /_next/data/development/en.json 200 in 24ms
- ✓ Compiled in 1733ms (3413 modules)
- GET / 200 in 819ms
- ✓ Compiled in 1828ms (3413 modules)
- GET / 200 in 276ms
- GET / 200 in 23ms
- ✓ Compiled in 1069ms (3413 modules)
- GET / 200 in 249ms
- ✓ Compiled in 2.5s (2979 modules)
- ✓ Compiled in 1523ms (3413 modules)
- GET / 200 in 139ms
- ○ Compiling /_error ...
- ✓ Compiled /_error in 755ms (3414 modules)
- GET / 404 in 771ms
- GET / 404 in 13ms
- GET / 404 in 8ms
- GET / 404 in 9ms
- GET / 404 in 8ms
- GET / 404 in 9ms
- GET / 404 in 8ms
- GET / 404 in 8ms
- GET / 404 in 8ms
- GET / 404 in 12ms
- GET / 404 in 8ms
- GET / 404 in 8ms
- GET / 404 in 14ms
- GET / 404 in 8ms
- GET / 404 in 7ms
- GET / 404 in 9ms
- GET / 404 in 23ms
- GET / 404 in 8ms
- GET / 404 in 9ms
- GET / 404 in 11ms
+ ✓ Compiled /product in 2.3s (2874 modules)
+ GET /product 200 in 4379ms
+ GET /agent 200 in 4388ms
+ ✓ Compiled in 6.7s (874 modules)
+ ○ Compiling /product ...
+ ✓ Compiled /product in 709ms (2864 modules)
+ GET /product 200 in 3342ms
+ GET /product/detail?id=6a2421998c8ed074a692793e 200 in 3348ms
+ ✓ Compiled in 504ms (874 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 13.6s (3391 modules)
+ GET /product 200 in 14675ms
+ GET / 200 in 14701ms
+ ✓ Compiled in 482ms (874 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 8.8s (3391 modules)
+ GET / 200 in 9167ms
+ GET /product?input=%7B%22page%22%3A1%2C%22limit%22%3A9%2C%22sort%22%3A%22createdAt%22%2C%22direction%22%3A%22DESC%22%2C%22search%22%3A%7B%22productOrigin%22%3A%22Turkey%22%7D%7D 200 in 9179ms
+ GET / 200 in 22ms
+ ✓ Compiled in 880ms (3258 modules)
+ GET / 200 in 162ms
+ ○ Compiling /agent/detail ...
+ ✓ Compiled /agent/detail in 8.7s (2608 modules)
+ GET /agent/detail?memberId=6a20788eaca3b774c4fa62bf 200 in 8892ms
+ GET /agent/detail?agentId=6a20788eaca3b774c4fa62bf 200 in 8907ms
+ ✓ Compiled in 484ms (874 modules)
+ ✓ Compiled in 4.7s (771 modules)
+ ○ Compiling /agent/detail ...
+ ✓ Compiled /agent/detail in 4.1s (2618 modules)
+ GET /agent/detail?memberId=6a20788eaca3b774c4fa62bf 200 in 4556ms
+ GET /agent/detail?agentId=6a20788eaca3b774c4fa62bf 200 in 4584ms
+ ✓ Compiled in 269ms (874 modules)
+ ✓ Compiled in 1927ms (771 modules)
+ ○ Compiling /agent/detail ...
+ ✓ Compiled /agent/detail in 570ms (2618 modules)
+ GET /agent/detail?agentId=6a20788eaca3b774c4fa62bf 200 in 1138ms
+ ✓ Compiled in 237ms (874 modules)
+ ○ Compiling /agent/detail ...
+ ✓ Compiled /agent/detail in 970ms (2616 modules)
+ GET /agent/detail?agentId=6a20788eaca3b774c4fa62bf 200 in 1445ms
+ ✓ Compiled in 1566ms (771 modules)
+ ✓ Compiled in 3.6s (874 modules)
+ ○ Compiling /product ...
+ ✓ Compiled /product in 4.1s (2711 modules)
+ GET /product 200 in 6801ms
+ GET /product?input=%7B%22page%22%3A1%2C%22limit%22%3A9%2C%22sort%22%3A%22createdAt%22%2C%22direction%22%3A%22DESC%22%2C%22search%22%3A%7B%22productMaterial%22%3A%5B%22COTTON%22%5D%7D%7D 200 in 6808ms
+ ✓ Compiled in 622ms (2711 modules)
+ GET /product 200 in 208ms
+ ✓ Compiled in 271ms (874 modules)
+ ○ Compiling /product ...
+ ✓ Compiled /product in 973ms (2711 modules)
+ GET /product 200 in 4020ms
+ ✓ Compiled in 422ms (874 modules)
+ ○ Compiling /product ...
+ ✓ Compiled /product in 751ms (2711 modules)
+ GET /product 200 in 3603ms
