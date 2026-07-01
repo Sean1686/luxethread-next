@@ -34,6 +34,7 @@ import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } f
 import { Direction } from '../../libs/enums/common.enum';
 import { GET_COMMENTS } from '../../apollo/admin/query';
 import { Height } from '@mui/icons-material';
+import { addCartItem } from '../../libs/cart';
 
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -706,6 +707,8 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 	const [slideImage, setSlideImage] = useState<string>('');
 	const [destinationProducts, setDestinationProducts] = useState<Product[]>([]);
 	const [activeAccordion, setActiveAccordion] = useState<string>('details');
+	const [selectedSize, setSelectedSize] = useState<string>('');
+	const [selectedColor, setSelectedColor] = useState<string>('');
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
 	const [productComments, setProductComments] = useState<Comment[]>([]);
 	const [commentTotal, setCommentTotal] = useState<number>(0);
@@ -800,6 +803,11 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 	}, [router.isReady, router.query.id, router.query.productId, router.query.product, initialComment]);
 
 	useEffect(() => {
+		setSelectedSize(product?.productSizes?.[0] ?? '');
+		setSelectedColor(product?.productColors?.[0] ?? '');
+	}, [product?._id]);
+
+	useEffect(() => {
 		if (commentInquiry.search.commentRefId) {
 			getCommentsRefetch({ input: commentInquiry });
 		}
@@ -848,6 +856,29 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 		} catch (err: any) {
 			await sweetErrorHandling(err);
 		}
+	};
+
+	const addToBagHandler = async () => {
+		if (!product) return;
+
+		addCartItem({
+			productId: product._id,
+			productTitle: product.productTitle,
+			productPrice: product.productPrice,
+			productImage: productImageUrl(activeImage),
+			productCategory: product.productCategory,
+			productType: product.productType,
+			productMaterial: product.productMaterial,
+			productFit: product.productFit,
+			productOrigin: product.productOrigin,
+			productSize: selectedSize || sizes[0],
+			productColor: selectedColor || colors[0],
+			sellerId: product.memberData?._id ?? product.memberId,
+			sellerName,
+			quantity: 1,
+		});
+
+		await sweetTopSmallSuccessAlert('Added to bag', 900);
 	};
 
 	const commentPaginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
@@ -965,15 +996,17 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 									<div className={'color-swatch-row'}>
 										{colors.length ? (
 											colors.map((color) => (
-												<span
+												<button
+													type="button"
 													key={color}
 													title={formatProductLabel(color)}
 													style={{ background: productColorHex[color] ?? '#d8cfc5' }}
-													className={color === 'WHITE' ? 'light' : ''}
+													className={`${color === 'WHITE' ? 'light' : ''} ${selectedColor === color ? 'selected' : ''}`}
+													onClick={() => setSelectedColor(color)}
 												/>
 											))
 										) : (
-											<span className={'light'} />
+											<button type="button" className={'light selected'} aria-label="Ask seller about color" />
 										)}
 									</div>
 								</div>
@@ -986,7 +1019,12 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 									<div className={'size-grid'}>
 										{sizes.length ? (
 											sizes.map((size, index) => (
-												<button type="button" className={index === 0 ? 'selected' : ''} key={size}>
+												<button
+													type="button"
+													className={selectedSize === size ? 'selected' : ''}
+													onClick={() => setSelectedSize(size)}
+													key={size}
+												>
 													{size}
 												</button>
 											))
@@ -1000,7 +1038,7 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 							</div>
 
 							<div className={'detail-actions'}>
-								<Button className={'add-bag-btn'}>
+								<Button className={'add-bag-btn'} onClick={addToBagHandler}>
 									<span>Add to Bag</span>
 									<EastIcon />
 								</Button>

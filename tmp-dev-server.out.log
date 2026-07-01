@@ -5,82 +5,51 @@ $ next dev
   - Environments: .env.local, .env.development
 
  ✓ Starting...
- ✓ Ready in 2.4s
- ○ Compiling /product/detail ...
- ✓ Compiled /product/detail in 15.6s (2748 modules)
- GET /product/detail 200 in 18332ms
- GET /product/detail?id=6a2421998c8ed074a692793e 200 in 291ms
- ✓ Compiled in 1203ms (2748 modules)
- GET /product/detail?id=6a2421998c8ed074a692793e 200 in 191ms
- ✓ Compiled in 812ms (2748 modules)
- GET /product/detail?productId=6a2421998c8ed074a692793e 200 in 185ms
- GET /product/detail?id=6a2421998c8ed074a692793e 200 in 186ms
- ✓ Compiled in 643ms (874 modules)
- ✓ Compiled in 2.4s (874 modules)
- ○ Compiling /product/detail ...
- ✓ Compiled /product/detail in 6.5s (2748 modules)
- GET /product/detail?id=6a2421998c8ed074a692793e 200 in 7062ms
- ✓ Compiled in 336ms (874 modules)
- ✓ Compiled in 1766ms (771 modules)
- ✓ Compiled in 1533ms (771 modules)
- ✓ Compiled in 3.5s (874 modules)
- ○ Compiling /product/detail ...
- ✓ Compiled /product/detail in 10.3s (2748 modules)
- GET /product/detail?id=6a2421998c8ed074a692793e 200 in 10725ms
- ○ Compiling /product ...
- ✓ Compiled /product in 2.3s (2874 modules)
- GET /product 200 in 4379ms
- GET /agent 200 in 4388ms
- ✓ Compiled in 6.7s (874 modules)
- ○ Compiling /product ...
- ✓ Compiled /product in 709ms (2864 modules)
- GET /product 200 in 3342ms
- GET /product/detail?id=6a2421998c8ed074a692793e 200 in 3348ms
- ✓ Compiled in 504ms (874 modules)
+ ✓ Ready in 3.1s
+ ○ Compiling /cart ...
+ ✓ Compiled /cart in 11.3s (2565 modules)
+ GET /cart 200 in 53ms
+ GET /cart 200 in 56ms
  ○ Compiling / ...
- ✓ Compiled / in 13.6s (3391 modules)
- GET /product 200 in 14675ms
- GET / 200 in 14701ms
- ✓ Compiled in 482ms (874 modules)
- ○ Compiling / ...
- ✓ Compiled / in 8.8s (3391 modules)
- GET / 200 in 9167ms
- GET /product?input=%7B%22page%22%3A1%2C%22limit%22%3A9%2C%22sort%22%3A%22createdAt%22%2C%22direction%22%3A%22DESC%22%2C%22search%22%3A%7B%22productOrigin%22%3A%22Turkey%22%7D%7D 200 in 9179ms
- GET / 200 in 22ms
- ✓ Compiled in 880ms (3258 modules)
- GET / 200 in 162ms
- ○ Compiling /agent/detail ...
- ✓ Compiled /agent/detail in 8.7s (2608 modules)
- GET /agent/detail?memberId=6a20788eaca3b774c4fa62bf 200 in 8892ms
- GET /agent/detail?agentId=6a20788eaca3b774c4fa62bf 200 in 8907ms
- ✓ Compiled in 484ms (874 modules)
- ✓ Compiled in 4.7s (771 modules)
- ○ Compiling /agent/detail ...
- ✓ Compiled /agent/detail in 4.1s (2618 modules)
- GET /agent/detail?memberId=6a20788eaca3b774c4fa62bf 200 in 4556ms
- GET /agent/detail?agentId=6a20788eaca3b774c4fa62bf 200 in 4584ms
- ✓ Compiled in 269ms (874 modules)
- ✓ Compiled in 1927ms (771 modules)
- ○ Compiling /agent/detail ...
- ✓ Compiled /agent/detail in 570ms (2618 modules)
- GET /agent/detail?agentId=6a20788eaca3b774c4fa62bf 200 in 1138ms
- ✓ Compiled in 237ms (874 modules)
- ○ Compiling /agent/detail ...
- ✓ Compiled /agent/detail in 970ms (2616 modules)
- GET /agent/detail?agentId=6a20788eaca3b774c4fa62bf 200 in 1445ms
- ✓ Compiled in 1566ms (771 modules)
- ✓ Compiled in 3.6s (874 modules)
- ○ Compiling /product ...
- ✓ Compiled /product in 4.1s (2711 modules)
- GET /product 200 in 6801ms
- GET /product?input=%7B%22page%22%3A1%2C%22limit%22%3A9%2C%22sort%22%3A%22createdAt%22%2C%22direction%22%3A%22DESC%22%2C%22search%22%3A%7B%22productMaterial%22%3A%5B%22COTTON%22%5D%7D%7D 200 in 6808ms
- ✓ Compiled in 622ms (2711 modules)
- GET /product 200 in 208ms
- ✓ Compiled in 271ms (874 modules)
- ○ Compiling /product ...
- ✓ Compiled /product in 973ms (2711 modules)
- GET /product 200 in 4020ms
- ✓ Compiled in 422ms (874 modules)
- ○ Compiling /product ...
- ✓ Compiled /product in 751ms (2711 modules)
- GET /product 200 in 3603ms
+ ✓ Compiled / in 13.2s (3262 modules)
+ ✓ Compiled /_error in 477ms (3264 modules)
+ GET / 404 in 13908ms
+ GET / 404 in 13ms
+ GET / 404 in 13ms
+ GET / 404 in 12ms
+ GET / 404 in 11ms
+ GET / 404 in 11ms
+ GET / 404 in 12ms
+ GET / 404 in 11ms
+ GET / 404 in 15ms
+ GET / 404 in 13ms
+ GET / 404 in 11ms
+ GET / 404 in 11ms
+ GET / 404 in 11ms
+ GET / 404 in 11ms
+ GET / 404 in 10ms
+ GET / 404 in 33ms
+ GET / 404 in 17ms
+ GET / 404 in 9ms
+ GET / 404 in 12ms
+ GET / 404 in 12ms
+ GET / 404 in 11ms
+ GET / 404 in 23ms
+ GET / 404 in 21ms
+ GET / 404 in 14ms
+ GET / 404 in 32ms
+ GET / 404 in 40ms
+ GET / 404 in 16ms
+ GET / 404 in 30ms
+ GET / 404 in 17ms
+ GET / 404 in 15ms
+ GET / 404 in 14ms
+ GET / 404 in 45ms
+ GET / 404 in 75ms
+ GET / 404 in 47ms
+ GET / 404 in 26ms
+ GET / 404 in 22ms
+ GET / 404 in 15ms
+ GET / 404 in 47ms
+ GET / 404 in 14ms
+ GET / 404 in 19ms

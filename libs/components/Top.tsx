@@ -15,8 +15,9 @@ import Link from 'next/link';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
-import { Logout, Menu as MenuIcon } from '@mui/icons-material';
+import { Logout, Menu as MenuIcon, ShoppingBagOutlined } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
+import { CART_UPDATED_EVENT, getCartCount } from '../cart';
 
 const Top = () => {
 	const device = useDeviceDetect();
@@ -31,6 +32,7 @@ const Top = () => {
 	let open = Boolean(anchorEl);
 	const [bgColor, setBgColor] = useState<boolean>(false);
 	const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(null);
+	const [cartCount, setCartCount] = useState<number>(0);
 	const logoutOpen = Boolean(logoutAnchor);
 
 	/** LIFECYCLES **/
@@ -56,6 +58,16 @@ const Top = () => {
 	useEffect(() => {
 		const jwt = getJwtToken();
 		if (jwt) updateUserInfo(jwt);
+	}, []);
+
+	useEffect(() => {
+		const refreshCartCount = () => setCartCount(getCartCount());
+		refreshCartCount();
+		window.addEventListener(CART_UPDATED_EVENT, refreshCartCount);
+
+		return () => {
+			window.removeEventListener(CART_UPDATED_EVENT, refreshCartCount);
+		};
 	}, []);
 
 	/** HANDLERS **/
@@ -152,6 +164,10 @@ const Top = () => {
 				<Link href={'/'}>
 					<div className={'top-brand'}>LUXETHREAD</div>
 				</Link>
+				<Link href={'/cart'} className={'top-icon-link cart-link'} aria-label="Open shopping bag">
+					<ShoppingBagOutlined />
+					{cartCount > 0 && <span className={'cart-count'}>{cartCount}</span>}
+				</Link>
 				<Menu anchorEl={anchorEl} open={open} onClose={handleClose} disableScrollLock sx={{ mt: '8px' }}>
 					<MenuItem onClick={handleClose} component={Link} href={'/'}>
 						{t('Home')}
@@ -228,6 +244,10 @@ const Top = () => {
 							</Link>
 						</Box>
 						<Box component={'div'} className={'user-box'}>
+							<Link href={'/cart'} className={'shop-bag'} aria-label="Open shopping bag">
+								<ShoppingBagOutlined />
+								{cartCount > 0 && <span className={'cart-count'}>{cartCount}</span>}
+							</Link>
 							{user?._id ? (
 								<>
 									<div className={'login-user'} onClick={(event: any) => setLogoutAnchor(event.currentTarget)}>

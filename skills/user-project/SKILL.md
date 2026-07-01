@@ -8,7 +8,7 @@ Focus on :
 - Typography and visual hierarchy
 - Mobile responsiveness and navigation
 - spacing and alignment
-- responsive design for different screen sizes
+- responsive design for mobile (up to 768px), tablet (768px to 1024px), and desktop (above 1024px)
 - commerce UX best practices
 
 DO NOT: 

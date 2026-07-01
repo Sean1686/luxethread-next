@@ -999,16 +999,23 @@
 			display: flex;
 			gap: 12px;
 
-			span {
+			span,
+			button {
 				width: 32px;
 				height: 32px;
 				display: block;
 				border: 2px solid #fff;
 				border-radius: 50%;
+				padding: 0;
 				box-shadow: 0 0 0 1px #cfc4c5;
+				cursor: pointer;
 
 				&.light {
 					box-shadow: 0 0 0 1px #9f9695;
+				}
+
+				&.selected {
+					box-shadow: 0 0 0 2px #1b1c1c;
 				}
 			}
 		}
