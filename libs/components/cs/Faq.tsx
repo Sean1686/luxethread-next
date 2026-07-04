@@ -1,3 +1,6 @@
+export { default } from './SupportFaq';
+
+/*
 import React, { SyntheticEvent, useState } from 'react';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import { AccordionDetails, Box, Stack, Typography } from '@mui/material';
@@ -36,10 +39,10 @@ const Faq = () => {
 	const [category, setCategory] = useState<string>('product');
 	const [expanded, setExpanded] = useState<string | false>('panel1');
 
-	/** APOLLO REQUESTS **/
-	/** LIFECYCLES **/
+	APOLLO REQUESTS
+	LIFECYCLES
 	
-	/** HANDLERS **/
+	HANDLERS
 	const changeCategoryHandler = (category: string) => {
 		setCategory(category);
 	};
@@ -208,9 +211,9 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a78',
-				subject: 'What are the advantages of using a real estate agent when buying a product?',
+				subject: 'What are the advantages of using a Luxethread seller when buying a product?',
 				content:
-					'Real estate agents provide expertise, negotiation skills, and guidance throughout the buying process, ultimately saving you time and hassle.',
+					'Luxethread sellers provide product context, measurements, and order support throughout the buying process.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a77',
@@ -229,12 +232,12 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a62',
-				subject: 'What qualifications do I need to become a real estate agent?',
+				subject: 'What qualifications do I need to become a Luxethread seller?',
 				content: 'Complete pre-licensing course, pass licensing exam, meet state requirements.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a63',
-				subject: 'How do I find clients as a new real estate agent?',
+				subject: 'How do I find customers as a new Luxethread seller?',
 				content: 'Build network, use online/offline marketing, join reputable brokerage.',
 			},
 			{
@@ -250,7 +253,7 @@ const Faq = () => {
 			{
 				id: '00f5a45ed8897f8090116a66',
 				subject: 'What should I do to stay updated with market trends and changes?',
-				content: 'Attend industry events, follow real estate news, participate in training.',
+				content: 'Follow marketplace updates, refresh listings, and keep product details accurate.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a67',
@@ -260,17 +263,17 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a68',
-				subject: 'What tools and technologies should I utilize as a real estate agent?',
+				subject: 'What tools and technologies should I utilize as a Luxethread seller?',
 				content: 'Use CRM software, virtual tours, digital marketing tools, and mobile apps.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a69',
-				subject: 'How do I ensure compliance with real estate laws and regulations?',
+				subject: 'How do I ensure compliance with marketplace policies?',
 				content: 'Stay updated with laws, attend education courses, consult legal professionals.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a70',
-				subject: 'What strategies can I use to grow my real estate business?',
+				subject: 'What strategies can I use to grow my Luxethread shop?',
 				content: 'Build relationships, provide exceptional service, seek referrals, and continuously improve skills.',
 			},
 		],
@@ -422,7 +425,7 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a31',
-				subject: 'Do you host events or webinars related to real estate?',
+				subject: 'Do you host events or webinars related to fashion marketplace selling?',
 				content: "We're not hosting events or webinars at this time.",
 			},
 			{
@@ -434,7 +437,7 @@ const Faq = () => {
 	};
 
 	if (device === 'mobile') {
-		return <div>FAQ MOBILE</div>;
+		return <div>FAQ help</div>;
 	} else {
 		return (
 			<Stack className={'faq-content'}>
@@ -523,3 +526,4 @@ const Faq = () => {
 };
 
 export default Faq;
+*/

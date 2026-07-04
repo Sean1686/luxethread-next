@@ -1,14 +1,13 @@
 import { Menu, MenuItem, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import IconButton from '@mui/material/IconButton';
 import ModeIcon from '@mui/icons-material/Mode';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Product } from '../../types/property/product';
-import { formatterStr } from '../../utils';
 import Moment from 'react-moment';
 import { useRouter } from 'next/router';
 import { ProductStatus } from '../../enums/product.enum';
+import MarketplaceProductCard, { formatProductLabel } from '../product/MarketplaceProductCard';
 
 interface ProductCardProps {
 	product?: Product;
@@ -25,14 +24,12 @@ export const ProductCard = (props: ProductCardProps) => {
 	const deleteProductHandler = props.deleteProductHandler ?? props.deletePropertyHandler;
 	const updateProductHandler = props.updateProductHandler ?? props.updatePropertyHandler;
 	const { memberPage } = props;
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 
 	/** HANDLERS **/
 	const pushEditProduct = async (id: string) => {
-		console.log('+pushEditProduct: ', id);
 		await router.push({
 			pathname: '/mypage',
 			query: { category: 'addProduct', productId: id },
@@ -56,33 +53,40 @@ export const ProductCard = (props: ProductCardProps) => {
 		setAnchorEl(null);
 	};
 
-	if (device === 'mobile') {
-		return <div>MOBILE PRODUCT CARD</div>;
-	} else
-		return (
+	return (
 			<Stack className="product-card-box">
-				<Stack className="image-box" onClick={() => pushProductDetail(product?._id)}>
-					<img src={`${process.env.REACT_APP_API_URL}/${product.productImages[0]}`} alt="" />
-				</Stack>
-				<Stack className="information-box" onClick={() => pushProductDetail(product?._id)}>
-					<Typography className="name">{product.productTitle}</Typography>
-					<Typography className="address">{product.productAddress}</Typography>
-					<Typography className="price">
-						<strong>${formatterStr(product?.productPrice)}</strong>
-					</Typography>
-				</Stack>
-				<Stack className="date-box">
-					<Typography className="date">
-						<Moment format="DD MMMM, YYYY">{product.createdAt}</Moment>
-					</Typography>
-				</Stack>
-				<Stack className="status-box">
-					<Stack className="coloured-box" sx={{ background: '#E5F0FD' }} onClick={handleClick}>
-						<Typography className="status" sx={{ color: '#3554d1' }}>
-							{product.productStatus}
-						</Typography>
-					</Stack>
-				</Stack>
+				<MarketplaceProductCard
+					product={product}
+					variant={'owner-list'}
+					onOpen={memberPage ? pushProductDetail : undefined}
+					statusSlot={
+						<Stack className="status-box">
+							<Stack className="coloured-box" onClick={handleClick}>
+								<Typography className="status">{formatProductLabel(product.productStatus)}</Typography>
+							</Stack>
+						</Stack>
+					}
+					metaSlot={
+						<Stack className="owner-list-meta">
+							<Typography className="date">
+								<Moment format="DD MMMM, YYYY">{product.createdAt}</Moment>
+							</Typography>
+							<Typography className="views">{product.productViews?.toLocaleString() ?? 0} views</Typography>
+						</Stack>
+					}
+					actionSlot={
+						!memberPage && product.productStatus === ProductStatus.ACTIVE ? (
+							<Stack className="action-box">
+								<IconButton className="icon-button" onClick={() => pushEditProduct(product._id)}>
+									<ModeIcon className="buttons" />
+								</IconButton>
+								<IconButton className="icon-button" onClick={() => deleteProductHandler(product._id)}>
+									<DeleteIcon className="buttons" />
+								</IconButton>
+							</Stack>
+						) : null
+					}
+				/>
 				{!memberPage && product.productStatus !== 'SOLD' && (
 					<Menu
 						anchorEl={anchorEl}
@@ -116,20 +120,6 @@ export const ProductCard = (props: ProductCardProps) => {
 							</MenuItem>
 						)}
 					</Menu>
-				)}
-
-				<Stack className="views-box">
-					<Typography className="views">{product.productViews.toLocaleString()}</Typography>
-				</Stack>
-				{!memberPage && product.productStatus === ProductStatus.ACTIVE &&(
-					<Stack className="action-box">
-						<IconButton className="icon-button" onClick={() => pushEditProduct(product._id)}>
-							<ModeIcon className="buttons" />
-						</IconButton>
-						<IconButton className="icon-button" onClick={() => deleteProductHandler(product._id)}>
-							<DeleteIcon className="buttons" />
-						</IconButton>
-					</Stack>
 				)}
 			</Stack>
 		);

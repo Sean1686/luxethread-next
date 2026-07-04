@@ -372,7 +372,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 										/>
 									</Stack>
 									<span>
-										Total {productTotal} propert{productTotal > 1 ? 'ies' : 'y'} available
+										Total {productTotal} product{productTotal === 1 ? '' : 's'} available
 									</span>
 								</>
 							) : (

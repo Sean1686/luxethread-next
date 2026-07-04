@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Button, Stack, Typography, Tab, Tabs, IconButton, Backdrop, Pagination } from '@mui/material';
+import { Button, Stack, Typography, IconButton, Backdrop, Pagination } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Moment from 'react-moment';
 import { userVar } from '../../apollo/store';
@@ -31,6 +30,12 @@ import {
 	sweetTopSmallSuccessAlert,
 } from '../../libs/sweetAlert';
 import { CREATE_COMMENT, LIKE_TARGET_BOARD_ARTICLE, UPDATE_COMMENT } from '../../apollo/user/mutation';
+import {
+	getCommunityCategoryMeta,
+	getCommunityCoverImage,
+	STYLE_COMMUNITY_CATEGORIES,
+} from '../../libs/utils/community';
+import { BoardArticleCategory } from '../../libs/enums/board-article.enum';
 
 const ToastViewerComponent = dynamic(() => import('../../libs/components/community/TViewer'), { ssr: false });
 
@@ -41,7 +46,6 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { query } = router;
 
@@ -58,26 +62,20 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 		...initialInput,
 	});
 	const [memberImage, setMemberImage] = useState<string>('/img/community/articleImg.png');
-	const [anchorEl, setAnchorEl] = useState<any | null>(null);
-	const open = Boolean(anchorEl);
-	const id = open ? 'simple-popover' : undefined;
 	const [openBackdrop, setOpenBackdrop] = useState<boolean>(false);
 	const [updatedComment, setUpdatedComment] = useState<string>('');
 	const [updatedCommentId, setUpdatedCommentId] = useState<string>('');
 	const [likeLoading, setLikeLoading] = useState<boolean>(false);
 	const [boardArticle, setBoardArticle] = useState<BoardArticle>();
+	const categoryMeta = getCommunityCategoryMeta(boardArticle?.articleCategory ?? articleCategory);
+	const coverImage = getCommunityCoverImage(boardArticle?.articleImage);
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetBoardArticle] = useMutation(LIKE_TARGET_BOARD_ARTICLE);
 	const [createComment] = useMutation(CREATE_COMMENT);
 	const [updateComment] = useMutation(UPDATE_COMMENT);
 
-	const {
-		loading: boardArticleLoading,
-		data: boardArticleData,
-		error: getBoardArticleError,
-		refetch: boardArticleRefetch,
-	} = useQuery(GET_BOARD_ARTICLE, {
+	const { refetch: boardArticleRefetch } = useQuery(GET_BOARD_ARTICLE, {
 		fetchPolicy: 'network-only',
 		variables: {
 			input: articleId,
@@ -91,12 +89,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 		},
 	});
 
-	const {
-		loading: getCommentsLoading,
-		data: getCommentsData,
-		error: getCommentsError,
-		refetch: getCommentsRefetch,
-	} = useQuery(GET_COMMENTS, {
+	const { refetch: getCommentsRefetch } = useQuery(GET_COMMENTS, {
 		fetchPolicy: 'network-only',
 		variables: {
 			input: searchFilter,
@@ -114,11 +107,11 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	}, [articleId]);
 
 	/** HANDLERS **/
-	const tabChangeHandler = (event: React.SyntheticEvent, value: string) => {
+	const tabChangeHandler = (value?: BoardArticleCategory) => {
 		router.replace(
 			{
 				pathname: '/community',
-				query: { articleCategory: value },
+				query: value ? { articleCategory: value } : {},
 			},
 			'/community',
 			{ shallow: true },
@@ -242,292 +235,177 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 		setSearchFilter({ ...searchFilter, page: value });
 	};
 
-	if (device === 'mobile') {
-		return <div>COMMUNITY DETAIL PAGE MOBILE</div>;
-	} else {
-		return (
-			<div id="community-detail-page">
-				<div className="container">
-					<Stack className="main-box">
-						<Stack className="left-config">
-							<Stack className={'image-info'}>
-								<img src={'/img/logo/luxethreadText.svg'} alt={'Luxethread'} />
-								<Stack className={'community-name'}>
-									<Typography className={'name'}>Community Board Article</Typography>
-								</Stack>
-							</Stack>
-							<Tabs
-								orientation="vertical"
-								aria-label="lab API tabs example"
-								TabIndicatorProps={{
-									style: { display: 'none' },
-								}}
-								onChange={tabChangeHandler}
-								value={articleCategory}
-							>
-								<Tab
-									value={'FREE'}
-									label={'Free Board'}
-									className={`tab-button ${articleCategory === 'FREE' ? 'active' : ''}`}
-								/>
-								<Tab
-									value={'RECOMMEND'}
-									label={'Recommendation'}
-									className={`tab-button ${articleCategory === 'RECOMMEND' ? 'active' : ''}`}
-								/>
-								<Tab
-									value={'NEWS'}
-									label={'News'}
-									className={`tab-button ${articleCategory === 'NEWS' ? 'active' : ''}`}
-								/>
-								<Tab
-									value={'HUMOR'}
-									label={'Humor'}
-									className={`tab-button ${articleCategory === 'HUMOR' ? 'active' : ''}`}
-								/>
-							</Tabs>
-						</Stack>
-						<div className="community-detail-config">
-							<Stack className="title-box">
-								<Stack className="left">
-									<Typography className="title">{articleCategory} BOARD</Typography>
-									<Typography className="sub-title">
-										Express your opinions freely here without content restrictions
-									</Typography>
-								</Stack>
-								<Button
-									onClick={() =>
-										router.push({
-											pathname: '/mypage',
-											query: {
-												category: 'writeArticle',
-											},
-										})
-									}
-									className="right"
+	return (
+		<div id="community-detail-page">
+			<div className="container">
+				<div className="community-detail-shell">
+					<aside className="style-story-nav">
+						<span>Style sections</span>
+						<button type="button" onClick={() => tabChangeHandler()}>
+							All stories
+						</button>
+						{STYLE_COMMUNITY_CATEGORIES.map((category) => {
+							const meta = getCommunityCategoryMeta(category);
+							return (
+								<button
+									type="button"
+									className={boardArticle?.articleCategory === category ? 'active' : ''}
+									onClick={() => tabChangeHandler(category)}
+									key={category}
 								>
-									Write
-								</Button>
-							</Stack>
-							<div className="config">
-								<Stack className="first-box-config">
-									<Stack className="content-and-info">
-										<Stack className="content">
-											<Typography className="content-data">{boardArticle?.articleTitle}</Typography>
-											<Stack className="member-info">
-												<img
-													src={memberImage}
-													alt=""
-													className="member-img"
-													onClick={() => goMemberPage(boardArticle?.memberData?._id)}
-												/>
-												<Typography className="member-nick" onClick={() => goMemberPage(boardArticle?.memberData?._id)}>
-													{boardArticle?.memberData?.memberNick}
-												</Typography>
-												<Stack className="divider"></Stack>
-												<Moment className={'time-added'} format={'DD.MM.YY HH:mm'}>
-													{boardArticle?.createdAt}
-												</Moment>
-											</Stack>
-										</Stack>
-										<Stack className="info">
-											<Stack className="icon-info">
-												{boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
-													<ThumbUpAltIcon onClick={() => likeBoArticleHandler(user, boardArticle?._id)} />
-												) : (
-													<ThumbUpOffAltIcon onClick={() => likeBoArticleHandler(user, boardArticle?._id)} />
-												)}
+									{meta.label}
+								</button>
+							);
+						})}
+						<Button
+							className="write-story-btn"
+							onClick={() => router.push({ pathname: '/mypage', query: { category: 'writeArticle' } })}
+						>
+							Write
+						</Button>
+					</aside>
 
-												<Typography className="text">{boardArticle?.articleLikes}</Typography>
-											</Stack>
-											<Stack className="divider"></Stack>
-											<Stack className="icon-info">
-												<VisibilityIcon />
-												<Typography className="text">{boardArticle?.articleViews}</Typography>
-											</Stack>
-											<Stack className="divider"></Stack>
-											<Stack className="icon-info">
-												{total > 0 ? <ChatIcon /> : <ChatBubbleOutlineRoundedIcon />}
-												<Typography className="text">{boardArticle?.articleComments}</Typography>
-											</Stack>
-										</Stack>
-									</Stack>
-									<Stack>
-										<ToastViewerComponent markdown={boardArticle?.articleContent} className={'ytb_play'} />
-									</Stack>
-									<Stack className="like-and-dislike">
-										<Stack className="top">
-											<Button>
-												{boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
-													<ThumbUpAltIcon onClick={() => likeBoArticleHandler(user, boardArticle?._id)} />
-												) : (
-													<ThumbUpOffAltIcon onClick={() => likeBoArticleHandler(user, boardArticle?._id)} />
-												)}
-												<Typography className="text">{boardArticle?.articleLikes}</Typography>
-											</Button>
-										</Stack>
-									</Stack>
-								</Stack>
-								<Stack
-									className="second-box-config"
-									sx={{ borderBottom: total > 0 ? 'none' : '1px solid #eee', border: '1px solid #eee' }}
-								>
-									<Typography className="title-text">Comments ({total})</Typography>
-									<Stack className="leave-comment">
-										<input
-											type="text"
-											placeholder="Leave a comment"
-											value={comment}
-											onChange={(e) => {
-												if (e.target.value.length > 100) return;
-												setWordsCnt(e.target.value.length);
-												setComment(e.target.value);
-											}}
-										/>
-										<Stack className="button-box">
-											<Typography>{wordsCnt}/100</Typography>
-											<Button onClick={creteCommentHandler}>comment</Button>
-										</Stack>
-									</Stack>
-								</Stack>
-								{total > 0 && (
-									<Stack className="comments">
-										<Typography className="comments-title">Comments</Typography>
-									</Stack>
-								)}
-								{comments?.map((commentData, index) => {
-									return (
-										<Stack className="comments-box" key={commentData?._id}>
-											<Stack className="main-comment">
-												<Stack className="member-info">
-													<Stack
-														className="name-date"
-														onClick={() => goMemberPage(commentData?.memberData?._id as string)}
-													>
-														<img src={getCommentMemberImage(commentData?.memberData?.memberImage)} alt="" />
-														<Stack className="name-date-column">
-															<Typography className="name">{commentData?.memberData?.memberNick}</Typography>
-															<Typography className="date">
-																<Moment className={'time-added'} format={'DD.MM.YY HH:mm'}>
-																	{commentData?.createdAt}
-																</Moment>
-															</Typography>
-														</Stack>
-													</Stack>
-													{commentData?.memberId === user?._id && (
-														<Stack className="buttons">
-															<IconButton
-																onClick={() => {
-																	setUpdatedCommentId(commentData?._id);
-																	updateButtonHandler(commentData?._id, CommentStatus.DELETE);
-																}}
-															>
-																<DeleteForeverIcon sx={{ color: '#757575', cursor: 'pointer' }} />
-															</IconButton>
-															<IconButton
-																onClick={(e: any) => {
-																	setUpdatedComment(commentData?.commentContent);
-																	setUpdatedCommentWordsCnt(commentData?.commentContent?.length);
-																	setUpdatedCommentId(commentData?._id);
-																	setOpenBackdrop(true);
-																}}
-															>
-																<EditIcon sx={{ color: '#757575' }} />
-															</IconButton>
-															<Backdrop
-																sx={{
-																	top: '40%',
-																	right: '25%',
-																	left: '25%',
-																	width: '1000px',
-																	height: 'fit-content',
-																	borderRadius: '10px',
-																	color: '#ffffff',
-																	zIndex: 999,
-																}}
-																open={openBackdrop}
-															>
-																<Stack
-																	sx={{
-																		width: '100%',
-																		height: '100%',
-																		background: 'white',
-																		border: '1px solid #b9b9b9',
-																		padding: '15px',
-																		gap: '10px',
-																		borderRadius: '10px',
-																		boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-																	}}
-																>
-																	<Typography variant="h4" color={'#b9b9b9'}>
-																		Update comment
-																	</Typography>
-																	<Stack gap={'20px'}>
-																		<input
-																			autoFocus
-																			value={updatedComment}
-																			onChange={(e) => updateCommentInputHandler(e.target.value)}
-																			type="text"
-																			style={{
-																				border: '1px solid #b9b9b9',
-																				outline: 'none',
-																				height: '40px',
-																				padding: '0px 10px',
-																				borderRadius: '5px',
-																			}}
-																		/>
-																		<Stack width={'100%'} flexDirection={'row'} justifyContent={'space-between'}>
-																			<Typography variant="subtitle1" color={'#b9b9b9'}>
-																				{updatedCommentWordsCnt}/100
-																			</Typography>
-																			<Stack sx={{ flexDirection: 'row', alignSelf: 'flex-end', gap: '10px' }}>
-																				<Button
-																					variant="outlined"
-																					color="inherit"
-																					onClick={() => cancelButtonHandler()}
-																				>
-																					Cancel
-																				</Button>
-																				<Button
-																					variant="contained"
-																					color="inherit"
-																					onClick={() => updateButtonHandler(updatedCommentId, undefined)}
-																				>
-																					Update
-																				</Button>
-																			</Stack>
-																		</Stack>
-																	</Stack>
-																</Stack>
-															</Backdrop>
-														</Stack>
-													)}
-												</Stack>
-												<Stack className="content">
-													<Typography>{commentData?.commentContent}</Typography>
-												</Stack>
-											</Stack>
-										</Stack>
-									);
-								})}
-								{total > 0 && (
-									<Stack className="pagination-box">
-										<Pagination
-											count={Math.ceil(total / searchFilter.limit) || 1}
-											page={searchFilter.page}
-											shape="circular"
-											color="primary"
-											onChange={paginationHandler}
-										/>
-									</Stack>
-								)}
+					<main className="style-story-main">
+						<header className="style-story-header">
+							<div className="story-cover">
+								<img src={coverImage} alt="" />
 							</div>
-						</div>
-					</Stack>
+							<div className="story-heading">
+								<span>{categoryMeta.label}</span>
+								<h1>{boardArticle?.articleTitle}</h1>
+								<div className="story-author">
+									<img src={memberImage} alt="" onClick={() => goMemberPage(boardArticle?.memberData?._id)} />
+									<button type="button" onClick={() => goMemberPage(boardArticle?.memberData?._id)}>
+										{boardArticle?.memberData?.memberNick ?? 'Luxethread member'}
+									</button>
+									<Moment format="DD MMM YYYY">{boardArticle?.createdAt}</Moment>
+								</div>
+								<div className="story-signals">
+									<button type="button" onClick={() => likeBoArticleHandler(user, boardArticle?._id)}>
+										{boardArticle?.meLiked?.[0]?.myFavorite ? <ThumbUpAltIcon /> : <ThumbUpOffAltIcon />}
+										{boardArticle?.articleLikes ?? 0}
+									</button>
+									<span>
+										<VisibilityIcon />
+										{boardArticle?.articleViews ?? 0}
+									</span>
+									<span>
+										{total > 0 ? <ChatIcon /> : <ChatBubbleOutlineRoundedIcon />}
+										{boardArticle?.articleComments ?? 0}
+									</span>
+								</div>
+							</div>
+						</header>
+
+						<article className="style-story-content">
+							<ToastViewerComponent markdown={boardArticle?.articleContent} className={'ytb_play'} />
+						</article>
+
+						<section className="style-comments">
+							<div className="comments-head">
+								<span>Discussion</span>
+								<strong>{total} comment{total === 1 ? '' : 's'}</strong>
+							</div>
+							<div className="leave-comment">
+								<input
+									type="text"
+									placeholder="Add a quick style note"
+									value={comment}
+									onChange={(e) => {
+										if (e.target.value.length > 100) return;
+										setWordsCnt(e.target.value.length);
+										setComment(e.target.value);
+									}}
+								/>
+								<div className="button-box">
+									<span>{wordsCnt}/100</span>
+									<Button onClick={creteCommentHandler}>Comment</Button>
+								</div>
+							</div>
+
+							{comments?.map((commentData) => (
+								<div className="comments-box" key={commentData?._id}>
+									<div className="main-comment">
+										<div className="member-info">
+											<button
+												type="button"
+												className="name-date"
+												onClick={() => goMemberPage(commentData?.memberData?._id as string)}
+											>
+												<img src={getCommentMemberImage(commentData?.memberData?.memberImage)} alt="" />
+												<span>
+													<strong>{commentData?.memberData?.memberNick}</strong>
+													<Moment format="DD MMM YYYY HH:mm">{commentData?.createdAt}</Moment>
+												</span>
+											</button>
+											{commentData?.memberId === user?._id && (
+												<Stack className="buttons">
+													<IconButton
+														onClick={() => {
+															setUpdatedCommentId(commentData?._id);
+															updateButtonHandler(commentData?._id, CommentStatus.DELETE);
+														}}
+													>
+														<DeleteForeverIcon />
+													</IconButton>
+													<IconButton
+														onClick={() => {
+															setUpdatedComment(commentData?.commentContent);
+															setUpdatedCommentWordsCnt(commentData?.commentContent?.length);
+															setUpdatedCommentId(commentData?._id);
+															setOpenBackdrop(true);
+														}}
+													>
+														<EditIcon />
+													</IconButton>
+												</Stack>
+											)}
+										</div>
+										<p>{commentData?.commentContent}</p>
+									</div>
+								</div>
+							))}
+
+							<Backdrop className="comment-edit-backdrop" open={openBackdrop}>
+								<Stack className="comment-edit-box">
+									<Typography variant="h4">Update comment</Typography>
+									<input
+										autoFocus
+										value={updatedComment}
+										onChange={(e) => updateCommentInputHandler(e.target.value)}
+										type="text"
+									/>
+									<Stack className="comment-edit-actions">
+										<Typography>{updatedCommentWordsCnt}/100</Typography>
+										<div>
+											<Button variant="outlined" color="inherit" onClick={() => cancelButtonHandler()}>
+												Cancel
+											</Button>
+											<Button variant="contained" color="inherit" onClick={() => updateButtonHandler(updatedCommentId, undefined)}>
+												Update
+											</Button>
+										</div>
+									</Stack>
+								</Stack>
+							</Backdrop>
+
+							{total > 0 && (
+								<Stack className="pagination-box">
+									<Pagination
+										count={Math.ceil(total / searchFilter.limit) || 1}
+										page={searchFilter.page}
+										shape="circular"
+										color="primary"
+										onChange={paginationHandler}
+									/>
+								</Stack>
+							)}
+						</section>
+					</main>
 				</div>
 			</div>
-		);
-	}
+		</div>
+	);
 };
 CommunityDetail.defaultProps = {
 	initialInput: {

@@ -161,6 +161,9 @@ function createApolloClient() {
 						productImages: {
 							merge: false,
 						},
+						productColorImages: {
+							merge: false,
+						},
 						productSizes: {
 							merge: false,
 						},

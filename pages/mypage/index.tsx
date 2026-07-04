@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import { Stack } from '@mui/material';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
+import { Stack, Typography } from '@mui/material';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import MyProducts from '../../libs/components/mypage/MyProducts';
 import MyFavorites from '../../libs/components/mypage/MyFavorites';
@@ -21,6 +20,39 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
 import { Messages } from '../../libs/config';
 import { T } from '../../libs/types/common';
+import { getJwtToken } from '../../libs/auth';
+
+const primaryMypageCategories = [
+	'myProfile',
+	'addProduct',
+	'myProducts',
+	'myFavorites',
+	'recentlyVisited',
+	'myArticles',
+	'writeArticle',
+	'followers',
+	'followings',
+];
+
+const normalizeMypageCategory = (category: any) => {
+	const value = Array.isArray(category) ? category[0] : category;
+	if (value === 'addProperty') return 'addProduct';
+	if (value === 'myProperties') return 'myProducts';
+	if (primaryMypageCategories.includes(value)) return value;
+	return 'myProfile';
+};
+
+const categoryMeta: Record<string, { title: string; eyebrow: string }> = {
+	addProduct: { title: 'Add product', eyebrow: 'Seller studio' },
+	myProducts: { title: 'My products', eyebrow: 'Seller studio' },
+	myFavorites: { title: 'Saved pieces', eyebrow: 'Wardrobe edit' },
+	recentlyVisited: { title: 'Recently viewed', eyebrow: 'Browsing ledger' },
+	myArticles: { title: 'Style notes', eyebrow: 'Community' },
+	writeArticle: { title: 'Write article', eyebrow: 'Community' },
+	myProfile: { title: 'My profile', eyebrow: 'Account atelier' },
+	followers: { title: 'Followers', eyebrow: 'Network' },
+	followings: { title: 'Following', eyebrow: 'Network' },
+};
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -29,10 +61,10 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const MyPage: NextPage = () => {
-	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
-	const category: any = router.query?.category ?? 'myProfile';
+	const category = normalizeMypageCategory(router.query?.category);
+	const activeMeta = categoryMeta[category] ?? categoryMeta.myProfile;
 
 	/** APOLLO REQUESTS **/
 	const [subscribe] = useMutation(SUBSCRIBE);
@@ -41,13 +73,12 @@ const MyPage: NextPage = () => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (!user._id) router.push('/').then();
-	}, [user]);
+		if (!user._id && !getJwtToken()) router.push('/').then();
+	}, [user._id, router]);
 
 	/** HANDLERS **/
 	const subscribeHandler = async (id: string, refetch: any, query: any) => {
 		try {
-			console.log('id:', id);
 			if (!id) throw new Error(Messages.error1);
 			if (!user._id) throw new Error(Messages.error2);
 
@@ -87,7 +118,7 @@ const MyPage: NextPage = () => {
 
 			await likeTargetMember({ variables: { input: id } });
 
-			await sweetTopSmallSuccessAlert('succes', 700);
+			await sweetTopSmallSuccessAlert('Success', 700);
 			await refetch({ input: query });
 		} catch (err: any) {
 			console.log('ERROR, likeMemberHandler:', err.message);
@@ -104,50 +135,67 @@ const MyPage: NextPage = () => {
 		}
 	};
 
-	if (device === 'mobile') {
-		return <div>MY PAGE</div>;
-	} else {
-		return (
-			<div id="my-page" style={{ position: 'relative' }}>
-				<div className="container">
-					<Stack className={'my-page'}>
-						<Stack className={'back-frame'}>
-							<Stack className={'left-config'}>
-								<MyMenu />
-							</Stack>
-							<Stack className="main-config" mb={'76px'}>
-								<Stack className={'list-config'}>
-									{category === 'addProduct' && <AddProduct />}
-									{category === 'myProducts' && <MyProducts />}
-									{category === 'myFavorites' && <MyFavorites />}
-									{category === 'recentlyVisited' && <RecentlyVisited />}
-									{category === 'myArticles' && <MyArticles />}
-									{category === 'writeArticle' && <WriteArticle />}
-									{category === 'myProfile' && <MyProfile />}
-									{category === 'followers' && (
-										<MemberFollowers
-											subscribeHandler={subscribeHandler}
-											unsubscribeHandler={unsubscribeHandler}
-											likeMemberHandler={likeMemberHandler}
-											redirectToMemberPageHandler={redirectToMemberPageHandler}
-										/>
-									)}
-									{category === 'followings' && (
-										<MemberFollowings
-											subscribeHandler={subscribeHandler}
-											unsubscribeHandler={unsubscribeHandler}
-											likeMemberHandler={likeMemberHandler}
-											redirectToMemberPageHandler={redirectToMemberPageHandler}
-										/>
-									)}
-								</Stack>
+	return (
+		<div id="my-page" style={{ position: 'relative' }}>
+			<div className="container">
+				<Stack className={'my-page'}>
+					<Stack className={'my-page-ledger'}>
+						<Stack className={'ledger-copy'}>
+							<Typography component={'span'}>{activeMeta.eyebrow}</Typography>
+							<Typography component={'h1'}>{activeMeta.title}</Typography>
+						</Stack>
+						<Stack className={'ledger-stats'}>
+							<div>
+								<strong>{user?.memberProducts ?? user?.memberProperties ?? 0}</strong>
+								<span>Products</span>
+							</div>
+							<div>
+								<strong>{(user as any)?.memberFollowers ?? 0}</strong>
+								<span>Followers</span>
+							</div>
+							<div>
+								<strong>{user?.memberArticles ?? 0}</strong>
+								<span>Articles</span>
+							</div>
+						</Stack>
+					</Stack>
+
+					<Stack className={'back-frame'}>
+						<Stack className={'left-config'}>
+							<MyMenu activeCategory={category} />
+						</Stack>
+						<Stack className="main-config">
+							<Stack className={'list-config'}>
+								{category === 'addProduct' && <AddProduct />}
+								{category === 'myProducts' && <MyProducts />}
+								{category === 'myFavorites' && <MyFavorites />}
+								{category === 'recentlyVisited' && <RecentlyVisited />}
+								{category === 'myArticles' && <MyArticles />}
+								{category === 'writeArticle' && <WriteArticle />}
+								{category === 'myProfile' && <MyProfile />}
+								{category === 'followers' && (
+									<MemberFollowers
+										subscribeHandler={subscribeHandler}
+										unsubscribeHandler={unsubscribeHandler}
+										likeMemberHandler={likeMemberHandler}
+										redirectToMemberPageHandler={redirectToMemberPageHandler}
+									/>
+								)}
+								{category === 'followings' && (
+									<MemberFollowings
+										subscribeHandler={subscribeHandler}
+										unsubscribeHandler={unsubscribeHandler}
+										likeMemberHandler={likeMemberHandler}
+										redirectToMemberPageHandler={redirectToMemberPageHandler}
+									/>
+								)}
 							</Stack>
 						</Stack>
 					</Stack>
-				</div>
+				</Stack>
 			</div>
-		);
-	}
+		</div>
+	);
 };
 
 export default withLayoutBasic(MyPage);

@@ -1,0 +1,662 @@
+[Error: EPERM: operation not permitted, open 'C:\luxethread-next\.next\trace'] {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'open',
+  path: 'C:\\luxethread-next\\.next\\trace'
+}
+ ⚠ Fast Refresh had to perform a full reload when ./pages/cs/index.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./libs/components/cs/Faq.tsx
+Error: 
+  [31mx[0m Return statement is not allowed here
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:437:1]
+ [2m437[0m | 	};
+ [2m438[0m | 
+ [2m439[0m | 	if (device === 'mobile') {
+ [2m440[0m | 		return <div>FAQ MOBILE</div>;
+     : [31;1m  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m441[0m | 	} else {
+ [2m442[0m | 		return (
+ [2m442[0m | 			<Stack className={'faq-content'}>
+     `----
+
+  [31mx[0m Return statement is not allowed here
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:439:1]
+ [2m439[0m |     	if (device === 'mobile') {
+ [2m440[0m |     		return <div>FAQ MOBILE</div>;
+ [2m441[0m |     	} else {
+ [2m442[0m | [31;1m,[0m[31;1m-[0m[31;1m>[0m 		return (
+ [2m443[0m | [31;1m|[0m   			<Stack className={'faq-content'}>
+ [2m444[0m | [31;1m|[0m   				<Box className={'categories'} component={'div'}>
+ [2m445[0m | [31;1m|[0m   					<div
+ [2m446[0m | [31;1m|[0m   						className={category === 'product' ? 'active' : ''}
+ [2m447[0m | [31;1m|[0m   						onClick={() => {
+ [2m448[0m | [31;1m|[0m   							changeCategoryHandler('product');
+ [2m449[0m | [31;1m|[0m   						}}
+ [2m450[0m | [31;1m|[0m   					>
+ [2m451[0m | [31;1m|[0m   						Product
+ [2m452[0m | [31;1m|[0m   					</div>
+ [2m453[0m | [31;1m|[0m   					<div
+ [2m454[0m | [31;1m|[0m   						className={category === 'payment' ? 'active' : ''}
+ [2m455[0m | [31;1m|[0m   						onClick={() => {
+ [2m456[0m | [31;1m|[0m   							changeCategoryHandler('payment');
+ [2m457[0m | [31;1m|[0m   						}}
+ [2m458[0m | [31;1m|[0m   					>
+ [2m459[0m | [31;1m|[0m   						Payment
+ [2m460[0m | [31;1m|[0m   					</div>
+ [2m461[0m | [31;1m|[0m   					<div
+ [2m462[0m | [31;1m|[0m   						className={category === 'buyers' ? 'active' : ''}
+ [2m463[0m | [31;1m|[0m   						onClick={() => {
+ [2m464[0m | [31;1m|[0m   							changeCategoryHandler('buyers');
+ [2m465[0m | [31;1m|[0m   						}}
+ [2m466[0m | [31;1m|[0m   					>
+ [2m467[0m | [31;1m|[0m   						Foy Buyers
+ [2m468[0m | [31;1m|[0m   					</div>
+ [2m469[0m | [31;1m|[0m   					<div
+ [2m470[0m | [31;1m|[0m   						className={category === 'agents' ? 'active' : ''}
+ [2m471[0m | [31;1m|[0m   						onClick={() => {
+ [2m472[0m | [31;1m|[0m   							changeCategoryHandler('agents');
+ [2m473[0m | [31;1m|[0m   						}}
+ [2m474[0m | [31;1m|[0m   					>
+ [2m475[0m | [31;1m|[0m   						For Agents
+ [2m476[0m | [31;1m|[0m   					</div>
+ [2m477[0m | [31;1m|[0m   					<div
+ [2m478[0m | [31;1m|[0m   						className={category === 'membership' ? 'active' : ''}
+ [2m479[0m | [31;1m|[0m   						onClick={() => {
+ [2m480[0m | [31;1m|[0m   							changeCategoryHandler('membership');
+ [2m481[0m | [31;1m|[0m   						}}
+ [2m482[0m | [31;1m|[0m   					>
+ [2m483[0m | [31;1m|[0m   						Membership
+ [2m484[0m | [31;1m|[0m   					</div>
+ [2m485[0m | [31;1m|[0m   					<div
+ [2m486[0m | [31;1m|[0m   						className={category === 'community' ? 'active' : ''}
+ [2m487[0m | [31;1m|[0m   						onClick={() => {
+ [2m488[0m | [31;1m|[0m   							changeCategoryHandler('community');
+ [2m489[0m | [31;1m|[0m   						}}
+ [2m490[0m | [31;1m|[0m   					>
+ [2m491[0m | [31;1m|[0m   						Community
+ [2m492[0m | [31;1m|[0m   					</div>
+ [2m493[0m | [31;1m|[0m   					<div
+ [2m494[0m | [31;1m|[0m   						className={category === 'other' ? 'active' : ''}
+ [2m495[0m | [31;1m|[0m   						onClick={() => {
+ [2m496[0m | [31;1m|[0m   							changeCategoryHandler('other');
+ [2m497[0m | [31;1m|[0m   						}}
+ [2m498[0m | [31;1m|[0m   					>
+ [2m499[0m | [31;1m|[0m   						Other
+ [2m500[0m | [31;1m|[0m   					</div>
+ [2m501[0m | [31;1m|[0m   				</Box>
+ [2m502[0m | [31;1m|[0m   				<Box className={'wrap'} component={'div'}>
+ [2m503[0m | [31;1m|[0m   					{data[category] &&
+ [2m504[0m | [31;1m|[0m   						data[category].map((ele: any) => (
+ [2m505[0m | [31;1m|[0m   							<Accordion expanded={expanded === ele?.id} onChange={handleChange(ele?.id)} key={ele?.subject}>
+ [2m506[0m | [31;1m|[0m   								<AccordionSummary id="panel1d-header" className="question" aria-controls="panel1d-content">
+ [2m507[0m | [31;1m|[0m   									<Typography className="badge" variant={'h4'}>
+ [2m508[0m | [31;1m|[0m   										Q
+ [2m509[0m | [31;1m|[0m   									</Typography>
+ [2m510[0m | [31;1m|[0m   									<Typography> {ele?.subject}</Typography>
+ [2m511[0m | [31;1m|[0m   								</AccordionSummary>
+ [2m512[0m | [31;1m|[0m   								<AccordionDetails>
+ [2m513[0m | [31;1m|[0m   									<Stack className={'answer flex-box'}>
+ [2m514[0m | [31;1m|[0m   										<Typography className="badge" variant={'h4'} color={'primary'}>
+ [2m515[0m | [31;1m|[0m   											A
+ [2m516[0m | [31;1m|[0m   										</Typography>
+ [2m517[0m | [31;1m|[0m   										<Typography> {ele?.content}</Typography>
+ [2m518[0m | [31;1m|[0m   									</Stack>
+ [2m519[0m | [31;1m|[0m   								</AccordionDetails>
+ [2m520[0m | [31;1m|[0m   							</Accordion>
+ [2m521[0m | [31;1m|[0m   						))}
+ [2m522[0m | [31;1m|[0m   				</Box>
+ [2m523[0m | [31;1m|[0m   			</Stack>
+ [2m524[0m | [31;1m`[0m[31;1m-[0m[31;1m>[0m 		);
+ [2m525[0m |     	}
+ [2m526[0m |     };
+ [2m526[0m |     
+     `----
+
+  [31mx[0m Expression expected
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:523:1]
+ [2m523[0m | 			</Stack>
+ [2m524[0m | 		);
+ [2m525[0m | 	}
+ [2m526[0m | };
+     : [31;1m^[0m
+ [2m527[0m | 
+ [2m528[0m | export default Faq;
+ [2m529[0m | */
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./libs/components/cs/Faq.tsx
+ ⨯ ./libs/components/cs/Faq.tsx
+Error: 
+  [31mx[0m Return statement is not allowed here
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:437:1]
+ [2m437[0m | 	};
+ [2m438[0m | 
+ [2m439[0m | 	if (device === 'mobile') {
+ [2m440[0m | 		return <div>FAQ MOBILE</div>;
+     : [31;1m  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m441[0m | 	} else {
+ [2m442[0m | 		return (
+ [2m442[0m | 			<Stack className={'faq-content'}>
+     `----
+
+  [31mx[0m Return statement is not allowed here
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:439:1]
+ [2m439[0m |     	if (device === 'mobile') {
+ [2m440[0m |     		return <div>FAQ MOBILE</div>;
+ [2m441[0m |     	} else {
+ [2m442[0m | [31;1m,[0m[31;1m-[0m[31;1m>[0m 		return (
+ [2m443[0m | [31;1m|[0m   			<Stack className={'faq-content'}>
+ [2m444[0m | [31;1m|[0m   				<Box className={'categories'} component={'div'}>
+ [2m445[0m | [31;1m|[0m   					<div
+ [2m446[0m | [31;1m|[0m   						className={category === 'product' ? 'active' : ''}
+ [2m447[0m | [31;1m|[0m   						onClick={() => {
+ [2m448[0m | [31;1m|[0m   							changeCategoryHandler('product');
+ [2m449[0m | [31;1m|[0m   						}}
+ [2m450[0m | [31;1m|[0m   					>
+ [2m451[0m | [31;1m|[0m   						Product
+ [2m452[0m | [31;1m|[0m   					</div>
+ [2m453[0m | [31;1m|[0m   					<div
+ [2m454[0m | [31;1m|[0m   						className={category === 'payment' ? 'active' : ''}
+ [2m455[0m | [31;1m|[0m   						onClick={() => {
+ [2m456[0m | [31;1m|[0m   							changeCategoryHandler('payment');
+ [2m457[0m | [31;1m|[0m   						}}
+ [2m458[0m | [31;1m|[0m   					>
+ [2m459[0m | [31;1m|[0m   						Payment
+ [2m460[0m | [31;1m|[0m   					</div>
+ [2m461[0m | [31;1m|[0m   					<div
+ [2m462[0m | [31;1m|[0m   						className={category === 'buyers' ? 'active' : ''}
+ [2m463[0m | [31;1m|[0m   						onClick={() => {
+ [2m464[0m | [31;1m|[0m   							changeCategoryHandler('buyers');
+ [2m465[0m | [31;1m|[0m   						}}
+ [2m466[0m | [31;1m|[0m   					>
+ [2m467[0m | [31;1m|[0m   						Foy Buyers
+ [2m468[0m | [31;1m|[0m   					</div>
+ [2m469[0m | [31;1m|[0m   					<div
+ [2m470[0m | [31;1m|[0m   						className={category === 'agents' ? 'active' : ''}
+ [2m471[0m | [31;1m|[0m   						onClick={() => {
+ [2m472[0m | [31;1m|[0m   							changeCategoryHandler('agents');
+ [2m473[0m | [31;1m|[0m   						}}
+ [2m474[0m | [31;1m|[0m   					>
+ [2m475[0m | [31;1m|[0m   						For Agents
+ [2m476[0m | [31;1m|[0m   					</div>
+ [2m477[0m | [31;1m|[0m   					<div
+ [2m478[0m | [31;1m|[0m   						className={category === 'membership' ? 'active' : ''}
+ [2m479[0m | [31;1m|[0m   						onClick={() => {
+ [2m480[0m | [31;1m|[0m   							changeCategoryHandler('membership');
+ [2m481[0m | [31;1m|[0m   						}}
+ [2m482[0m | [31;1m|[0m   					>
+ [2m483[0m | [31;1m|[0m   						Membership
+ [2m484[0m | [31;1m|[0m   					</div>
+ [2m485[0m | [31;1m|[0m   					<div
+ [2m486[0m | [31;1m|[0m   						className={category === 'community' ? 'active' : ''}
+ [2m487[0m | [31;1m|[0m   						onClick={() => {
+ [2m488[0m | [31;1m|[0m   							changeCategoryHandler('community');
+ [2m489[0m | [31;1m|[0m   						}}
+ [2m490[0m | [31;1m|[0m   					>
+ [2m491[0m | [31;1m|[0m   						Community
+ [2m492[0m | [31;1m|[0m   					</div>
+ [2m493[0m | [31;1m|[0m   					<div
+ [2m494[0m | [31;1m|[0m   						className={category === 'other' ? 'active' : ''}
+ [2m495[0m | [31;1m|[0m   						onClick={() => {
+ [2m496[0m | [31;1m|[0m   							changeCategoryHandler('other');
+ [2m497[0m | [31;1m|[0m   						}}
+ [2m498[0m | [31;1m|[0m   					>
+ [2m499[0m | [31;1m|[0m   						Other
+ [2m500[0m | [31;1m|[0m   					</div>
+ [2m501[0m | [31;1m|[0m   				</Box>
+ [2m502[0m | [31;1m|[0m   				<Box className={'wrap'} component={'div'}>
+ [2m503[0m | [31;1m|[0m   					{data[category] &&
+ [2m504[0m | [31;1m|[0m   						data[category].map((ele: any) => (
+ [2m505[0m | [31;1m|[0m   							<Accordion expanded={expanded === ele?.id} onChange={handleChange(ele?.id)} key={ele?.subject}>
+ [2m506[0m | [31;1m|[0m   								<AccordionSummary id="panel1d-header" className="question" aria-controls="panel1d-content">
+ [2m507[0m | [31;1m|[0m   									<Typography className="badge" variant={'h4'}>
+ [2m508[0m | [31;1m|[0m   										Q
+ [2m509[0m | [31;1m|[0m   									</Typography>
+ [2m510[0m | [31;1m|[0m   									<Typography> {ele?.subject}</Typography>
+ [2m511[0m | [31;1m|[0m   								</AccordionSummary>
+ [2m512[0m | [31;1m|[0m   								<AccordionDetails>
+ [2m513[0m | [31;1m|[0m   									<Stack className={'answer flex-box'}>
+ [2m514[0m | [31;1m|[0m   										<Typography className="badge" variant={'h4'} color={'primary'}>
+ [2m515[0m | [31;1m|[0m   											A
+ [2m516[0m | [31;1m|[0m   										</Typography>
+ [2m517[0m | [31;1m|[0m   										<Typography> {ele?.content}</Typography>
+ [2m518[0m | [31;1m|[0m   									</Stack>
+ [2m519[0m | [31;1m|[0m   								</AccordionDetails>
+ [2m520[0m | [31;1m|[0m   							</Accordion>
+ [2m521[0m | [31;1m|[0m   						))}
+ [2m522[0m | [31;1m|[0m   				</Box>
+ [2m523[0m | [31;1m|[0m   			</Stack>
+ [2m524[0m | [31;1m`[0m[31;1m-[0m[31;1m>[0m 		);
+ [2m525[0m |     	}
+ [2m526[0m |     };
+ [2m526[0m |     
+     `----
+
+  [31mx[0m Expression expected
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:523:1]
+ [2m523[0m | 			</Stack>
+ [2m524[0m | 		);
+ [2m525[0m | 	}
+ [2m526[0m | };
+     : [31;1m^[0m
+ [2m527[0m | 
+ [2m528[0m | export default Faq;
+ [2m529[0m | */
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./libs/components/cs/Faq.tsx
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ⨯ ./libs/components/cs/Faq.tsx
+Error: 
+  [31mx[0m Return statement is not allowed here
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:437:1]
+ [2m437[0m | 	};
+ [2m438[0m | 
+ [2m439[0m | 	if (device === 'mobile') {
+ [2m440[0m | 		return <div>FAQ MOBILE</div>;
+     : [31;1m  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m441[0m | 	} else {
+ [2m442[0m | 		return (
+ [2m442[0m | 			<Stack className={'faq-content'}>
+     `----
+
+  [31mx[0m Return statement is not allowed here
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:439:1]
+ [2m439[0m |     	if (device === 'mobile') {
+ [2m440[0m |     		return <div>FAQ MOBILE</div>;
+ [2m441[0m |     	} else {
+ [2m442[0m | [31;1m,[0m[31;1m-[0m[31;1m>[0m 		return (
+ [2m443[0m | [31;1m|[0m   			<Stack className={'faq-content'}>
+ [2m444[0m | [31;1m|[0m   				<Box className={'categories'} component={'div'}>
+ [2m445[0m | [31;1m|[0m   					<div
+ [2m446[0m | [31;1m|[0m   						className={category === 'product' ? 'active' : ''}
+ [2m447[0m | [31;1m|[0m   						onClick={() => {
+ [2m448[0m | [31;1m|[0m   							changeCategoryHandler('product');
+ [2m449[0m | [31;1m|[0m   						}}
+ [2m450[0m | [31;1m|[0m   					>
+ [2m451[0m | [31;1m|[0m   						Product
+ [2m452[0m | [31;1m|[0m   					</div>
+ [2m453[0m | [31;1m|[0m   					<div
+ [2m454[0m | [31;1m|[0m   						className={category === 'payment' ? 'active' : ''}
+ [2m455[0m | [31;1m|[0m   						onClick={() => {
+ [2m456[0m | [31;1m|[0m   							changeCategoryHandler('payment');
+ [2m457[0m | [31;1m|[0m   						}}
+ [2m458[0m | [31;1m|[0m   					>
+ [2m459[0m | [31;1m|[0m   						Payment
+ [2m460[0m | [31;1m|[0m   					</div>
+ [2m461[0m | [31;1m|[0m   					<div
+ [2m462[0m | [31;1m|[0m   						className={category === 'buyers' ? 'active' : ''}
+ [2m463[0m | [31;1m|[0m   						onClick={() => {
+ [2m464[0m | [31;1m|[0m   							changeCategoryHandler('buyers');
+ [2m465[0m | [31;1m|[0m   						}}
+ [2m466[0m | [31;1m|[0m   					>
+ [2m467[0m | [31;1m|[0m   						Foy Buyers
+ [2m468[0m | [31;1m|[0m   					</div>
+ [2m469[0m | [31;1m|[0m   					<div
+ [2m470[0m | [31;1m|[0m   						className={category === 'agents' ? 'active' : ''}
+ [2m471[0m | [31;1m|[0m   						onClick={() => {
+ [2m472[0m | [31;1m|[0m   							changeCategoryHandler('agents');
+ [2m473[0m | [31;1m|[0m   						}}
+ [2m474[0m | [31;1m|[0m   					>
+ [2m475[0m | [31;1m|[0m   						For Agents
+ [2m476[0m | [31;1m|[0m   					</div>
+ [2m477[0m | [31;1m|[0m   					<div
+ [2m478[0m | [31;1m|[0m   						className={category === 'membership' ? 'active' : ''}
+ [2m479[0m | [31;1m|[0m   						onClick={() => {
+ [2m480[0m | [31;1m|[0m   							changeCategoryHandler('membership');
+ [2m481[0m | [31;1m|[0m   						}}
+ [2m482[0m | [31;1m|[0m   					>
+ [2m483[0m | [31;1m|[0m   						Membership
+ [2m484[0m | [31;1m|[0m   					</div>
+ [2m485[0m | [31;1m|[0m   					<div
+ [2m486[0m | [31;1m|[0m   						className={category === 'community' ? 'active' : ''}
+ [2m487[0m | [31;1m|[0m   						onClick={() => {
+ [2m488[0m | [31;1m|[0m   							changeCategoryHandler('community');
+ [2m489[0m | [31;1m|[0m   						}}
+ [2m490[0m | [31;1m|[0m   					>
+ [2m491[0m | [31;1m|[0m   						Community
+ [2m492[0m | [31;1m|[0m   					</div>
+ [2m493[0m | [31;1m|[0m   					<div
+ [2m494[0m | [31;1m|[0m   						className={category === 'other' ? 'active' : ''}
+ [2m495[0m | [31;1m|[0m   						onClick={() => {
+ [2m496[0m | [31;1m|[0m   							changeCategoryHandler('other');
+ [2m497[0m | [31;1m|[0m   						}}
+ [2m498[0m | [31;1m|[0m   					>
+ [2m499[0m | [31;1m|[0m   						Other
+ [2m500[0m | [31;1m|[0m   					</div>
+ [2m501[0m | [31;1m|[0m   				</Box>
+ [2m502[0m | [31;1m|[0m   				<Box className={'wrap'} component={'div'}>
+ [2m503[0m | [31;1m|[0m   					{data[category] &&
+ [2m504[0m | [31;1m|[0m   						data[category].map((ele: any) => (
+ [2m505[0m | [31;1m|[0m   							<Accordion expanded={expanded === ele?.id} onChange={handleChange(ele?.id)} key={ele?.subject}>
+ [2m506[0m | [31;1m|[0m   								<AccordionSummary id="panel1d-header" className="question" aria-controls="panel1d-content">
+ [2m507[0m | [31;1m|[0m   									<Typography className="badge" variant={'h4'}>
+ [2m508[0m | [31;1m|[0m   										Q
+ [2m509[0m | [31;1m|[0m   									</Typography>
+ [2m510[0m | [31;1m|[0m   									<Typography> {ele?.subject}</Typography>
+ [2m511[0m | [31;1m|[0m   								</AccordionSummary>
+ [2m512[0m | [31;1m|[0m   								<AccordionDetails>
+ [2m513[0m | [31;1m|[0m   									<Stack className={'answer flex-box'}>
+ [2m514[0m | [31;1m|[0m   										<Typography className="badge" variant={'h4'} color={'primary'}>
+ [2m515[0m | [31;1m|[0m   											A
+ [2m516[0m | [31;1m|[0m   										</Typography>
+ [2m517[0m | [31;1m|[0m   										<Typography> {ele?.content}</Typography>
+ [2m518[0m | [31;1m|[0m   									</Stack>
+ [2m519[0m | [31;1m|[0m   								</AccordionDetails>
+ [2m520[0m | [31;1m|[0m   							</Accordion>
+ [2m521[0m | [31;1m|[0m   						))}
+ [2m522[0m | [31;1m|[0m   				</Box>
+ [2m523[0m | [31;1m|[0m   			</Stack>
+ [2m524[0m | [31;1m`[0m[31;1m-[0m[31;1m>[0m 		);
+ [2m525[0m |     	}
+ [2m526[0m |     };
+ [2m526[0m |     
+     `----
+
+  [31mx[0m Expression expected
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:523:1]
+ [2m523[0m | 			</Stack>
+ [2m524[0m | 		);
+ [2m525[0m | 	}
+ [2m526[0m | };
+     : [31;1m^[0m
+ [2m527[0m | 
+ [2m528[0m | export default Faq;
+ [2m529[0m | */
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./libs/components/cs/Faq.tsx
+ ⨯ ./libs/components/cs/Faq.tsx
+Error: 
+  [31mx[0m Return statement is not allowed here
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:437:1]
+ [2m437[0m | 	};
+ [2m438[0m | 
+ [2m439[0m | 	if (device === 'mobile') {
+ [2m440[0m | 		return <div>FAQ MOBILE</div>;
+     : [31;1m  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m441[0m | 	} else {
+ [2m442[0m | 		return (
+ [2m442[0m | 			<Stack className={'faq-content'}>
+     `----
+
+  [31mx[0m Return statement is not allowed here
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:439:1]
+ [2m439[0m |     	if (device === 'mobile') {
+ [2m440[0m |     		return <div>FAQ MOBILE</div>;
+ [2m441[0m |     	} else {
+ [2m442[0m | [31;1m,[0m[31;1m-[0m[31;1m>[0m 		return (
+ [2m443[0m | [31;1m|[0m   			<Stack className={'faq-content'}>
+ [2m444[0m | [31;1m|[0m   				<Box className={'categories'} component={'div'}>
+ [2m445[0m | [31;1m|[0m   					<div
+ [2m446[0m | [31;1m|[0m   						className={category === 'product' ? 'active' : ''}
+ [2m447[0m | [31;1m|[0m   						onClick={() => {
+ [2m448[0m | [31;1m|[0m   							changeCategoryHandler('product');
+ [2m449[0m | [31;1m|[0m   						}}
+ [2m450[0m | [31;1m|[0m   					>
+ [2m451[0m | [31;1m|[0m   						Product
+ [2m452[0m | [31;1m|[0m   					</div>
+ [2m453[0m | [31;1m|[0m   					<div
+ [2m454[0m | [31;1m|[0m   						className={category === 'payment' ? 'active' : ''}
+ [2m455[0m | [31;1m|[0m   						onClick={() => {
+ [2m456[0m | [31;1m|[0m   							changeCategoryHandler('payment');
+ [2m457[0m | [31;1m|[0m   						}}
+ [2m458[0m | [31;1m|[0m   					>
+ [2m459[0m | [31;1m|[0m   						Payment
+ [2m460[0m | [31;1m|[0m   					</div>
+ [2m461[0m | [31;1m|[0m   					<div
+ [2m462[0m | [31;1m|[0m   						className={category === 'buyers' ? 'active' : ''}
+ [2m463[0m | [31;1m|[0m   						onClick={() => {
+ [2m464[0m | [31;1m|[0m   							changeCategoryHandler('buyers');
+ [2m465[0m | [31;1m|[0m   						}}
+ [2m466[0m | [31;1m|[0m   					>
+ [2m467[0m | [31;1m|[0m   						Foy Buyers
+ [2m468[0m | [31;1m|[0m   					</div>
+ [2m469[0m | [31;1m|[0m   					<div
+ [2m470[0m | [31;1m|[0m   						className={category === 'agents' ? 'active' : ''}
+ [2m471[0m | [31;1m|[0m   						onClick={() => {
+ [2m472[0m | [31;1m|[0m   							changeCategoryHandler('agents');
+ [2m473[0m | [31;1m|[0m   						}}
+ [2m474[0m | [31;1m|[0m   					>
+ [2m475[0m | [31;1m|[0m   						For Agents
+ [2m476[0m | [31;1m|[0m   					</div>
+ [2m477[0m | [31;1m|[0m   					<div
+ [2m478[0m | [31;1m|[0m   						className={category === 'membership' ? 'active' : ''}
+ [2m479[0m | [31;1m|[0m   						onClick={() => {
+ [2m480[0m | [31;1m|[0m   							changeCategoryHandler('membership');
+ [2m481[0m | [31;1m|[0m   						}}
+ [2m482[0m | [31;1m|[0m   					>
+ [2m483[0m | [31;1m|[0m   						Membership
+ [2m484[0m | [31;1m|[0m   					</div>
+ [2m485[0m | [31;1m|[0m   					<div
+ [2m486[0m | [31;1m|[0m   						className={category === 'community' ? 'active' : ''}
+ [2m487[0m | [31;1m|[0m   						onClick={() => {
+ [2m488[0m | [31;1m|[0m   							changeCategoryHandler('community');
+ [2m489[0m | [31;1m|[0m   						}}
+ [2m490[0m | [31;1m|[0m   					>
+ [2m491[0m | [31;1m|[0m   						Community
+ [2m492[0m | [31;1m|[0m   					</div>
+ [2m493[0m | [31;1m|[0m   					<div
+ [2m494[0m | [31;1m|[0m   						className={category === 'other' ? 'active' : ''}
+ [2m495[0m | [31;1m|[0m   						onClick={() => {
+ [2m496[0m | [31;1m|[0m   							changeCategoryHandler('other');
+ [2m497[0m | [31;1m|[0m   						}}
+ [2m498[0m | [31;1m|[0m   					>
+ [2m499[0m | [31;1m|[0m   						Other
+ [2m500[0m | [31;1m|[0m   					</div>
+ [2m501[0m | [31;1m|[0m   				</Box>
+ [2m502[0m | [31;1m|[0m   				<Box className={'wrap'} component={'div'}>
+ [2m503[0m | [31;1m|[0m   					{data[category] &&
+ [2m504[0m | [31;1m|[0m   						data[category].map((ele: any) => (
+ [2m505[0m | [31;1m|[0m   							<Accordion expanded={expanded === ele?.id} onChange={handleChange(ele?.id)} key={ele?.subject}>
+ [2m506[0m | [31;1m|[0m   								<AccordionSummary id="panel1d-header" className="question" aria-controls="panel1d-content">
+ [2m507[0m | [31;1m|[0m   									<Typography className="badge" variant={'h4'}>
+ [2m508[0m | [31;1m|[0m   										Q
+ [2m509[0m | [31;1m|[0m   									</Typography>
+ [2m510[0m | [31;1m|[0m   									<Typography> {ele?.subject}</Typography>
+ [2m511[0m | [31;1m|[0m   								</AccordionSummary>
+ [2m512[0m | [31;1m|[0m   								<AccordionDetails>
+ [2m513[0m | [31;1m|[0m   									<Stack className={'answer flex-box'}>
+ [2m514[0m | [31;1m|[0m   										<Typography className="badge" variant={'h4'} color={'primary'}>
+ [2m515[0m | [31;1m|[0m   											A
+ [2m516[0m | [31;1m|[0m   										</Typography>
+ [2m517[0m | [31;1m|[0m   										<Typography> {ele?.content}</Typography>
+ [2m518[0m | [31;1m|[0m   									</Stack>
+ [2m519[0m | [31;1m|[0m   								</AccordionDetails>
+ [2m520[0m | [31;1m|[0m   							</Accordion>
+ [2m521[0m | [31;1m|[0m   						))}
+ [2m522[0m | [31;1m|[0m   				</Box>
+ [2m523[0m | [31;1m|[0m   			</Stack>
+ [2m524[0m | [31;1m`[0m[31;1m-[0m[31;1m>[0m 		);
+ [2m525[0m |     	}
+ [2m526[0m |     };
+ [2m526[0m |     
+     `----
+
+  [31mx[0m Expression expected
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:523:1]
+ [2m523[0m | 			</Stack>
+ [2m524[0m | 		);
+ [2m525[0m | 	}
+ [2m526[0m | };
+     : [31;1m^[0m
+ [2m527[0m | 
+ [2m528[0m | export default Faq;
+ [2m529[0m | */
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./libs/components/cs/Faq.tsx
+ ⨯ ./libs/components/cs/Faq.tsx
+Error: 
+  [31mx[0m Return statement is not allowed here
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:437:1]
+ [2m437[0m | 	};
+ [2m438[0m | 
+ [2m439[0m | 	if (device === 'mobile') {
+ [2m440[0m | 		return <div>FAQ help</div>;
+     : [31;1m  ^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m441[0m | 	} else {
+ [2m442[0m | 		return (
+ [2m442[0m | 			<Stack className={'faq-content'}>
+     `----
+
+  [31mx[0m Return statement is not allowed here
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:439:1]
+ [2m439[0m |     	if (device === 'mobile') {
+ [2m440[0m |     		return <div>FAQ help</div>;
+ [2m441[0m |     	} else {
+ [2m442[0m | [31;1m,[0m[31;1m-[0m[31;1m>[0m 		return (
+ [2m443[0m | [31;1m|[0m   			<Stack className={'faq-content'}>
+ [2m444[0m | [31;1m|[0m   				<Box className={'categories'} component={'div'}>
+ [2m445[0m | [31;1m|[0m   					<div
+ [2m446[0m | [31;1m|[0m   						className={category === 'product' ? 'active' : ''}
+ [2m447[0m | [31;1m|[0m   						onClick={() => {
+ [2m448[0m | [31;1m|[0m   							changeCategoryHandler('product');
+ [2m449[0m | [31;1m|[0m   						}}
+ [2m450[0m | [31;1m|[0m   					>
+ [2m451[0m | [31;1m|[0m   						Product
+ [2m452[0m | [31;1m|[0m   					</div>
+ [2m453[0m | [31;1m|[0m   					<div
+ [2m454[0m | [31;1m|[0m   						className={category === 'payment' ? 'active' : ''}
+ [2m455[0m | [31;1m|[0m   						onClick={() => {
+ [2m456[0m | [31;1m|[0m   							changeCategoryHandler('payment');
+ [2m457[0m | [31;1m|[0m   						}}
+ [2m458[0m | [31;1m|[0m   					>
+ [2m459[0m | [31;1m|[0m   						Payment
+ [2m460[0m | [31;1m|[0m   					</div>
+ [2m461[0m | [31;1m|[0m   					<div
+ [2m462[0m | [31;1m|[0m   						className={category === 'buyers' ? 'active' : ''}
+ [2m463[0m | [31;1m|[0m   						onClick={() => {
+ [2m464[0m | [31;1m|[0m   							changeCategoryHandler('buyers');
+ [2m465[0m | [31;1m|[0m   						}}
+ [2m466[0m | [31;1m|[0m   					>
+ [2m467[0m | [31;1m|[0m   						Foy Buyers
+ [2m468[0m | [31;1m|[0m   					</div>
+ [2m469[0m | [31;1m|[0m   					<div
+ [2m470[0m | [31;1m|[0m   						className={category === 'agents' ? 'active' : ''}
+ [2m471[0m | [31;1m|[0m   						onClick={() => {
+ [2m472[0m | [31;1m|[0m   							changeCategoryHandler('agents');
+ [2m473[0m | [31;1m|[0m   						}}
+ [2m474[0m | [31;1m|[0m   					>
+ [2m475[0m | [31;1m|[0m   						For Agents
+ [2m476[0m | [31;1m|[0m   					</div>
+ [2m477[0m | [31;1m|[0m   					<div
+ [2m478[0m | [31;1m|[0m   						className={category === 'membership' ? 'active' : ''}
+ [2m479[0m | [31;1m|[0m   						onClick={() => {
+ [2m480[0m | [31;1m|[0m   							changeCategoryHandler('membership');
+ [2m481[0m | [31;1m|[0m   						}}
+ [2m482[0m | [31;1m|[0m   					>
+ [2m483[0m | [31;1m|[0m   						Membership
+ [2m484[0m | [31;1m|[0m   					</div>
+ [2m485[0m | [31;1m|[0m   					<div
+ [2m486[0m | [31;1m|[0m   						className={category === 'community' ? 'active' : ''}
+ [2m487[0m | [31;1m|[0m   						onClick={() => {
+ [2m488[0m | [31;1m|[0m   							changeCategoryHandler('community');
+ [2m489[0m | [31;1m|[0m   						}}
+ [2m490[0m | [31;1m|[0m   					>
+ [2m491[0m | [31;1m|[0m   						Community
+ [2m492[0m | [31;1m|[0m   					</div>
+ [2m493[0m | [31;1m|[0m   					<div
+ [2m494[0m | [31;1m|[0m   						className={category === 'other' ? 'active' : ''}
+ [2m495[0m | [31;1m|[0m   						onClick={() => {
+ [2m496[0m | [31;1m|[0m   							changeCategoryHandler('other');
+ [2m497[0m | [31;1m|[0m   						}}
+ [2m498[0m | [31;1m|[0m   					>
+ [2m499[0m | [31;1m|[0m   						Other
+ [2m500[0m | [31;1m|[0m   					</div>
+ [2m501[0m | [31;1m|[0m   				</Box>
+ [2m502[0m | [31;1m|[0m   				<Box className={'wrap'} component={'div'}>
+ [2m503[0m | [31;1m|[0m   					{data[category] &&
+ [2m504[0m | [31;1m|[0m   						data[category].map((ele: any) => (
+ [2m505[0m | [31;1m|[0m   							<Accordion expanded={expanded === ele?.id} onChange={handleChange(ele?.id)} key={ele?.subject}>
+ [2m506[0m | [31;1m|[0m   								<AccordionSummary id="panel1d-header" className="question" aria-controls="panel1d-content">
+ [2m507[0m | [31;1m|[0m   									<Typography className="badge" variant={'h4'}>
+ [2m508[0m | [31;1m|[0m   										Q
+ [2m509[0m | [31;1m|[0m   									</Typography>
+ [2m510[0m | [31;1m|[0m   									<Typography> {ele?.subject}</Typography>
+ [2m511[0m | [31;1m|[0m   								</AccordionSummary>
+ [2m512[0m | [31;1m|[0m   								<AccordionDetails>
+ [2m513[0m | [31;1m|[0m   									<Stack className={'answer flex-box'}>
+ [2m514[0m | [31;1m|[0m   										<Typography className="badge" variant={'h4'} color={'primary'}>
+ [2m515[0m | [31;1m|[0m   											A
+ [2m516[0m | [31;1m|[0m   										</Typography>
+ [2m517[0m | [31;1m|[0m   										<Typography> {ele?.content}</Typography>
+ [2m518[0m | [31;1m|[0m   									</Stack>
+ [2m519[0m | [31;1m|[0m   								</AccordionDetails>
+ [2m520[0m | [31;1m|[0m   							</Accordion>
+ [2m521[0m | [31;1m|[0m   						))}
+ [2m522[0m | [31;1m|[0m   				</Box>
+ [2m523[0m | [31;1m|[0m   			</Stack>
+ [2m524[0m | [31;1m`[0m[31;1m-[0m[31;1m>[0m 		);
+ [2m525[0m |     	}
+ [2m526[0m |     };
+ [2m526[0m |     
+     `----
+
+  [31mx[0m Expression expected
+     ,-[[36;1;4mC:\luxethread-next\libs\components\cs\Faq.tsx[0m:523:1]
+ [2m523[0m | 			</Stack>
+ [2m524[0m | 		);
+ [2m525[0m | 	}
+ [2m526[0m | };
+     : [31;1m^[0m
+ [2m527[0m | 
+ [2m528[0m | export default Faq;
+ [2m529[0m | */
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./libs/components/cs/Faq.tsx
+ ⚠ Fast Refresh had to perform a full reload when ./libs/components/cs/Faq.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./pages/account/join.tsx
+Error: 
+  [31mx[0m Unexpected token `Stack`. Expected jsx identifier
+     ,-[[36;1;4mC:\luxethread-next\pages\account\join.tsx[0m:107:1]
+ [2m107[0m | 	};
+ [2m108[0m | 
+ [2m109[0m | 	return (
+ [2m110[0m | 		<Stack className={'join-page'}>
+     : [31;1m   ^^^^^[0m
+ [2m111[0m | 			<Stack className={'container'}>
+ [2m112[0m | 				<Stack className={'auth-shell'}>
+ [2m113[0m | 					<Stack className={'auth-form-panel'}>
+     `----
+
+Caused by:
+    Syntax Error
+ ⚠ Fast Refresh had to perform a full reload when ./pages/account/join.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload when ./pages/account/join.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+Could not find files for /account/join in .next/build-manifest.json
+Could not find files for /account/join in .next/build-manifest.json
+Could not find files for /account/join in .next/build-manifest.json
+Could not find files for /account/join in .next/build-manifest.json
+Could not find files for /account/join in .next/build-manifest.json
+Could not find files for /account/join in .next/build-manifest.json
+Could not find files for /account/join in .next/build-manifest.json
+Could not find files for /account/join in .next/build-manifest.json
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\luxethread-next\.next\cache\webpack\server-development\3.pack.gz_' -> 'C:\luxethread-next\.next\cache\webpack\server-development\3.pack.gz'
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\luxethread-next\.next\cache\webpack\client-development\4.pack.gz_' -> 'C:\luxethread-next\.next\cache\webpack\client-development\4.pack.gz'
+Could not find files for /account/join in .next/build-manifest.json
+Could not find files for /account/join in .next/build-manifest.json
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload

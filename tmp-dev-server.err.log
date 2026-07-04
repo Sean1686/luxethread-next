@@ -1,55 +1,14 @@
-Browserslist: caniuse-lite is outdated. Please run:
-  npx update-browserslist-db@latest
-  Why you should do it regularly: https://github.com/browserslist/update-db#readme
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
- ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
- ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
- ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
- ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
- ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
- ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
- ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
- ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-Could not find files for / in .next/build-manifest.json
-Could not find files for / in .next/build-manifest.json
-<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, lstat 'C:\luxethread-next\.next\server\pages\cart.js'
-<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../../.next/server/pages/cart' in C:\luxethread-next\node_modules\next\dist\server for build dependencies doesn't lead to expected result 'C:\luxethread-next\.next\server\pages\cart.js', but to 'Error: Can't resolve '../../../../.next/server/pages/cart' in 'C:\luxethread-next\node_modules\next\dist\server'' instead. Resolving dependencies are ignored for this path.
-<w>  at resolve commonjs file ../../../../.next/server/pages/cart (expected C:\luxethread-next\.next\server\pages\cart.js)
-<w>  at file dependencies C:\luxethread-next\node_modules\next\dist\server\require.js
-<w>  at file C:\luxethread-next\node_modules\next\dist\server\require.js
-<w>  at file dependencies C:\luxethread-next\node_modules\next\dist\server\load-components.js
-<w>  at file C:\luxethread-next\node_modules\next\dist\server\load-components.js
-<w>  at file dependencies C:\luxethread-next\node_modules\next\dist\build\utils.js
-<w>  at file C:\luxethread-next\node_modules\next\dist\build\utils.js
-<w>  at file dependencies C:\luxethread-next\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
-<w>  at file C:\luxethread-next\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
-<w>  at file dependencies C:\luxethread-next\node_modules\next\dist\compiled\loader-runner\LoaderRunner.js
-<w>  at file C:\luxethread-next\node_modules\next\dist\compiled\loader-runner\LoaderRunner.js
-<w>  at file dependencies C:\luxethread-next\node_modules\next\dist\compiled\webpack\bundle5.js
-<w>  at file C:\luxethread-next\node_modules\next\dist\compiled\webpack\bundle5.js
-<w>  at file dependencies C:\luxethread-next\node_modules\next\dist\compiled\webpack\webpack.js
-<w>  at file C:\luxethread-next\node_modules\next\dist\compiled\webpack\webpack.js
-<w>  at file dependencies C:\luxethread-next\node_modules\next\dist\build\webpack\plugins\define-env-plugin.js
-<w>  at file C:\luxethread-next\node_modules\next\dist\build\webpack\plugins\define-env-plugin.js
-<w>  at file dependencies C:\luxethread-next\node_modules\next\dist\build\webpack-config.js
-<w>  at file C:\luxethread-next\node_modules\next\dist\build\webpack-config.js
-<w>  at file dependencies C:\luxethread-next\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js
-<w>  at file C:\luxethread-next\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js
-<w>  at resolve commonjs C:\luxethread-next\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:420:11)
+    at spawn (node:child_process:762:9)
+    at fork (node:child_process:172:10)
+    at C:\luxethread-next\node_modules\next\dist\cli\next-dev.js:213:45
+    at new Promise (<anonymous>)
+    at startServer (C:\luxethread-next\node_modules\next\dist\cli\next-dev.js:199:16)
+    at runDevServer (C:\luxethread-next\node_modules\next\dist\cli\next-dev.js:280:23)
+    at Module.nextDev (C:\luxethread-next\node_modules\next\dist\cli\next-dev.js:288:11) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'spawn'
+}
+error Command failed with exit code 1.

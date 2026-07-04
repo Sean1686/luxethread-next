@@ -9,6 +9,11 @@ import {
 } from '../../enums/property.enum';
 import { Direction } from '../../enums/common.enum';
 
+export interface ProductColorImageInput {
+	color: ProductColor;
+	images: string[];
+}
+
 export interface ProductInput {
 	_id?: string;
 	productCategory: ProductCategory | '';
@@ -21,6 +26,7 @@ export interface ProductInput {
 	productTitle: string;
 	productPrice: number;
 	productImages: string[];
+	productColorImages?: ProductColorImageInput[];
 	productDesc?: string;
 	productLocation?: string;
 	productAddress?: string;

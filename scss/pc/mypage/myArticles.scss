@@ -32,9 +32,9 @@
 		.article-list-box {
 			width: 100%;
 			height: auto;
-			flex-direction: row;
-			flex-wrap: wrap;
-			gap: 25px;
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 18px;
 			margin-top: 55px;
 			margin-bottom: 87px;
 		}

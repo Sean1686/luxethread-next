@@ -19,6 +19,11 @@ export interface TotalCounter {
 	total: number;
 }
 
+export interface ProductColorImage {
+	color: ProductColor;
+	images: string[];
+}
+
 export interface Product {
 	_id: string;
 	productCategory: ProductCategory;
@@ -36,6 +41,7 @@ export interface Product {
 	productComments: number;
 	productRank: number;
 	productImages: string[];
+	productColorImages?: ProductColorImage[];
 	productDesc?: string;
 	productLocation: string;
 	productAddress: string;

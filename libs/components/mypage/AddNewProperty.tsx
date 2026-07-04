@@ -1,9 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Stack, Typography } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { ProductLocation, ProductType } from '../../enums/product.enum';
-import { REACT_APP_API_URL, productSquare } from '../../config';
+import {
+	ProductCategory,
+	ProductColor,
+	ProductFit,
+	ProductMaterial,
+	ProductSize,
+	ProductType,
+} from '../../enums/product.enum';
+import { REACT_APP_API_URL } from '../../config';
 import { ProductInput } from '../../types/property/product.input';
 import axios from 'axios';
 import { getJwtToken } from '../../auth';
@@ -13,13 +19,85 @@ import { userVar } from '../../../apollo/store';
 import { CREATE_PRODUCT, UPDATE_PRODUCT } from '../../../apollo/user/mutation';
 import { GET_PRODUCT } from '../../../apollo/user/query';
 
+const productColorHex: Record<string, string> = {
+	BLACK: '#151515',
+	WHITE: '#f7f3ee',
+	YELLOW: '#d5aa32',
+	GRAY: '#7a8087',
+	RED: '#7b1f2a',
+	BLUE: '#2f557f',
+	GREEN: '#2f5d50',
+	BEIGE: '#d8c2a2',
+	BROWN: '#6f4a32',
+	PINK: '#d8a7ad',
+};
+
+const formatProductLabel = (value?: string) => {
+	if (!value) return '';
+	return value
+		.toLowerCase()
+		.split('_')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+};
+
+const defaultProductInput: ProductInput = {
+	productCategory: '',
+	productTitle: '',
+	productPrice: 0,
+	productType: '',
+	productSizes: [],
+	productColors: [],
+	productMaterial: '',
+	productFit: '',
+	productOrigin: '',
+	productDesc: '',
+	productImages: [],
+	productColorImages: [],
+};
+
+const normalizeProductColorImages = (data: ProductInput) => {
+	const selectedColors = new Set(data.productColors);
+	const uploadedImages = new Set(data.productImages);
+
+	return (data.productColorImages ?? [])
+		.filter((item) => selectedColors.has(item.color))
+		.map((item) => ({
+			color: item.color,
+			images: Array.from(new Set(item.images.filter((image) => uploadedImages.has(image)))),
+		}))
+		.filter((item) => item.images.length > 0);
+};
+
+const buildProductPayload = (data: ProductInput, productId?: string) => ({
+	...(productId ? { _id: productId } : {}),
+	productCategory: data.productCategory,
+	productType: data.productType,
+	productSizes: data.productSizes,
+	productColors: data.productColors,
+	productMaterial: data.productMaterial,
+	productFit: data.productFit,
+	productOrigin: data.productOrigin.trim(),
+	productTitle: data.productTitle.trim(),
+	productPrice: Number(data.productPrice) || 0,
+	productImages: data.productImages,
+	productColorImages: normalizeProductColorImages(data),
+	productDesc: data.productDesc?.trim() || undefined,
+});
+
+const normalizePriceInput = (value: string) => {
+	if (value.trim() === '') return 0;
+	const parsedValue = Number(value);
+	return Number.isFinite(parsedValue) ? parsedValue : 0;
+};
+
 const AddProduct = ({ initialValues, ...props }: any) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
+	const routeProductId = Array.isArray(router.query?.productId)
+		? router.query.productId[0]
+		: (router.query?.productId as string | undefined);
 	const inputRef = useRef<any>(null);
-	const [insertProductData, setInsertProductData] = useState<ProductInput>(initialValues);
-	const [productType, setProductType] = useState<ProductType[]>(Object.values(ProductType));
-	const [productLocation, setProductLocation] = useState<ProductLocation[]>(Object.values(ProductLocation));
+	const [insertProductData, setInsertProductData] = useState<ProductInput>({ ...defaultProductInput, ...initialValues });
 	const token = getJwtToken();
 	const user = useReactiveVar(userVar);
 
@@ -34,28 +112,30 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 		refetch: getProductRefetch,
 	} = useQuery(GET_PRODUCT, {
 		fetchPolicy: 'network-only',
-		variables: { input: router.query?.productId },
-		skip: !router.query?.productId,
+		variables: { input: routeProductId },
+		skip: !routeProductId,
 	});
 
 	/** LIFECYCLES **/
 	useEffect(() => {
+		if (routeProductId && !getProductData?.getProduct) return;
+		const product = getProductData?.getProduct;
 		setInsertProductData({
-			...insertProductData,
-			productTitle: getProductData?.getProduct ? getProductData?.getProduct?.productTitle : '',
-			productPrice: getProductData?.getProduct ? getProductData?.getProduct?.productPrice : 0,
-			productType: getProductData?.getProduct ? getProductData?.getProduct?.productType : '',
-			productLocation: getProductData?.getProduct ? getProductData?.getProduct?.productLocation : '',
-			productAddress: getProductData?.getProduct ? getProductData?.getProduct?.productAddress : '',
-			productBarter: getProductData?.getProduct ? getProductData?.getProduct?.productBarter : false,
-			productRent: getProductData?.getProduct ? getProductData?.getProduct?.productRent : false,
-			productRooms: getProductData?.getProduct ? getProductData?.getProduct?.productRooms : 0,
-			productBeds: getProductData?.getProduct ? getProductData?.getProduct?.productBeds : 0,
-			productSquare: getProductData?.getProduct ? getProductData?.getProduct?.productSquare : 0,
-			productDesc: getProductData?.getProduct ? getProductData?.getProduct?.productDesc : '',
-			productImages: getProductData?.getProduct ? getProductData?.getProduct?.productImages : [],
+			...defaultProductInput,
+			productCategory: product?.productCategory ?? '',
+			productTitle: product?.productTitle ?? '',
+			productPrice: product?.productPrice ?? 0,
+			productType: product?.productType ?? '',
+			productSizes: product?.productSizes ?? [],
+			productColors: product?.productColors ?? [],
+			productMaterial: product?.productMaterial ?? '',
+			productFit: product?.productFit ?? '',
+			productOrigin: product?.productOrigin ?? '',
+			productDesc: product?.productDesc ?? '',
+			productImages: product?.productImages ?? [],
+			productColorImages: product?.productColorImages ?? [],
 		});
-	}, [getProductLoading, getProductData]);
+	}, [routeProductId, getProductLoading, getProductData]);
 
 	/** HANDLERS **/
 	async function uploadImages() {
@@ -102,27 +182,84 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 
 			const responseImages = response.data.data.imagesUploader;
 
-			console.log('+responseImages: ', responseImages);
-			setInsertProductData({ ...insertProductData, productImages: responseImages });
+			setInsertProductData((prev) => ({
+				...prev,
+				productImages: responseImages,
+				productColorImages: (prev.productColorImages ?? [])
+					.map((item) => ({
+						...item,
+						images: item.images.filter((image) => responseImages.includes(image)),
+					}))
+					.filter((item) => item.images.length > 0),
+			}));
 		} catch (err: any) {
 			console.log('err: ', err.message);
 			await sweetMixinErrorAlert(err.message);
 		}
 	}
 
+	const colorAssignmentOptions = insertProductData.productColors?.length
+		? insertProductData.productColors
+		: Object.values(ProductColor);
+
+	const isImageAssignedToColor = (image: string, color: ProductColor) =>
+		Boolean((insertProductData.productColorImages ?? []).find((item) => item.color === color)?.images.includes(image));
+
+	const toggleImageColorAssignment = (image: string, color: ProductColor) => {
+		setInsertProductData((prev) => {
+			const assignments = prev.productColorImages ?? [];
+			const current = assignments.find((item) => item.color === color);
+			const isAssigned = Boolean(current?.images.includes(image));
+			const nextAssignments = current
+				? assignments.map((item) =>
+						item.color === color
+							? {
+									...item,
+									images: isAssigned ? item.images.filter((itemImage) => itemImage !== image) : [...item.images, image],
+								}
+							: item,
+				  )
+				: [...assignments, { color, images: [image] }];
+
+			return {
+				...prev,
+				productColorImages: nextAssignments.filter((item) => item.images.length > 0),
+			};
+		});
+	};
+
+	const toggleArrayValue = <T extends string>(key: 'productSizes' | 'productColors', value: T) => {
+		setInsertProductData((prev) => {
+			const currentValues = prev[key] as T[];
+			const hasValue = currentValues.includes(value);
+			const nextValues = hasValue ? currentValues.filter((item) => item !== value) : [...currentValues, value];
+
+			return {
+				...prev,
+				[key]: nextValues,
+				...(key === 'productColors'
+					? {
+							productColorImages: (prev.productColorImages ?? []).filter((item) =>
+								(nextValues as ProductColor[]).includes(item.color),
+							),
+					  }
+					: {}),
+			};
+		});
+	};
+
 	const doDisabledCheck = () => {
 		if (
-			insertProductData.productTitle === '' ||
-			insertProductData.productPrice === 0 || // @ts-ignore
-			insertProductData.productType === '' || // @ts-ignore
-			insertProductData.productLocation === '' || // @ts-ignore
-			insertProductData.productAddress === '' || // @ts-ignore
-			insertProductData.productBarter === '' || // @ts-ignore
-			insertProductData.productRent === '' ||
-			insertProductData.productRooms === 0 ||
-			insertProductData.productBeds === 0 ||
-			insertProductData.productSquare === 0 ||
-			insertProductData.productDesc === '' ||
+			insertProductData.productTitle.trim() === '' ||
+			!Number.isFinite(Number(insertProductData.productPrice)) ||
+			Number(insertProductData.productPrice) <= 0 ||
+			insertProductData.productCategory === '' ||
+			insertProductData.productType === '' ||
+			insertProductData.productSizes.length === 0 ||
+			insertProductData.productColors.length === 0 ||
+			insertProductData.productMaterial === '' ||
+			insertProductData.productFit === '' ||
+			insertProductData.productOrigin.trim() === '' ||
 			insertProductData.productImages.length === 0
 		) {
 			return true;
@@ -131,9 +268,10 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 
 	const insertProductHandler = useCallback(async () => {
 		try {
+			const input = buildProductPayload(insertProductData);
 			const result = await createProduct({
 				variables: {
-					input: insertProductData,
+					input,
 				},
 			});
 
@@ -149,11 +287,14 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 
 	const updateProductHandler = useCallback(async () => {
 		try {
-			insertProductData._id = getProductData?.getProduct?._id;
+			if (!routeProductId) throw new Error('Product id is missing.');
+			if (!getProductData?.getProduct) throw new Error('Product details are still loading. Please try again.');
+
+			const input = buildProductPayload(insertProductData, routeProductId);
 			const result = await updateProduct({
 				variables: {
-					input: insertProductData,
-				}
+					input,
+				},
 			});
 
 			await sweetMixinSuccessAlert('This product has been successfully updated!');
@@ -164,22 +305,25 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
-	}, [insertProductData]);
+	}, [insertProductData, getProductData, routeProductId]);
 
-	if (user?.memberType !== 'AGENT') {
-		router.back();
+	if (user?._id && user?.memberType !== 'AGENT') {
+		return (
+			<div id="add-product-page">
+				<div className={'no-data'}>
+					<img src="/img/icons/icoAlert.svg" alt="" />
+					<strong>Seller access required</strong>
+					<p>Create a seller account to add products to Luxethread.</p>
+				</div>
+			</div>
+		);
 	}
 
-	console.log('+insertProductData', insertProductData);
-
-	if (device === 'mobile') {
-		return <div>ADD NEW PRODUCT MOBILE PAGE</div>;
-	} else {
-		return (
+	return (
 			<div id="add-product-page">
 				<Stack className="main-title-box">
 					<Typography className="main-title">Add New Product</Typography>
-					<Typography className="sub-title">We are glad to see you again!</Typography>
+					<Typography className="sub-title">Build a complete product record for your boutique.</Typography>
 				</Stack>
 
 				<div>
@@ -207,31 +351,27 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 										placeholder={'Price'}
 										value={insertProductData.productPrice}
 										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productPrice: parseInt(value) })
+											setInsertProductData({ ...insertProductData, productPrice: normalizePriceInput(value) })
 										}
 									/>
 								</Stack>
 								<Stack className="price-year-after-price">
-									<Typography className="title">Select Type</Typography>
+									<Typography className="title">Category</Typography>
 									<select
 										className={'select-description'}
-										defaultValue={insertProductData.productType || 'select'}
-										value={insertProductData.productType || 'select'}
+										value={insertProductData.productCategory || 'select'}
 										onChange={({ target: { value } }) =>
-											// @ts-ignore
-											setInsertProductData({ ...insertProductData, productType: value })
+											setInsertProductData({ ...insertProductData, productCategory: value as ProductCategory })
 										}
 									>
-										<>
-											<option selected={true} disabled={true} value={'select'}>
-												Select
+										<option disabled={true} value={'select'}>
+											Select
+										</option>
+										{Object.values(ProductCategory).map((category) => (
+											<option value={category} key={category}>
+												{formatProductLabel(category)}
 											</option>
-											{productType.map((type: any) => (
-												<option value={`${type}`} key={type}>
-													{type}
-												</option>
-											))}
-										</>
+										))}
 									</select>
 									<div className={'divider'}></div>
 									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
@@ -240,148 +380,118 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 
 							<Stack className="config-row">
 								<Stack className="price-year-after-price">
-									<Typography className="title">Select Location</Typography>
+									<Typography className="title">Type</Typography>
 									<select
 										className={'select-description'}
-										defaultValue={insertProductData.productLocation || 'select'}
-										value={insertProductData.productLocation || 'select'}
+										value={insertProductData.productType || 'select'}
 										onChange={({ target: { value } }) =>
-											// @ts-ignore
-											setInsertProductData({ ...insertProductData, productLocation: value })
+											setInsertProductData({ ...insertProductData, productType: value as ProductType })
 										}
 									>
-										<>
-											<option selected={true} disabled={true} value={'select'}>
-												Select
+										<option disabled={true} value={'select'}>
+											Select
+										</option>
+										{Object.values(ProductType).map((type) => (
+											<option value={type} key={type}>
+												{formatProductLabel(type)}
 											</option>
-											{productLocation.map((location: any) => (
-												<option value={`${location}`} key={location}>
-													{location}
-												</option>
-											))}
-										</>
+										))}
 									</select>
 									<div className={'divider'}></div>
 									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
 								</Stack>
 								<Stack className="price-year-after-price">
-									<Typography className="title">Address</Typography>
+									<Typography className="title">Material</Typography>
+									<select
+										className={'select-description'}
+										value={insertProductData.productMaterial || 'select'}
+										onChange={({ target: { value } }) =>
+											setInsertProductData({ ...insertProductData, productMaterial: value as ProductMaterial })
+										}
+									>
+										<option disabled={true} value={'select'}>
+											Select
+										</option>
+										{Object.values(ProductMaterial).map((material) => (
+											<option value={material} key={material}>
+												{formatProductLabel(material)}
+											</option>
+										))}
+									</select>
+									<div className={'divider'}></div>
+									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
+								</Stack>
+							</Stack>
+
+							<Stack className="config-row">
+								<Stack className="price-year-after-price">
+									<Typography className="title">Fit</Typography>
+									<select
+										className={'select-description'}
+										value={insertProductData.productFit || 'select'}
+										onChange={({ target: { value } }) =>
+											setInsertProductData({ ...insertProductData, productFit: value as ProductFit })
+										}
+									>
+										<option disabled={true} value={'select'}>
+											Select
+										</option>
+										{Object.values(ProductFit).map((fit) => (
+											<option value={fit} key={fit}>
+												{formatProductLabel(fit)}
+											</option>
+										))}
+									</select>
+									<div className={'divider'}></div>
+									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
+								</Stack>
+								<Stack className="price-year-after-price">
+									<Typography className="title">Origin</Typography>
 									<input
 										type="text"
 										className="description-input"
-										placeholder={'Address'}
-										value={insertProductData.productAddress}
+										placeholder={'Italy'}
+										value={insertProductData.productOrigin}
 										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productAddress: value })
+											setInsertProductData({ ...insertProductData, productOrigin: value })
 										}
 									/>
 								</Stack>
 							</Stack>
 
-							<Stack className="config-row">
-								<Stack className="price-year-after-price">
-									<Typography className="title">Barter</Typography>
-									<select
-										className={'select-description'}
-										value={insertProductData.productBarter ? 'yes' : 'no'}
-										defaultValue={insertProductData.productBarter ? 'yes' : 'no'}
-										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productBarter: value === 'yes' })
-										}
-									>
-										<option disabled={true} selected={true}>
-											Select
-										</option>
-										<option value={'yes'}>Yes</option>
-										<option value={'no'}>No</option>
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Rent</Typography>
-									<select
-										className={'select-description'}
-										value={insertProductData.productRent ? 'yes' : 'no'}
-										defaultValue={insertProductData.productRent ? 'yes' : 'no'}
-										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productRent: value === 'yes' })
-										}
-									>
-										<option disabled={true} selected={true}>
-											Select
-										</option>
-										<option value={'yes'}>Yes</option>
-										<option value={'no'}>No</option>
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
+							<Stack className="config-column">
+								<Typography className="title">Sizes</Typography>
+								<div className="choice-chip-grid">
+									{Object.values(ProductSize).map((size) => (
+										<button
+											type="button"
+											key={size}
+											className={`choice-chip ${insertProductData.productSizes.includes(size) ? 'selected' : ''}`}
+											onClick={() => toggleArrayValue('productSizes', size)}
+										>
+											{size}
+										</button>
+									))}
+								</div>
 							</Stack>
 
-							<Stack className="config-row">
-								<Stack className="price-year-after-price">
-									<Typography className="title">Rooms</Typography>
-									<select
-										className={'select-description'}
-										value={insertProductData.productRooms || 'select'}
-										defaultValue={insertProductData.productRooms || 'select'}
-										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productRooms: parseInt(value) })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{[1, 2, 3, 4, 5].map((room: number) => (
-											<option value={`${room}`}>{room}</option>
-										))}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Bed</Typography>
-									<select
-										className={'select-description'}
-										value={insertProductData.productBeds || 'select'}
-										defaultValue={insertProductData.productBeds || 'select'}
-										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productBeds: parseInt(value) })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{[1, 2, 3, 4, 5].map((bed: number) => (
-											<option value={`${bed}`}>{bed}</option>
-										))}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
-								<Stack className="price-year-after-price">
-									<Typography className="title">Square</Typography>
-									<select
-										className={'select-description'}
-										value={insertProductData.productSquare || 'select'}
-										defaultValue={insertProductData.productSquare || 'select'}
-										onChange={({ target: { value } }) =>
-											setInsertProductData({ ...insertProductData, productSquare: parseInt(value) })
-										}
-									>
-										<option disabled={true} selected={true} value={'select'}>
-											Select
-										</option>
-										{productSquare.map((square: number) => {
-											if (square !== 0) {
-												return <option value={`${square}`}>{square}</option>;
-											}
-										})}
-									</select>
-									<div className={'divider'}></div>
-									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
-								</Stack>
+							<Stack className="config-column">
+								<Typography className="title">Colors</Typography>
+								<div className="choice-chip-grid color-choice-grid">
+									{Object.values(ProductColor).map((color) => (
+										<button
+											type="button"
+											key={color}
+											className={`choice-chip color-choice-chip ${
+												insertProductData.productColors.includes(color) ? 'selected' : ''
+											}`}
+											onClick={() => toggleArrayValue('productColors', color)}
+										>
+											<span style={{ background: productColorHex[color] ?? '#ded6cc' }} />
+											{formatProductLabel(color)}
+										</button>
+									))}
+								</div>
 							</Stack>
 
 							<Typography className="product-title">Product Description</Typography>
@@ -481,8 +591,31 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								{insertProductData?.productImages.map((image: string) => {
 									const imagePath: string = `${REACT_APP_API_URL}/${image}`;
 									return (
-										<Stack className="image-box">
+										<Stack className="image-box" key={image}>
 											<img src={imagePath} alt="" />
+											<Stack className="image-color-panel">
+												<Typography className="image-color-title">Assign colors</Typography>
+												<div className="image-color-chips">
+													{colorAssignmentOptions.map((color) => {
+														const assigned = isImageAssignedToColor(image, color);
+
+														return (
+															<button
+																type="button"
+																key={color}
+																className={`image-color-chip ${color === ProductColor.WHITE ? 'light' : ''} ${
+																	assigned ? 'selected' : ''
+																}`}
+																onClick={() => toggleImageColorAssignment(image, color)}
+																title={formatProductLabel(color)}
+															>
+																<span style={{ background: productColorHex[color] ?? '#ded6cc' }} />
+																{formatProductLabel(color)}
+															</button>
+														);
+													})}
+												</div>
+											</Stack>
 										</Stack>
 									);
 								})}
@@ -490,8 +623,12 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 						</Stack>
 
 						<Stack className="buttons-row">
-							{router.query.productId ? (
-								<Button className="next-button" disabled={doDisabledCheck()} onClick={updateProductHandler}>
+							{routeProductId ? (
+								<Button
+									className="next-button"
+									disabled={doDisabledCheck() || getProductLoading || !getProductData?.getProduct}
+									onClick={updateProductHandler}
+								>
 									<Typography className="next-button-text">Save</Typography>
 								</Button>
 							) : (
@@ -504,24 +641,10 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 				</div>
 			</div>
 		);
-	}
 };
 
 AddProduct.defaultProps = {
-	initialValues: {
-		productTitle: '',
-		productPrice: 0,
-		productType: '',
-		productLocation: '',
-		productAddress: '',
-		productBarter: false,
-		productRent: false,
-		productRooms: 0,
-		productBeds: 0,
-		productSquare: 0,
-		productDesc: '',
-		productImages: [],
-	},
+	initialValues: defaultProductInput,
 };
 
 export default AddProduct;

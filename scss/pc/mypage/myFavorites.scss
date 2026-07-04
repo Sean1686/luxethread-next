@@ -222,3 +222,63 @@
 		}
 	}
 }
+
+#pc-wrap {
+	#my-page {
+		#my-favorites-page {
+			gap: 24px;
+			.main-title-box {
+				.right-box {
+					width: 100%;
+					.main-title {
+						color: #151515;
+						font-family: Georgia, 'Times New Roman', serif;
+						font-size: 34px;
+						font-weight: 400;
+						line-height: 1.12;
+						letter-spacing: 0;
+					}
+					.sub-title {
+						margin-top: 8px;
+						color: #605e5b;
+						font-size: 14px;
+						line-height: 1.55;
+					}
+				}
+			}
+			.favorites-list-box {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 18px;
+				.market-product-card {
+					width: 100%;
+					min-height: 456px;
+					box-shadow: none;
+				}
+				.no-data {
+					grid-column: 1 / -1;
+					min-height: 320px;
+					justify-content: center;
+					gap: 8px;
+					border: 1px solid #ded6cc;
+					border-radius: 6px;
+					background: #fff;
+					strong {
+						color: #151515;
+						font-size: 18px;
+						font-weight: 850;
+					}
+					p {
+						max-width: 360px;
+						color: #7a8087;
+						font-size: 13px;
+						line-height: 1.5;
+					}
+				}
+			}
+			.pagination-config {
+				margin-top: 8px;
+			}
+		}
+	}
+}

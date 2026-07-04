@@ -8,6 +8,11 @@ import {
 	ProductType,
 } from '../../enums/property.enum';
 
+export interface ProductColorImageInput {
+	color: ProductColor;
+	images: string[];
+}
+
 export interface ProductUpdate {
 	_id: string;
 	productCategory?: ProductCategory;
@@ -21,6 +26,7 @@ export interface ProductUpdate {
 	productTitle?: string;
 	productPrice?: number;
 	productImages?: string[];
+	productColorImages?: ProductColorImageInput[];
 	productDesc?: string;
 	soldAt?: Date;
 	deletedAt?: Date;

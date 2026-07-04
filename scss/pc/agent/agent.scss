@@ -79,3 +79,463 @@
 		}
 	}
 }
+
+#pc-wrap {
+	.agent-list-page {
+		padding: 116px 0 80px;
+		background: #fbfaf7;
+
+		.container {
+			width: min(1180px, calc(100% - 48px));
+			gap: 24px;
+		}
+
+		.seller-hero {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			align-items: flex-start;
+			padding: 34px 0 24px;
+			border-bottom: 1px solid #ded6cc;
+
+			.seller-hero-copy {
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
+				gap: 13px;
+
+				span {
+					color: #7b1f2a;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 800;
+					letter-spacing: 0.14em;
+					text-transform: uppercase;
+				}
+
+				h1 {
+					margin: 0;
+					color: #151515;
+					font-family: $font;
+					font-size: 54px;
+					font-weight: 600;
+					line-height: 0.98;
+					letter-spacing: 0;
+				}
+
+				p {
+					max-width: 650px;
+					margin: 0;
+					color: #4f5358;
+					font-family: $font;
+					font-size: 15px;
+					font-weight: 400;
+					line-height: 1.8;
+				}
+			}
+
+			.seller-hero-stats {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px 22px;
+				border: 0;
+				background: transparent;
+
+				div {
+					min-height: 0;
+					padding: 0;
+					display: inline-flex;
+					flex-direction: row;
+					align-items: center;
+					gap: 8px;
+					border: 0;
+
+					svg {
+						color: #2f5d50;
+						font-size: 18px;
+					}
+
+					strong {
+						color: #151515;
+						font-family: $font;
+						font-size: 15px;
+						font-weight: 800;
+						line-height: 1;
+					}
+
+					span {
+						color: #7a8087;
+						font-family: $font;
+						font-size: 10px;
+						font-weight: 800;
+						letter-spacing: 0.1em;
+						text-transform: uppercase;
+					}
+				}
+			}
+		}
+
+		.filter {
+			margin-top: 2px;
+			padding: 0;
+			flex-direction: row;
+			gap: 12px;
+			justify-content: flex-start;
+			align-items: center;
+			border: 0;
+			background: transparent;
+
+			.left {
+				flex: 0 1 420px;
+				min-width: 0;
+				height: 44px;
+				padding: 0 5px 0 13px;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				border: 1px solid #ded6cc;
+				background: #fbfaf7;
+
+				svg {
+					color: #7a8087;
+					font-size: 20px;
+				}
+
+				input {
+					width: 100%;
+					height: 100%;
+					padding: 0;
+					border: 0;
+					border-radius: 0;
+					background: transparent;
+					color: #151515;
+					font-family: $font;
+					font-size: 14px;
+					outline: none;
+				}
+
+				button {
+					height: 34px;
+					min-width: 78px;
+					border-radius: 4px;
+					background: #151515;
+					color: #fff;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 800;
+					text-transform: uppercase;
+					letter-spacing: 0.06em;
+				}
+			}
+
+			.right {
+				flex: 0 0 auto;
+				gap: 10px;
+				color: #7a8087;
+				font-family: $font;
+				font-size: 12px;
+				font-weight: 800;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+
+				button {
+					height: 44px;
+					margin-left: 0;
+					padding: 0 14px;
+					border: 1px solid #ded6cc;
+					border-radius: 4px;
+					color: #151515;
+					font-size: 12px;
+					font-weight: 800;
+					text-transform: uppercase;
+					letter-spacing: 0.06em;
+				}
+			}
+		}
+
+		.seller-quick-chips {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+
+			button {
+				height: 34px;
+				padding: 0 13px;
+				border: 1px solid #ded6cc;
+				border-radius: 4px;
+				background: #fff;
+				color: #151515;
+				font-family: $font;
+				font-size: 12px;
+				font-weight: 700;
+				cursor: pointer;
+			}
+		}
+
+		.seller-row-shell {
+			margin-top: 8px;
+			width: 100%;
+		}
+
+		.seller-row-shell.has-pagination {
+			display: grid;
+			grid-template-columns: 42px minmax(0, 1fr) 42px;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.seller-page-arrow {
+			width: 42px;
+			height: 42px;
+			border: 1px solid #ded6cc;
+			border-radius: 4px;
+			background: #fff;
+			color: #151515;
+
+			&:hover {
+				background: #151515;
+				color: #fff;
+			}
+
+			&.Mui-disabled {
+				border-color: rgba(222, 214, 204, 0.7);
+				background: rgba(251, 250, 247, 0.7);
+				color: #b8b2aa;
+			}
+		}
+
+		.card-wrap {
+			margin-top: 0;
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 16px;
+			min-height: 360px;
+		}
+
+		@media (max-width: 980px) {
+			.seller-row-shell.has-pagination {
+				grid-template-columns: 38px minmax(0, 1fr) 38px;
+				gap: 10px;
+			}
+
+			.seller-page-arrow {
+				width: 38px;
+				height: 38px;
+			}
+		}
+
+		.no-data {
+			grid-column: 1 / -1;
+			min-height: 320px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 12px;
+			border: 1px solid #ded6cc;
+			background: #fff;
+
+			img {
+				width: 44px;
+				height: 44px;
+			}
+
+			strong {
+				color: #151515;
+				font-family: $font;
+				font-size: 18px;
+				font-weight: 700;
+			}
+
+			p {
+				margin: 0;
+				color: #7a8087;
+				font-family: $font;
+				font-size: 14px;
+			}
+		}
+
+		.pagination {
+			margin-top: 12px;
+			align-items: center;
+
+			span {
+				margin-top: 16px;
+				color: #7a8087;
+				font-family: $font;
+				font-size: 13px;
+				font-weight: 600;
+			}
+		}
+
+		.agent-general-card {
+			min-width: 0;
+			margin: 0;
+			border: 1px solid #ded6cc;
+			border-radius: 6px;
+			background: #fff;
+			overflow: hidden;
+
+			.seller-portrait-link {
+				display: block;
+			}
+
+			.agent-img {
+				position: relative;
+				width: 100%;
+				height: 202px;
+				border-radius: 0;
+				background-color: #ded6cc;
+
+				.shop-badge {
+					position: absolute;
+					left: 12px;
+					top: 12px;
+					height: 28px;
+					padding: 0 9px;
+					display: inline-flex;
+					align-items: center;
+					gap: 6px;
+					border-radius: 4px;
+					background: rgba(251, 250, 247, 0.94);
+					color: #151515;
+					font-family: $font;
+					font-size: 11px;
+					font-weight: 800;
+					letter-spacing: 0.08em;
+					text-transform: uppercase;
+
+					svg {
+						font-size: 15px;
+					}
+				}
+			}
+
+			.agent-desc {
+				margin-top: 0;
+				padding: 14px;
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+				gap: 12px;
+
+				.agent-info {
+					gap: 5px;
+
+					a {
+						text-decoration: none;
+					}
+
+					strong {
+						color: #151515;
+						font-family: $font;
+						font-size: 17px;
+						font-weight: 700;
+						line-height: 1.2;
+					}
+
+					span {
+						color: #7b1f2a;
+						font-family: $font;
+						font-size: 11px;
+						font-weight: 800;
+						line-height: 1.2;
+						letter-spacing: 0.08em;
+						text-transform: uppercase;
+					}
+
+					p {
+						display: -webkit-box;
+						min-height: 40px;
+						margin: 8px 0 0;
+						overflow: hidden;
+						color: #565c61;
+						font-family: $font;
+						font-size: 12px;
+						line-height: 1.6;
+						-webkit-line-clamp: 2;
+						-webkit-box-orient: vertical;
+					}
+				}
+
+				.seller-rail {
+					display: grid;
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+					border-top: 1px solid #ded6cc;
+					border-bottom: 1px solid #ded6cc;
+
+					span {
+						min-width: 0;
+						padding: 10px 6px;
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						gap: 5px;
+						border-right: 1px solid #ded6cc;
+						color: #7a8087;
+						font-family: $font;
+						font-size: 9px;
+						font-weight: 800;
+						letter-spacing: 0.08em;
+						text-transform: uppercase;
+
+						&:last-child {
+							border-right: 0;
+						}
+
+						svg {
+							color: #2f5d50;
+							font-size: 16px;
+						}
+
+						strong {
+							color: #151515;
+							font-size: 15px;
+							font-weight: 800;
+							line-height: 1;
+							letter-spacing: 0;
+						}
+					}
+				}
+
+				.buttons {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					gap: 10px;
+
+					.view-shop-btn {
+						flex: 1;
+						height: 38px;
+						border-radius: 4px;
+						background: #151515;
+						color: #fff;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 800;
+						text-transform: uppercase;
+						letter-spacing: 0.06em;
+					}
+
+					.seller-like-btn {
+						width: 38px;
+						height: 38px;
+						border: 1px solid #ded6cc;
+						border-radius: 4px;
+						color: #151515;
+
+						&.liked {
+							border-color: #7b1f2a;
+							color: #7b1f2a;
+						}
+
+						svg {
+							width: 20px;
+							height: 20px;
+						}
+					}
+				}
+			}
+		}
+	}
+}

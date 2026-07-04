@@ -1,0 +1,338 @@
+#pc-wrap {
+	.market-product-card {
+		width: 296px;
+		display: flex;
+		flex-direction: column;
+		background: #fbfaf7;
+		border: 1px solid rgba(222, 214, 204, 0.95);
+		border-radius: 4px;
+		overflow: hidden;
+		transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+
+		&:hover {
+			transform: translateY(-3px);
+			border-color: #c8bbad;
+			box-shadow: 0 16px 32px rgba(21, 21, 21, 0.08);
+		}
+	}
+
+	.market-product-card--carousel {
+		width: 100%;
+		min-height: 500px;
+	}
+
+	.market-product-card--favorite {
+		width: 296px;
+	}
+
+	.market-product-card--owner-list {
+		width: 100%;
+		min-height: 0;
+		display: grid;
+		grid-template-columns: 164px minmax(0, 1fr);
+		align-items: stretch;
+		background: #fff;
+	}
+
+	.trend-products .trend-product-swiper,
+	.popular-products .popular-product-swiper,
+	.top-products .top-product-swiper {
+		height: 500px;
+	}
+
+	.trend-products .trend-product-slide,
+	.popular-products .popular-product-slide,
+	.top-products .top-product-slide {
+		width: 250px;
+	}
+
+	.trend-products .market-product-card--carousel .market-product-card__image,
+	.popular-products .market-product-card--carousel .market-product-card__image,
+	.top-products .market-product-card--carousel .market-product-card__image {
+		aspect-ratio: 3 / 4;
+
+		img {
+			object-position: center 42%;
+		}
+	}
+
+	.market-product-card__image {
+		position: relative;
+		display: block;
+		aspect-ratio: 4 / 5;
+		background: #ded6cc;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			height: 100%;
+			display: block;
+			object-fit: cover;
+			transition: transform 0.55s ease;
+		}
+
+		&:hover img {
+			transform: scale(1.035);
+		}
+	}
+
+	.market-product-card--owner-list .market-product-card__image {
+		aspect-ratio: auto;
+		height: 100%;
+		min-height: 190px;
+	}
+
+	.market-product-card__badge,
+	.market-product-card__price {
+		position: absolute;
+		left: 14px;
+		display: inline-flex;
+		align-items: center;
+		border-radius: 3px;
+		font-family: $font;
+		line-height: 1;
+	}
+
+	.market-product-card__badge {
+		top: 14px;
+		height: 28px;
+		padding: 0 10px;
+		background: #7b1f2a;
+		color: #fff;
+		font-size: 10px;
+		font-weight: 900;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+
+	.market-product-card__price {
+		bottom: 14px;
+		min-height: 34px;
+		padding: 0 12px;
+		background: rgba(251, 250, 247, 0.94);
+		color: #151515;
+		font-size: 14px;
+		font-weight: 900;
+		box-shadow: 0 8px 22px rgba(21, 21, 21, 0.08);
+	}
+
+	.market-product-card__body {
+		min-width: 0;
+		flex: 1;
+		padding: 16px;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		background: #fff;
+	}
+
+	.market-product-card--owner-list .market-product-card__body {
+		padding: 18px 20px;
+		justify-content: space-between;
+	}
+
+	.market-product-card__headline {
+		display: flex;
+		justify-content: space-between;
+		gap: 16px;
+		min-width: 0;
+
+		> div {
+			min-width: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		span {
+			color: #7a8087;
+			font-family: $font;
+			font-size: 10px;
+			font-weight: 900;
+			line-height: 1.2;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+		}
+
+		a {
+			color: #151515;
+			font-family: $font;
+			font-size: 15px;
+			font-weight: 800;
+			line-height: 1.35;
+			letter-spacing: 0;
+			text-transform: none;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+	}
+
+	.market-product-card--owner-list .market-product-card__headline a {
+		font-size: 18px;
+	}
+
+	.market-product-card__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px 10px;
+
+		span {
+			color: #4e5558;
+			font-family: $font;
+			font-size: 12px;
+			font-weight: 700;
+			line-height: 1.35;
+		}
+	}
+
+	.market-product-card__selectors {
+		min-height: 28px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	.market-product-card__sizes,
+	.market-product-card__swatches {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.market-product-card__sizes span {
+		min-width: 28px;
+		height: 26px;
+		padding: 0 7px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #ded6cc;
+		border-radius: 3px;
+		color: #151515;
+		font-family: $font;
+		font-size: 10px;
+		font-weight: 900;
+		line-height: 1;
+	}
+
+	.market-product-card__swatches span {
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		border: 1px solid rgba(21, 21, 21, 0.18);
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.42);
+	}
+
+	.market-product-card__footer {
+		margin-top: auto;
+		min-height: 34px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		border-top: 1px solid rgba(222, 214, 204, 0.7);
+		padding-top: 12px;
+	}
+
+	.market-product-card__signals {
+		margin-left: auto;
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		color: #7a8087;
+		font-family: $font;
+		font-size: 12px;
+		font-weight: 800;
+
+		span {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		svg {
+			font-size: 17px;
+		}
+
+		button {
+			width: 30px;
+			height: 30px;
+			padding: 0;
+			color: #151515;
+
+			svg {
+				font-size: 18px;
+			}
+
+			.MuiSvgIcon-root[data-testid='FavoriteIcon'] {
+				color: #7b1f2a;
+			}
+		}
+	}
+
+	.owner-list-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 14px;
+
+		p {
+			color: #7a8087;
+			font-family: $font;
+			font-size: 12px;
+			font-weight: 800;
+			line-height: 1.2;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+		}
+	}
+
+	.market-product-card--owner-list {
+		.status-box {
+			flex: 0 0 auto;
+		}
+
+		.coloured-box {
+			height: 32px;
+			padding: 0 12px;
+			align-items: center;
+			justify-content: center;
+			border: 1px solid rgba(47, 93, 80, 0.24);
+			border-radius: 3px;
+			background: rgba(47, 93, 80, 0.08);
+			cursor: pointer;
+		}
+
+		.status {
+			color: #2f5d50;
+			font-family: $font;
+			font-size: 11px;
+			font-weight: 900;
+			line-height: 1;
+			text-transform: uppercase;
+			letter-spacing: 0.07em;
+		}
+
+		.action-box {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 4px;
+			margin-left: auto;
+
+			.icon-button {
+				width: 34px;
+				height: 34px;
+				color: #151515;
+				border: 1px solid rgba(222, 214, 204, 0.9);
+				border-radius: 3px;
+			}
+
+			svg {
+				font-size: 17px;
+			}
+		}
+	}
+}

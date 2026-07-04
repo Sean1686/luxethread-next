@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Stack, Tab, Typography, Button, Pagination } from '@mui/material';
+import { Stack, Typography, Button, Pagination } from '@mui/material';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import CommunityCard from '../../libs/components/common/CommunityCard';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { BoardArticle } from '../../libs/types/board-article/board-article';
 import { T } from '../../libs/types/common';
@@ -13,10 +13,9 @@ import { BoardArticlesInquiry } from '../../libs/types/board-article/board-artic
 import { BoardArticleCategory } from '../../libs/enums/board-article.enum';
 import { GET_BOARD_ARTICLES } from '../../apollo/user/query';
 import { useMutation, useQuery } from '@apollo/client';
-import { Messages } from '../../libs/config';
-import { likeTargetBoardArticleHandler } from '../../libs/utils';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { LIKE_TARGET_BOARD_ARTICLE } from '../../apollo/user/mutation';
+import { getCommunityCategoryMeta, STYLE_COMMUNITY_CATEGORIES } from '../../libs/utils/community';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -25,24 +24,19 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const Community: NextPage = ({ initialInput, ...props }: T) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { query } = router;
-	const articleCategory = query?.articleCategory as string;
 	const [searchCommunity, setSearchCommunity] = useState<BoardArticlesInquiry>(initialInput);
 	const [boardArticles, setBoardArticles] = useState<BoardArticle[]>([]);
 	const [totalCount, setTotalCount] = useState<number>(0);
-	if (articleCategory) initialInput.search.articleCategory = articleCategory;
+	const [searchText, setSearchText] = useState<string>('');
+	const selectedCategory = searchCommunity.search.articleCategory;
+	const activeMeta = getCommunityCategoryMeta(selectedCategory);
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetBoardArticle] = useMutation(LIKE_TARGET_BOARD_ARTICLE);
 
-	const {
-		loading: boardArticlesLoading,
-		data: boardArticlesData,
-		error: boardArticlesError,
-		refetch: boardArticlesRefetch,
-	} = useQuery(GET_BOARD_ARTICLES, {
+	const { refetch: boardArticlesRefetch } = useQuery(GET_BOARD_ARTICLES, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: searchCommunity },
 		notifyOnNetworkStatusChange: true,
@@ -52,241 +46,192 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 		},
 	});
 
-	/** LIFECYCLES **/
 	useEffect(() => {
-		if (!query?.articleCategory)
-			router.push(
-				{
-					pathname: router.pathname,
-					query: { articleCategory: 'FREE' },
-				},
-				router.pathname,
-				{ shallow: true },
-			);
-	}, []);
+		if (!router.isReady) return;
+		const category = query?.articleCategory as BoardArticleCategory | undefined;
+		const isSupported = category && Object.values(BoardArticleCategory).includes(category);
+
+		setSearchCommunity({
+			...initialInput,
+			search: {
+				...(isSupported ? { articleCategory: category } : {}),
+			},
+		});
+	}, [router.isReady, query?.articleCategory, initialInput]);
 
 	/** HANDLERS **/
-	const tabChangeHandler = async (e: T, value: string) => {
-		console.log(value);
+	const categoryChangeHandler = async (category?: BoardArticleCategory) => {
+		const nextInput: BoardArticlesInquiry = {
+			...searchCommunity,
+			page: 1,
+			search: {
+				...(category ? { articleCategory: category } : {}),
+				...(searchText.trim() ? { text: searchText.trim() } : {}),
+			},
+		};
 
-		setSearchCommunity({ ...searchCommunity, page: 1, search: { articleCategory: value as BoardArticleCategory } });
+		setSearchCommunity(nextInput);
 		await router.push(
 			{
 				pathname: '/community',
-				query: { articleCategory: value },
+				query: category ? { articleCategory: category } : {},
 			},
-			router.pathname,
+			undefined,
 			{ shallow: true },
 		);
+	};
+
+	const applySearchHandler = () => {
+		setSearchCommunity({
+			...searchCommunity,
+			page: 1,
+			search: {
+				...(selectedCategory ? { articleCategory: selectedCategory } : {}),
+				...(searchText.trim() ? { text: searchText.trim() } : {}),
+			},
+		});
 	};
 
 	const paginationHandler = (e: T, value: number) => {
 		setSearchCommunity({ ...searchCommunity, page: value });
 	};
 
-	const likeBoardArticleHandler = async (user: T, id: string) => {
+	const likeBoardArticleHandler = async (id: string) => {
 		try {
 			if (!id) return;
-			if (!user._id) throw new Error(Messages.error2);
 
 			await likeTargetBoardArticle({ variables: { input: id } });
-			await boardArticlesRefetch({ input: initialInput });
+			await boardArticlesRefetch({ input: searchCommunity });
 
-			await sweetTopSmallSuccessAlert('succes', 700);
+			await sweetTopSmallSuccessAlert('success', 700);
 		} catch (err: any) {
-			console.log('ERROR, likeProductHandler:', err.message);
+			console.log('ERROR, likeBoardArticleHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
 
-	if (device === 'mobile') {
-		return <h1>COMMUNITY PAGE MOBILE</h1>;
-	} else {
-		return (
-			<div id="community-list-page">
-				<div className="container">
-					<TabContext value={searchCommunity.search.articleCategory}>
-						<Stack className="main-box">
-							<Stack className="left-config">
-								<Stack className={'image-info'}>
-									<img src={'/img/logo/luxethreadText.svg'} alt={'Luxethread'} />
-									<Stack className={'community-name'}>
-										<Typography className={'name'}>Luxethread Community</Typography>
-									</Stack>
-								</Stack>
+	const featuredArticle = boardArticles?.[0];
+	const latestArticles = featuredArticle ? boardArticles.slice(1) : boardArticles;
 
-								<TabList
-									orientation="vertical"
-									aria-label="lab API tabs example"
-									TabIndicatorProps={{
-										style: { display: 'none' },
-									}}
-									onChange={tabChangeHandler}
-								>
-									<Tab
-										value={'FREE'}
-										label={'Free Board'}
-										className={`tab-button ${searchCommunity.search.articleCategory == 'FREE' ? 'active' : ''}`}
-									/>
-									<Tab
-										value={'RECOMMEND'}
-										label={'Recommendation'}
-										className={`tab-button ${searchCommunity.search.articleCategory == 'RECOMMEND' ? 'active' : ''}`}
-									/>
-									<Tab
-										value={'NEWS'}
-										label={'News'}
-										className={`tab-button ${searchCommunity.search.articleCategory == 'NEWS' ? 'active' : ''}`}
-									/>
-									<Tab
-										value={'HUMOR'}
-										label={'Humor'}
-										className={`tab-button ${searchCommunity.search.articleCategory == 'HUMOR' ? 'active' : ''}`}
-									/>
-								</TabList>
-							</Stack>
-							<Stack className="right-config">
-								<Stack className="panel-config">
-									<Stack className="title-box">
-										<Stack className="left">
-											<Typography className="title">{searchCommunity.search.articleCategory} BOARD</Typography>
-											<Typography className="sub-title">
-												Express your opinions freely here without content restrictions
-											</Typography>
-										</Stack>
-										<Button
-											onClick={() =>
-												router.push({
-													pathname: '/mypage',
-													query: {
-														category: 'writeArticle',
-													},
-												})
-											}
-											className="right"
-										>
-											Write
-										</Button>
-									</Stack>
+	return (
+		<div id="community-list-page">
+			<div className="container">
+				<section className="community-hero">
+					<div className="community-hero-copy">
+						<span>Luxethread community</span>
+						<h1>Style Feed</h1>
+						<p>
+							A place for outfit notes, fit checks, seller stories, product care, and the market signals behind
+							what people are wearing now.
+						</p>
+					</div>
+					<div className="community-hero-panel">
+						<strong>{totalCount}</strong>
+						<span>{selectedCategory ? activeMeta.label : 'All stories'}</span>
+						<p>{activeMeta.description}</p>
+					</div>
+				</section>
 
-									<TabPanel value="FREE">
-										<Stack className="list-box">
-											{totalCount ? (
-												boardArticles?.map((boardArticle: BoardArticle) => {
-													return (
-														<CommunityCard
-															boardArticle={boardArticle}
-															likeArticleHandler={likeBoardArticleHandler}
-															key={boardArticle?._id}
-														/>
-													);
-												})
-											) : (
-												<Stack className={'no-data'}>
-													<img src="/img/icons/icoAlert.svg" alt="" />
-													<p>No Article found!</p>
-												</Stack>
-											)}
-										</Stack>
-									</TabPanel>
-									<TabPanel value="RECOMMEND">
-										<Stack className="list-box">
-											{totalCount ? (
-												boardArticles?.map((boardArticle: BoardArticle) => {
-													return (
-														<CommunityCard
-															boardArticle={boardArticle}
-															likeArticleHandler={likeBoardArticleHandler}
-															key={boardArticle?._id}
-														/>
-													);
-												})
-											) : (
-												<Stack className={'no-data'}>
-													<img src="/img/icons/icoAlert.svg" alt="" />
-													<p>No Article found!</p>
-												</Stack>
-											)}
-										</Stack>
-									</TabPanel>
-									<TabPanel value="NEWS">
-										<Stack className="list-box">
-											{totalCount ? (
-												boardArticles?.map((boardArticle: BoardArticle) => {
-													return (
-														<CommunityCard
-															boardArticle={boardArticle}
-															likeArticleHandler={likeBoardArticleHandler}
-															key={boardArticle?._id}
-														/>
-													);
-												})
-											) : (
-												<Stack className={'no-data'}>
-													<img src="/img/icons/icoAlert.svg" alt="" />
-													<p>No Article found!</p>
-												</Stack>
-											)}
-										</Stack>
-									</TabPanel>
-									<TabPanel value="HUMOR">
-										<Stack className="list-box">
-											{totalCount ? (
-												boardArticles?.map((boardArticle: BoardArticle) => {
-													return (
-														<CommunityCard
-															boardArticle={boardArticle}
-															likeArticleHandler={likeBoardArticleHandler}
-															key={boardArticle?._id}
-														/>
-													);
-												})
-											) : (
-												<Stack className={'no-data'}>
-													<img src="/img/icons/icoAlert.svg" alt="" />
-													<p>No Article found!</p>
-												</Stack>
-											)}
-										</Stack>
-									</TabPanel>
-								</Stack>
-							</Stack>
-						</Stack>
-					</TabContext>
+				<section className="community-toolbar">
+					<div className="community-search">
+						<SearchRoundedIcon />
+						<input
+							value={searchText}
+							placeholder="Search style conversations"
+							onChange={(event) => setSearchText(event.target.value)}
+							onKeyDown={(event) => {
+								if (event.key === 'Enter') applySearchHandler();
+							}}
+						/>
+						<Button onClick={applySearchHandler}>Search</Button>
+					</div>
+					<Button
+						className="write-story-btn"
+						startIcon={<CreateOutlinedIcon />}
+						onClick={() => router.push({ pathname: '/mypage', query: { category: 'writeArticle' } })}
+					>
+						Write
+					</Button>
+				</section>
 
-					{totalCount > 0 && (
-						<Stack className="pagination-config">
-							<Stack className="pagination-box">
-								<Pagination
-									count={Math.ceil(totalCount / searchCommunity.limit)}
-									page={searchCommunity.page}
-									shape="circular"
-									color="primary"
-									onChange={paginationHandler}
-								/>
-							</Stack>
-							<Stack className="total-result">
-								<Typography>
-									Total {totalCount} article{totalCount > 1 ? 's' : ''} available
-								</Typography>
-							</Stack>
-						</Stack>
-					)}
+				<div className="community-category-row">
+					<button className={!selectedCategory ? 'active' : ''} type="button" onClick={() => categoryChangeHandler()}>
+						All
+					</button>
+					{STYLE_COMMUNITY_CATEGORIES.map((category) => {
+						const meta = getCommunityCategoryMeta(category);
+						return (
+							<button
+								className={selectedCategory === category ? 'active' : ''}
+								type="button"
+								onClick={() => categoryChangeHandler(category)}
+								key={category}
+							>
+								{meta.label}
+							</button>
+						);
+					})}
 				</div>
+
+				{boardArticles?.length > 0 ? (
+					<section className="community-feed">
+						{featuredArticle && (
+							<div className="community-featured">
+								<CommunityCard
+									boardArticle={featuredArticle}
+									likeArticleHandler={likeBoardArticleHandler}
+									size="featured"
+								/>
+							</div>
+						)}
+						<Stack className="community-latest">
+							{latestArticles.map((boardArticle: BoardArticle) => (
+								<CommunityCard
+									boardArticle={boardArticle}
+									likeArticleHandler={likeBoardArticleHandler}
+									key={boardArticle?._id}
+								/>
+							))}
+						</Stack>
+					</section>
+				) : (
+					<Stack className="no-data community-empty">
+						<img src="/img/icons/icoAlert.svg" alt="" />
+						<strong>No stories found</strong>
+						<p>Try another search or start the first conversation in this style category.</p>
+					</Stack>
+				)}
+
+				{totalCount > 0 && (
+					<Stack className="pagination-config">
+						<Stack className="pagination-box">
+							<Pagination
+								count={Math.ceil(totalCount / searchCommunity.limit)}
+								page={searchCommunity.page}
+								shape="circular"
+								color="primary"
+								onChange={paginationHandler}
+							/>
+						</Stack>
+						<Stack className="total-result">
+							<Typography>
+								Showing {boardArticles.length} of {totalCount} stor{totalCount === 1 ? 'y' : 'ies'}
+							</Typography>
+						</Stack>
+					</Stack>
+				)}
 			</div>
-		);
-	}
+		</div>
+	);
 };
 
 Community.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 6,
+		limit: 7,
 		sort: 'createdAt',
-		direction: 'ASC',
-		search: {
-			articleCategory: 'FREE',
-		},
+		direction: 'DESC',
+		search: {},
 	},
 };
 

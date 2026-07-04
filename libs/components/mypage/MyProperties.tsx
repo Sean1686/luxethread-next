@@ -1,26 +1,22 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import { Pagination, Stack, Typography } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { PropertyCard } from './PropertyCard';
+import { ProductCard } from './PropertyCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { Property } from '../../types/property/property';
-import { AgentPropertiesInquiry } from '../../types/property/property.input';
+import { Product } from '../../types/property/product';
+import { AgentProductsInquiry } from '../../types/property/product.input';
 import { T } from '../../types/common';
-import { PropertyStatus } from '../../enums/property.enum';
+import { ProductStatus } from '../../enums/product.enum';
 import { userVar } from '../../../apollo/store';
-import { useRouter } from 'next/router';
 import { sweetConfirmAlert, sweetErrorHandling } from '../../sweetAlert';
 import { GET_AGENT_PROPERTIES } from '../../../apollo/user/query';
 import { UPDATE_PROPERTY } from '../../../apollo/user/mutation';
 
 const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
-	const device = useDeviceDetect();
-	const [searchFilter, setSearchFilter] = useState<AgentPropertiesInquiry>(initialInput);
-	const [agentProperties, setAgentProperties] = useState<Property[]>([]);
+	const [searchFilter, setSearchFilter] = useState<AgentProductsInquiry>(initialInput);
+	const [agentProducts, setAgentProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const user = useReactiveVar(userVar);
-	const router = useRouter();
 
 	/** APOLLO REQUESTS **/
 	const [updateProperty] = useMutation(UPDATE_PROPERTY);
@@ -35,8 +31,8 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setAgentProperties(data?.getAgentProperties?.list);
-			setTotal(data?.getAgentProperties?.metaCounter[0]?.total ?? 0);
+			setAgentProducts(data?.getAgentProducts?.list ?? data?.getAgentProperties?.list ?? []);
+			setTotal(data?.getAgentProducts?.metaCounter[0]?.total ?? data?.getAgentProperties?.metaCounter[0]?.total ?? 0);
 		},
 	});
 
@@ -45,18 +41,18 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 		setSearchFilter({ ...searchFilter, page: value });
 	};
 
-	const changeStatusHandler = (value: PropertyStatus) => {
-		setSearchFilter({ ...searchFilter, search: { propertyStatus: value } });
+	const changeStatusHandler = (value: ProductStatus) => {
+		setSearchFilter({ ...searchFilter, page: 1, search: { productStatus: value } });
 	};
 
-	const deletePropertyHandler = async (id: string) => {
+	const deleteProductHandler = async (id: string) => {
 		try {
-			if (await sweetConfirmAlert('Are your sure to delete this property?')) {
+			if (await sweetConfirmAlert('Are you sure you want to remove this product?')) {
 				await updateProperty({
 					variables: {
 						input: {
 							_id: id,
-							propertyStatus: PropertyStatus.DELETE,
+							productStatus: ProductStatus.DELETE,
 						},
 					},
 				});
@@ -67,14 +63,14 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 		}
 	};
 
-	const updatePropertyHandler = async (status: string, id: string) => {
+	const updateProductHandler = async (status: string, id: string) => {
 		try {
-			if (await sweetConfirmAlert(`Are you sure to ${status} status?`)) {
+			if (await sweetConfirmAlert(`Move this product to ${String(status).toLowerCase()}?`)) {
 				await updateProperty({
 					variables: {
 						input: {
 							_id: id,
-							propertyStatus: status,
+							productStatus: status,
 						},
 					},
 				});
@@ -85,66 +81,72 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 		}
 	};
 
-	if (user?.memberType !== 'AGENT') {
-		router.back();
+	if (user?._id && user?.memberType !== 'AGENT') {
+		return (
+			<div id="my-product-page">
+				<div className={'no-data'}>
+					<img src="/img/icons/icoAlert.svg" alt="" />
+					<strong>Seller access required</strong>
+					<p>Create a seller account to list products and manage your Luxethread studio.</p>
+				</div>
+			</div>
+		);
 	}
 
-	if (device === 'mobile') {
-		return <div>NESTAR PROPERTIES MOBILE</div>;
-	} else {
-		return (
-			<div id="my-property-page">
+	return (
+			<div id="my-product-page">
 				<Stack className="main-title-box">
 					<Stack className="right-box">
-						<Typography className="main-title">My Properties</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
+						<Typography className="main-title">My Products</Typography>
+						<Typography className="sub-title">Manage your active pieces and sold archive.</Typography>
 					</Stack>
 				</Stack>
-				<Stack className="property-list-box">
+				<Stack className="product-list-box">
 					<Stack className="tab-name-box">
 						<Typography
-							onClick={() => changeStatusHandler(PropertyStatus.ACTIVE)}
-							className={searchFilter.search.propertyStatus === 'ACTIVE' ? 'active-tab-name' : 'tab-name'}
+							onClick={() => changeStatusHandler(ProductStatus.ACTIVE)}
+							className={searchFilter.search.productStatus === 'ACTIVE' ? 'active-tab-name' : 'tab-name'}
 						>
-							On Sale
+							Live
 						</Typography>
 						<Typography
-							onClick={() => changeStatusHandler(PropertyStatus.SOLD)}
-							className={searchFilter.search.propertyStatus === 'SOLD' ? 'active-tab-name' : 'tab-name'}
+							onClick={() => changeStatusHandler(ProductStatus.SOLD)}
+							className={searchFilter.search.productStatus === 'SOLD' ? 'active-tab-name' : 'tab-name'}
 						>
-							On Sold
+							Sold
 						</Typography>
 					</Stack>
 					<Stack className="list-box">
 						<Stack className="listing-title-box">
-							<Typography className="title-text">Listing title</Typography>
-							<Typography className="title-text">Date Published</Typography>
+							<Typography className="title-text">Product</Typography>
+							<Typography className="title-text">Published</Typography>
 							<Typography className="title-text">Status</Typography>
-							<Typography className="title-text">View</Typography>
-							{searchFilter.search.propertyStatus === 'ACTIVE' && (
+							<Typography className="title-text">Views</Typography>
+							{searchFilter.search.productStatus === 'ACTIVE' && (
 								<Typography className="title-text">Action</Typography>
 							)}
 						</Stack>
 
-						{agentProperties?.length === 0 ? (
+						{agentProducts?.length === 0 ? (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No Property found!</p>
+								<strong>No products yet</strong>
+								<p>Add your first Luxethread piece to start selling.</p>
 							</div>
 						) : (
-							agentProperties.map((property: Property) => {
+							agentProducts.map((product: Product) => {
 								return (
-									<PropertyCard
-										key={property._id}
-										property={property}
-										deletePropertyHandler={deletePropertyHandler}
-										updatePropertyHandler={updatePropertyHandler}
+									<ProductCard
+										key={product._id}
+										product={product}
+										deleteProductHandler={deleteProductHandler}
+										updateProductHandler={updateProductHandler}
 									/>
 								);
 							})
 						)}
 
-						{agentProperties.length !== 0 && (
+						{agentProducts.length !== 0 && (
 							<Stack className="pagination-config">
 								<Stack className="pagination-box">
 									<Pagination
@@ -156,7 +158,9 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 									/>
 								</Stack>
 								<Stack className="total-result">
-									<Typography>{total} property available</Typography>
+									<Typography>
+										{total} product{total === 1 ? '' : 's'} in this view
+									</Typography>
 								</Stack>
 							</Stack>
 						)}
@@ -164,7 +168,6 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 				</Stack>
 			</div>
 		);
-	}
 };
 
 MyProperties.defaultProps = {
@@ -174,7 +177,7 @@ MyProperties.defaultProps = {
 		sort: 'createdAt',
 		direction: 'DESC',
 		search: {
-			propertyStatus: 'ACTIVE',
+			productStatus: 'ACTIVE',
 		},
 	},
 };

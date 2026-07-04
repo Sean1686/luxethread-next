@@ -1,8 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, Stack } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, FormGroup, IconButton } from '@mui/material';
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
+import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
+import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import { useRouter } from 'next/router';
 import { logIn, signUp } from '../../libs/auth';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
@@ -14,25 +19,54 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
+const roleOptions = [
+	{
+		value: 'USER',
+		label: 'Shopper',
+		copy: 'Save pieces, follow sellers, and checkout faster.',
+	},
+	{
+		value: 'AGENT',
+		label: 'Seller',
+		copy: 'List products and manage your seller studio.',
+	},
+];
+
+const atelierBenefits = [
+	{
+		icon: FavoriteBorderRoundedIcon,
+		title: 'Saved pieces',
+		copy: 'Keep favorites and recently viewed products close.',
+	},
+	{
+		icon: StorefrontOutlinedIcon,
+		title: 'Seller studio',
+		copy: 'Approved sellers can publish and manage products.',
+	},
+	{
+		icon: VerifiedUserOutlinedIcon,
+		title: 'Secure checkout',
+		copy: 'Use Luxethread account channels for every order issue.',
+	},
+	{
+		icon: ForumOutlinedIcon,
+		title: 'Community identity',
+		copy: 'Join articles, follows, and marketplace conversations.',
+	},
+];
+
 const Join: NextPage = () => {
 	const router = useRouter();
-	const device = useDeviceDetect();
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' });
 	const [loginView, setLoginView] = useState<boolean>(true);
+	const [showPassword, setShowPassword] = useState<boolean>(false);
+
+	const loginDisabled = input.nick === '' || input.password === '';
+	const signupDisabled = input.nick === '' || input.password === '' || input.phone === '' || input.type === '';
 
 	/** HANDLERS **/
 	const viewChangeHandler = (state: boolean) => {
 		setLoginView(state);
-	};
-
-	const checkUserTypeHandler = (e: any) => {
-		const checked = e.target.checked;
-		if (checked) {
-			const value = e.target.name;
-			handleInput('type', value);
-		} else {
-			handleInput('type', 'USER');
-		}
 	};
 
 	const handleInput = useCallback((name: any, value: any) => {
@@ -42,7 +76,6 @@ const Join: NextPage = () => {
 	}, []);
 
 	const doLogin = useCallback(async () => {
-		console.warn(input);
 		try {
 			await logIn(input.nick, input.password);
 			await router.push(`${router.query.referrer ?? '/'}`);
@@ -52,7 +85,6 @@ const Join: NextPage = () => {
 	}, [input]);
 
 	const doSignUp = useCallback(async () => {
-		console.warn(input);
 		try {
 			await signUp(input.nick, input.password, input.phone, input.type);
 			await router.push(`${router.query.referrer ?? '/'}`);
@@ -61,157 +93,183 @@ const Join: NextPage = () => {
 		}
 	}, [input]);
 
-	console.log('+input: ', input);
+	const authSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		if (loginView) {
+			if (!loginDisabled) doLogin();
+			return;
+		}
 
-	if (device === 'mobile') {
-		return <div>LOGIN MOBILE</div>;
-	} else {
-		return (
-			<Stack className={'join-page'}>
-				<Stack className={'container'}>
-					<Stack className={'main'}>
-						<Stack className={'left'}>
-							{/* @ts-ignore */}
-							<Box className={'logo'}>
-								<img src="/img/logo/luxethreadText.svg" alt="Luxethread" />
-								<span>Luxethread</span>
-							</Box>
-							<Box className={'info'}>
-								<span>{loginView ? 'login' : 'signup'}</span>
-								<p>{loginView ? 'Login' : 'Sign'} in with this account across the following sites.</p>
-							</Box>
-							<Box className={'input-wrap'}>
-								<div className={'input-box'}>
+		if (!signupDisabled) doSignUp();
+	};
+
+	return (
+		<div className={'join-page'}>
+			<div className={'container'}>
+				<div className={'auth-shell'}>
+					<div className={'auth-form-panel'}>
+						<div className={'auth-brand'}>
+							<img src="/img/logo/luxethreadText.svg" alt="Luxethread" />
+							<span>Luxethread</span>
+						</div>
+
+						<div className={'auth-heading'}>
+							<span>{loginView ? 'Private access' : 'Join the marketplace'}</span>
+							<h1>{loginView ? 'Sign in' : 'Create account'}</h1>
+							<p>
+								{loginView
+									? 'Enter your Luxethread account to manage saved pieces, seller tools, and community activity.'
+									: 'Create a shopper profile or request seller access with the same Luxethread account.'}
+							</p>
+						</div>
+
+						<div className={'auth-mode-tabs'} aria-label={'Authentication mode'}>
+							<button type={'button'} className={loginView ? 'active' : ''} onClick={() => viewChangeHandler(true)}>
+								Sign in
+							</button>
+							<button type={'button'} className={!loginView ? 'active' : ''} onClick={() => viewChangeHandler(false)}>
+								Create account
+							</button>
+						</div>
+
+						<form className={'auth-form'} onSubmit={authSubmitHandler}>
+							<div className={'input-wrap'}>
+								<label className={'input-box'}>
 									<span>Nickname</span>
 									<input
-										type="text"
-										placeholder={'Enter Nickname'}
+										type={'text'}
+										value={input.nick}
+										placeholder={'Enter your nickname'}
 										onChange={(e) => handleInput('nick', e.target.value)}
 										required={true}
-										onKeyDown={(event) => {
-											if (event.key == 'Enter' && loginView) doLogin();
-											if (event.key == 'Enter' && !loginView) doSignUp();
-										}}
 									/>
-								</div>
-								<div className={'input-box'}>
+									<small>Use the nickname connected to your Luxethread profile.</small>
+								</label>
+
+								<label className={'input-box'}>
 									<span>Password</span>
-									<input
-										type="text"
-										placeholder={'Enter Password'}
-										onChange={(e) => handleInput('password', e.target.value)}
-										required={true}
-										onKeyDown={(event) => {
-											if (event.key == 'Enter' && loginView) doLogin();
-											if (event.key == 'Enter' && !loginView) doSignUp();
-										}}
-									/>
-								</div>
+									<div className={'password-control'}>
+										<input
+											type={showPassword ? 'text' : 'password'}
+											value={input.password}
+											placeholder={'Enter your password'}
+											onChange={(e) => handleInput('password', e.target.value)}
+											required={true}
+										/>
+										<IconButton
+											type={'button'}
+											aria-label={showPassword ? 'Hide password' : 'Show password'}
+											onClick={() => setShowPassword((prev) => !prev)}
+										>
+											{showPassword ? <VisibilityOffRoundedIcon /> : <VisibilityRoundedIcon />}
+										</IconButton>
+									</div>
+									<small>Password is stored through the existing Luxethread auth flow.</small>
+								</label>
+
 								{!loginView && (
-									<div className={'input-box'}>
+									<label className={'input-box'}>
 										<span>Phone</span>
 										<input
-											type="text"
-											placeholder={'Enter Phone'}
+											type={'tel'}
+											value={input.phone}
+											placeholder={'Enter your phone number'}
 											onChange={(e) => handleInput('phone', e.target.value)}
 											required={true}
-											onKeyDown={(event) => {
-												if (event.key == 'Enter') doSignUp();
-											}}
 										/>
-									</div>
+										<small>Used for account care and seller review follow-up.</small>
+									</label>
 								)}
-							</Box>
-							<Box className={'register'}>
-								{!loginView && (
-									<div className={'type-option'}>
-										<span className={'text'}>I want to be registered as:</span>
-										<div>
-											<FormGroup>
-												<FormControlLabel
-													control={
-														<Checkbox
-															size="small"
-															name={'USER'}
-															onChange={checkUserTypeHandler}
-															checked={input?.type == 'USER'}
-														/>
-													}
-													label="User"
-												/>
-											</FormGroup>
-											<FormGroup>
-												<FormControlLabel
-													control={
-														<Checkbox
-															size="small"
-															name={'AGENT'}
-															onChange={checkUserTypeHandler}
-															checked={input?.type == 'AGENT'}
-														/>
-													}
-													label="Agent"
-												/>
-											</FormGroup>
-										</div>
-									</div>
-								)}
+							</div>
 
+							{!loginView && (
+								<div className={'role-selector'}>
+									<span className={'role-title'}>Account type</span>
+									<div className={'role-grid'}>
+										{roleOptions.map((role) => (
+											<button
+												key={role.value}
+												type={'button'}
+												className={input.type === role.value ? 'active' : ''}
+												aria-pressed={input.type === role.value}
+												onClick={() => handleInput('type', role.value)}
+											>
+												<strong>{role.label}</strong>
+												<span>{role.copy}</span>
+											</button>
+										))}
+									</div>
+								</div>
+							)}
+
+							<div className={'auth-actions'}>
 								{loginView && (
 									<div className={'remember-info'}>
 										<FormGroup>
 											<FormControlLabel control={<Checkbox defaultChecked size="small" />} label="Remember me" />
 										</FormGroup>
-										<a>Lost your password?</a>
+										<a href={'/cs?tab=contact'}>Need account help?</a>
 									</div>
 								)}
 
-								{loginView ? (
-									<Button
-										variant="contained"
-										endIcon={<img src="/img/icons/rightup.svg" alt="" />}
-										disabled={input.nick == '' || input.password == ''}
-										onClick={doLogin}
-									>
-										LOGIN
-									</Button>
-								) : (
-									<Button
-										variant="contained"
-										disabled={input.nick == '' || input.password == '' || input.phone == '' || input.type == ''}
-										onClick={doSignUp}
-										endIcon={<img src="/img/icons/rightup.svg" alt="" />}
-									>
-										SIGNUP
-									</Button>
-								)}
-							</Box>
-							<Box className={'ask-info'}>
-								{loginView ? (
-									<p>
-										Not registered yet?
-										<b
-											onClick={() => {
-												viewChangeHandler(false);
-											}}
-										>
-											SIGNUP
-										</b>
-									</p>
-								) : (
-									<p>
-										Have account?
-										<b onClick={() => viewChangeHandler(true)}> LOGIN</b>
-									</p>
-								)}
-							</Box>
-						</Stack>
-						<Stack className={'right'}></Stack>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	}
+								<Button
+									type={'submit'}
+									variant="contained"
+									endIcon={<img src="/img/icons/rightup.svg" alt="" />}
+									disabled={loginView ? loginDisabled : signupDisabled}
+								>
+									{loginView ? 'Sign in' : 'Create account'}
+								</Button>
+							</div>
+						</form>
+
+						<div className={'auth-switch'}>
+							{loginView ? (
+								<p>
+									New to Luxethread?
+									<button type={'button'} onClick={() => viewChangeHandler(false)}>
+										Create account
+									</button>
+								</p>
+							) : (
+								<p>
+									Already have an account?
+									<button type={'button'} onClick={() => viewChangeHandler(true)}>
+										Sign in
+									</button>
+								</p>
+							)}
+						</div>
+					</div>
+
+					<div className={'auth-atelier-panel'}>
+						<div className={'atelier-media'}>
+							<img src={'/img/luxethread/campaign-atelier.png'} alt={'Luxethread atelier garments'} />
+						</div>
+						<div className={'atelier-copy'}>
+							<span>Access atelier</span>
+							<h2>One account for shopping, selling, and style community.</h2>
+						</div>
+						<div className={'atelier-benefits'}>
+							{atelierBenefits.map((benefit) => {
+								const Icon = benefit.icon;
+
+								return (
+									<article key={benefit.title}>
+										<Icon />
+										<div>
+											<strong>{benefit.title}</strong>
+											<p>{benefit.copy}</p>
+										</div>
+									</article>
+								);
+							})}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default withLayoutBasic(Join);

@@ -42,6 +42,10 @@ const PRODUCT_FIELDS = `
 	productComments
 	productRank
 	productImages
+	productColorImages {
+		color
+		images
+	}
 	productDesc
 	memberId
 	soldAt

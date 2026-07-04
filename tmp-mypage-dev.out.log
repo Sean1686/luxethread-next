@@ -1,0 +1,336 @@
+yarn run v1.22.22
+$ next dev -p 3001
+  ▲ Next.js 14.2.0
+  - Local:        http://localhost:3001
+  - Environments: .env.local, .env.development
+
+ ✓ Starting...
+ ✓ Ready in 9.4s
+ ○ Compiling /mypage ...
+ ✓ Compiled /mypage in 6.6s (2869 modules)
+ GET /mypage 200 in 30546ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myProfile 200 in 324ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=addProduct 200 in 49ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myProducts 200 in 47ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myFavorites 200 in 46ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=recentlyVisited 200 in 43ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=addProperty 200 in 40ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myProperties 200 in 37ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage 200 in 47ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myFavorites 200 in 39ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myFavorites 200 in 36ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=addProduct 200 in 42ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.5s (2730 modules)
+ GET / 200 in 2687ms
+ ✓ Compiled /mypage in 405ms (3036 modules)
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /_next/data/development/en/mypage.json 200 in 2576ms
+ ○ Compiling /cs ...
+ ✓ Compiled /cs in 951ms (3066 modules)
+ GET /_next/data/development/en/cs.json 200 in 2623ms
+ GET /_next/data/development/en/cs.json?tab=faq 200 in 39ms
+ ✓ Compiled in 3.1s (2945 modules)
+ GET /cs?tab=faq 200 in 662ms
+ ✓ Compiled in 775ms (2947 modules)
+ ✓ Compiled in 3.4s (2953 modules)
+ GET /cs?tab=faq 200 in 3220ms
+ GET /cs 200 in 42ms
+ GET /cs 200 in 40ms
+ GET /cs?tab=help 200 in 42ms
+ GET /cs?tab=faq 200 in 37ms
+ GET /cs?tab=notice 200 in 41ms
+ GET /cs?tab=contact 200 in 37ms
+ GET /cs?tab=unknown 200 in 34ms
+ GET /cs 200 in 36ms
+ GET /cs?tab=help 200 in 34ms
+ GET /cs?tab=faq 200 in 36ms
+ GET /cs?tab=notice 200 in 31ms
+ GET /cs?tab=contact 200 in 32ms
+ GET /_next/data/development/en/cs.json?tab=notice 200 in 43ms
+ GET /_next/data/development/en/cs.json?tab=contact 200 in 41ms
+ GET /_next/data/development/en/cs.json?tab=help 200 in 44ms
+ GET /_next/data/development/en/cs.json?tab=help 200 in 43ms
+ GET /_next/data/development/en/cs.json?tab=help 200 in 38ms
+ GET /_next/data/development/en/cs.json?tab=help 200 in 35ms
+ GET /_next/data/development/en/cs.json?tab=help 200 in 38ms
+ GET /_next/data/development/en/cs.json?tab=help 200 in 35ms
+ GET /_next/data/development/en/cs.json?tab=contact 200 in 37ms
+ GET /cs?tab=contact 200 in 54ms
+ ○ Compiling /account/join ...
+ ✓ Compiled /account/join in 967ms (2985 modules)
++input:  { nick: '', password: '', phone: '', type: 'USER' }
+ GET /_next/data/development/en/account/join.json 200 in 2710ms
+ ✓ Compiled in 1281ms (2829 modules)
+ GET /account/join 200 in 3603ms
+ ✓ Compiled in 2.7s (2347 modules)
+ ✓ Compiled in 1676ms (2829 modules)
+ ✓ Compiled in 1047ms (2829 modules)
+ GET /account/join 200 in 642ms
+ ✓ Compiled in 1857ms (2347 modules)
+ ✓ Compiled in 816ms (2829 modules)
+ GET /account/join 200 in 105ms
+ GET /account/join 200 in 30ms
+ GET /account/join?referrer=/mypage 200 in 34ms
+ GET /account/join 200 in 31ms
+ GET /account/join 200 in 86ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1678ms (3014 modules)
+ ✓ Compiled /_error in 317ms (3016 modules)
+ GET /_next/static/webpack/2c0c897ca9b08c82.webpack.hot-update.json 404 in 365ms
+ GET /account/join 200 in 121ms
+ GET /_next/data/development/en.json 200 in 30ms
+ GET / 200 in 19ms
+ ○ Compiling /mypage ...
+ ✓ Compiled /mypage in 2.4s (3108 modules)
+ GET /_next/data/development/en/mypage.json 404 in 43ms
+ GET /mypage 404 in 21ms
+ GET /mypage 404 in 23ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage 200 in 186ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myProfile 200 in 49ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=addProduct 200 in 44ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myProducts 200 in 41ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myFavorites 200 in 39ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=recentlyVisited 200 in 36ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myArticles 200 in 37ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=writeArticle 200 in 36ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=followers 200 in 37ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=followings 200 in 35ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=addProperty 200 in 37ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myProperties 200 in 35ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=unknown 200 in 36ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=myProfile 200 in 68ms
++updateData {
+  _id: '',
+  memberImage: '',
+  memberNick: '',
+  memberPhone: '',
+  memberAddress: ''
+}
+ GET /mypage?category=unknown 200 in 62ms
+ ✓ Compiled in 554ms (2787 modules)
+ ○ Compiling /mypage ...
+ ✓ Compiled /mypage in 1376ms (3064 modules)
+ GET /mypage 200 in 5183ms
+ GET /mypage?category=myProfile 200 in 58ms
+ GET /mypage?category=addProduct 200 in 67ms
+ GET /mypage?category=myProducts 200 in 62ms
+ GET /mypage?category=myFavorites 200 in 44ms
+ GET /mypage?category=recentlyVisited 200 in 44ms
+ GET /mypage?category=myArticles 200 in 37ms
+ GET /mypage?category=writeArticle 200 in 39ms
+ GET /mypage?category=followers 200 in 54ms
+ GET /mypage?category=followings 200 in 55ms
+ GET /mypage?category=addProperty 200 in 46ms
+ GET /mypage?category=myProperties 200 in 37ms
+ GET /mypage?category=unknown 200 in 40ms
+ GET /mypage?category=myProfile 200 in 41ms
+ GET /mypage?category=addProduct 200 in 45ms
+ GET /mypage?category=myProducts 200 in 39ms
+ GET /mypage?category=myFavorites 200 in 43ms
+ GET /mypage?category=recentlyVisited 200 in 37ms
+ ✓ Compiled in 682ms (2787 modules)
+ ✓ Compiled in 3.1s (2452 modules)
+ ○ Compiling /mypage ...
+ ✓ Compiled /mypage in 520ms (3064 modules)
+ GET /mypage?category=myProfile 200 in 4218ms
+ GET /mypage?category=myProducts 200 in 51ms
+ GET /mypage?category=myFavorites 200 in 44ms
+ ✓ Compiled in 631ms (2787 modules)
+ ○ Compiling /mypage ...
+ ✓ Compiled /mypage in 918ms (3064 modules)
+ GET /mypage?category=addProduct 200 in 4756ms
+ GET /mypage?category=addProduct&productId=test-id 200 in 58ms
+ GET /mypage?category=myProducts 200 in 49ms
+ ✓ Compiled in 1049ms (3064 modules)
+ GET /mypage?category=addProduct 200 in 215ms
+ GET /mypage?category=addProduct&productId=test-id 200 in 71ms
+ GET /mypage?category=myProducts 200 in 48ms

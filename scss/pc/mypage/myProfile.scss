@@ -319,3 +319,116 @@
 		}
 	}
 }
+
+#pc-wrap {
+	#my-page {
+		#my-profile-page {
+			gap: 24px;
+			.main-title-box {
+				.right-box {
+					width: 100%;
+					.main-title {
+						color: #151515;
+						font-family: Georgia, 'Times New Roman', serif;
+						font-size: 34px;
+						font-weight: 400;
+						line-height: 1.12;
+						letter-spacing: 0;
+					}
+					.sub-title {
+						margin-top: 8px;
+						color: #605e5b;
+						font-size: 14px;
+						line-height: 1.55;
+					}
+				}
+			}
+			.top-box {
+				margin-top: 0;
+				padding: 28px;
+				gap: 24px;
+				border: 1px solid #ded6cc;
+				border-radius: 6px;
+				box-shadow: none;
+				background: #fff;
+				.photo-box {
+					padding-bottom: 24px;
+					border-bottom: 1px solid #ded6cc;
+					.title {
+						color: #7b1f2a;
+						font-size: 11px;
+						font-weight: 900;
+						letter-spacing: 0.09em;
+						text-transform: uppercase;
+					}
+					.image-big-box {
+						align-items: flex-end;
+						gap: 24px;
+						.image-box {
+							width: 150px;
+							height: 150px;
+							border: 1px solid #ded6cc;
+							border-radius: 6px;
+							overflow: hidden;
+							img {
+								border-radius: 0;
+							}
+						}
+						.upload-big-box {
+							gap: 10px;
+							.labeler {
+								width: 190px;
+								height: 42px;
+								border-radius: 4px;
+								border-color: #151515;
+							}
+							.upload-text {
+								color: #7a8087;
+								font-size: 12px;
+							}
+						}
+					}
+				}
+				.small-input-box {
+					gap: 18px;
+					.input-box {
+						width: calc(50% - 9px);
+					}
+				}
+				.input-box,
+				.address-box {
+					gap: 9px;
+					.title {
+						color: #151515;
+						font-size: 11px;
+						font-weight: 900;
+						letter-spacing: 0.08em;
+						text-transform: uppercase;
+					}
+					input {
+						height: 48px;
+						border-color: #ded6cc;
+						border-radius: 4px;
+						background: #fbfaf7;
+						color: #151515;
+						font-size: 14px;
+					}
+				}
+				.about-me-box {
+					.update-button {
+						width: 168px;
+						height: 44px;
+						border-radius: 4px;
+						background: #151515;
+						p {
+							font-size: 12px;
+							font-weight: 900;
+							letter-spacing: 0.06em;
+							text-transform: uppercase;
+						}
+					}
+				}
+			}
+		}
+	}
+}

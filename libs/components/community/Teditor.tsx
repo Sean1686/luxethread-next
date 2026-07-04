@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Box, Button, FormControl, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import { Editor } from '@toast-ui/react-editor';
 import { useMutation } from '@apollo/client';
 import axios from 'axios';
@@ -12,12 +13,14 @@ import { Messages, REACT_APP_API_URL } from '../../config';
 import { sweetErrorHandling, sweetMixinSuccessAlert } from '../../sweetAlert';
 import { BoardArticleInput } from '../../types/board-article/board-article.input';
 import { T } from '../../types/common';
+import { getCommunityCategoryMeta, getCommunityCoverImage, STYLE_COMMUNITY_CATEGORIES } from '../../utils/community';
 
 const TuiEditor = () => {
 	const editorRef = useRef<Editor>(null);
+	const coverInputRef = useRef<HTMLInputElement>(null);
 	const router = useRouter();
 	const token = getJwtToken();
-	const [articleCategory, setArticleCategory] = useState<BoardArticleCategory>(BoardArticleCategory.FREE);
+	const [articleCategory, setArticleCategory] = useState<BoardArticleCategory>(BoardArticleCategory.STYLE_TALK);
 
 	/** APOLLO REQUESTS **/
 	const [createboardArticle] = useMutation(CREATE_BOARD_ARTICLE);
@@ -26,11 +29,11 @@ const TuiEditor = () => {
 		articleTitle: '',
 		articleContent: '',
 		articleImage: '',
-		articleCategory: BoardArticleCategory.FREE,
+		articleCategory: BoardArticleCategory.STYLE_TALK,
 	});
 
 	/** HANDLERS **/
-	const uploadImage = async (image: File) => {
+	const uploadImage = async (image: File, assignAsCover = false) => {
 		try {
 			const formData = new FormData();
 			formData.append(
@@ -62,10 +65,12 @@ const TuiEditor = () => {
 			});
 
 			const responseImage = response.data.data.imageUploader;
-			setArticleInput((prev) => ({
-				...prev,
-				articleImage: responseImage,
-			}));
+			if (assignAsCover || !articleInput.articleImage) {
+				setArticleInput((prev) => ({
+					...prev,
+					articleImage: responseImage,
+				}));
+			}
 
 			return `${REACT_APP_API_URL}/${responseImage}`;
 		} catch (err) {
@@ -78,6 +83,13 @@ const TuiEditor = () => {
 		setArticleCategory(e.target.value);
 	};
 
+	const coverImageHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (!file) return;
+		await uploadImage(file, true);
+		event.target.value = '';
+	};
+
 	const articleTitleHandler = (e: T) => {
 		setArticleInput((prev) => ({
 			...prev,
@@ -87,14 +99,13 @@ const TuiEditor = () => {
 
 	const handleRegisterButton = async () => {
 		try {
-			const editor = editorRef.current;
 			const articleContent = editorRef.current?.getInstance().getHTML() ?? '';
 			const updatedInput = {
 				...articleInput,
 				articleContent,
 			};
 
-			if (!articleInput.articleTitle.trim() || articleContent.trim() === '') {
+			if (!articleInput.articleTitle.trim() || articleContent.trim() === '' || !articleInput.articleImage) {
 				throw new Error(Messages.error3);
 			}
 			await createboardArticle({
@@ -118,45 +129,59 @@ const TuiEditor = () => {
 	};
 
 	return (
-		<Stack>
-			<Stack direction="row" style={{ margin: '40px' }} justifyContent="space-evenly">
-				<Box component={'div'} className={'form_row'} style={{ width: '300px' }}>
-					<Typography style={{ color: '#7f838d', margin: '10px' }} variant="h3">
+		<Stack className="style-editor">
+			<Stack className="style-editor-fields">
+				<Box component={'div'} className={'form_row'}>
+					<Typography className="field-label" variant="h3">
 						Category
 					</Typography>
-					<FormControl sx={{ width: '100%', background: 'white' }}>
+					<FormControl className="style-select">
 						<Select
 							value={articleCategory}
 							onChange={changeCategoryHandler}
 							displayEmpty
 							inputProps={{ 'aria-label': 'Without label' }}
 						>
-							<MenuItem value={BoardArticleCategory.FREE}>
-								<span>Free</span>
-							</MenuItem>
-							<MenuItem value={BoardArticleCategory.HUMOR}>Humor</MenuItem>
-							<MenuItem value={BoardArticleCategory.NEWS}>News</MenuItem>
-							<MenuItem value={BoardArticleCategory.RECOMMEND}>Recommendation</MenuItem>
+							{STYLE_COMMUNITY_CATEGORIES.map((category) => (
+								<MenuItem value={category} key={category}>
+									{getCommunityCategoryMeta(category).label}
+								</MenuItem>
+							))}
 						</Select>
 					</FormControl>
 				</Box>
-				<Box component={'div'} style={{ width: '300px', flexDirection: 'column' }}>
-					<Typography style={{ color: '#7f838d', margin: '10px' }} variant="h3">
+				<Box component={'div'} className="form_row title-row">
+					<Typography className="field-label" variant="h3">
 						Title
 					</Typography>
 					<TextField
 						value={articleInput.articleTitle}
 						onChange={articleTitleHandler}
 						id="filled-basic"
-						label="Type Title"
-						style={{ width: '300px', background: 'white' }}
+						placeholder="What style conversation are you starting?"
+						className="style-title-input"
 					/>
 				</Box>
 			</Stack>
 
+			<div className="cover-upload-panel">
+				<input ref={coverInputRef} type="file" accept="image/*" onChange={coverImageHandler} />
+				<div className="cover-preview">
+					<img src={getCommunityCoverImage(articleInput.articleImage)} alt="" />
+				</div>
+				<div className="cover-copy">
+					<span>Cover image</span>
+					<strong>Lead with the garment, outfit, shop moment, or market reference.</strong>
+					<p>Used on the community feed and article header.</p>
+					<Button startIcon={<AddPhotoAlternateOutlinedIcon />} onClick={() => coverInputRef.current?.click()}>
+						{articleInput.articleImage ? 'Change cover' : 'Upload cover'}
+					</Button>
+				</div>
+			</div>
+
 			<Editor
 				initialValue={''}
-				placeholder={'Type here'}
+				placeholder={'Write the story, question, fit note, or seller tip here'}
 				previewStyle={'vertical'}
 				height={'640px'}
 				initialEditType={'wysiwyg'}
@@ -176,14 +201,13 @@ const TuiEditor = () => {
 				}}
 			/>
 
-			<Stack direction="row" justifyContent="center">
+			<Stack className="publish-row">
 				<Button
 					variant="contained"
 					color="primary"
-					style={{ margin: '30px', width: '250px', height: '45px' }}
 					onClick={handleRegisterButton}
 				>
-					Register
+					Publish story
 				</Button>
 			</Stack>
 		</Stack>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Pagination, Stack, Typography } from '@mui/material';
 import ProductCard from '../product/ProductCard';
 import { Product } from '../../types/property/product';
@@ -9,7 +8,6 @@ import { GET_VISITED } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 
 const RecentlyVisited: NextPage = () => {
-	const device = useDeviceDetect();
 	const [recentlyVisited, setRecentlyVisited] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [searchVisited, setSearchVisited] = useState<T>({ page: 1, limit: 6 });
@@ -17,45 +15,43 @@ const RecentlyVisited: NextPage = () => {
 	/** APOLLO REQUESTS **/
 
 	const {
-				loading: getVisitedLoading,
-				data: getVisitedData,
-				error: getVisitedError,
-				refetch: getVisitedRefetch,
-			} = useQuery(GET_VISITED, {
-				fetchPolicy: 'network-only',
-				variables: { input: searchVisited },
-				notifyOnNetworkStatusChange: true,
-				onCompleted: (data: T) => {
-					setRecentlyVisited(data?.getVisited?.list);
-					setTotal(data?.getVisited?.metaCounter[0]?.total ?? 0);
-				},
-			});
+		loading: getVisitedLoading,
+		data: getVisitedData,
+		error: getVisitedError,
+		refetch: getVisitedRefetch,
+	} = useQuery(GET_VISITED, {
+		fetchPolicy: 'network-only',
+		variables: { input: searchVisited },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setRecentlyVisited(data?.getVisited?.list ?? []);
+			setTotal(data?.getVisited?.metaCounter[0]?.total ?? 0);
+		},
+	});
 
 	/** HANDLERS **/
 	const paginationHandler = (e: T, value: number) => {
 		setSearchVisited({ ...searchVisited, page: value });
 	};
 
-	if (device === 'mobile') {
-		return <div>NESTAR MY FAVORITES MOBILE</div>;
-	} else {
-		return (
+	return (
 			<div id="my-favorites-page">
 				<Stack className="main-title-box">
 					<Stack className="right-box">
 						<Typography className="main-title">Recently Visited</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
+						<Typography className="sub-title">A clean trail back to products you inspected.</Typography>
 					</Stack>
 				</Stack>
 				<Stack className="favorites-list-box">
 					{recentlyVisited?.length ? (
 						recentlyVisited?.map((product: Product) => {
-							return <ProductCard product={product} recentlyVisited={true} />;
+							return <ProductCard key={product._id} product={product} recentlyVisited={true} />;
 						})
 					) : (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Recently Visited Products found!</p>
+							<strong>No recently viewed products</strong>
+							<p>Browse the catalog and your latest product visits will appear here.</p>
 						</div>
 					)}
 				</Stack>
@@ -72,14 +68,13 @@ const RecentlyVisited: NextPage = () => {
 						</Stack>
 						<Stack className="total-result">
 							<Typography>
-								Total {total} recently visited propert{total > 1 ? 'ies' : 'y'}
+								Total {total} recently visited product{total === 1 ? '' : 's'}
 							</Typography>
 						</Stack>
 					</Stack>
 				) : null}
 			</div>
 		);
-	}
 };
 
 export default RecentlyVisited;

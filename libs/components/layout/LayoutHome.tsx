@@ -4,8 +4,6 @@ import Head from 'next/head';
 import Top from '../Top';
 import Footer from '../MarketplaceFooter';
 import { Stack } from '@mui/material';
-import FiberContainer from '../common/FiberContainer';
-import HeaderFilter from '../homepage/HeaderFilter';
 import { userVar } from '../../../apollo/store';
 import { useReactiveVar } from '@apollo/client';
 import { getJwtToken, updateUserInfo } from '../../auth';
@@ -21,7 +19,6 @@ const withLayoutMain = (Component: any) => {
 		const user = useReactiveVar(userVar);
 		const router = useRouter();
 		const [isMounted, setIsMounted] = React.useState(false);
-		const isHomePage = router.pathname === '/';
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -67,15 +64,6 @@ const withLayoutMain = (Component: any) => {
 						<Stack id={'top'}>
 							<Top />
 						</Stack>
-
-						{!isHomePage && (
-							<Stack className={'header-main'}>
-								<FiberContainer />
-								<Stack className={'container'}>
-									<HeaderFilter />
-								</Stack>
-							</Stack>
-						)}
 
 						<Stack id={'main'}>
 							<Component {...props} />

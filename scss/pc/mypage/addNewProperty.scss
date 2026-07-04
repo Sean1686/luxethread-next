@@ -158,6 +158,48 @@
 						font-weight: 600;
 						line-height: normal;
 					}
+					.choice-chip-grid {
+						display: flex;
+						flex-wrap: wrap;
+						gap: 8px;
+						margin-top: 15px;
+						.choice-chip {
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							min-height: 34px;
+							padding: 0 13px;
+							border: 1px solid #ded6cc;
+							border-radius: 6px;
+							background: #fbfaf7;
+							color: #151515;
+							font-family: $font;
+							font-size: 13px;
+							font-weight: 600;
+							cursor: pointer;
+							transition:
+								border-color 0.18s ease,
+								background 0.18s ease,
+								color 0.18s ease;
+							&.selected {
+								border-color: #151515;
+								background: #151515;
+								color: #fff;
+							}
+						}
+						.color-choice-chip {
+							gap: 7px;
+							span {
+								width: 13px;
+								height: 13px;
+								border-radius: 50%;
+								border: 1px solid rgba(21, 21, 21, 0.18);
+							}
+							&.selected span {
+								border-color: rgba(255, 255, 255, 0.75);
+							}
+						}
+					}
 					.config-row {
 						width: 100%;
 						height: auto;
@@ -290,13 +332,64 @@
 						flex-wrap: wrap;
 						.image-box {
 							position: relative;
-							width: 150px;
-							height: 150px;
-							overflow: hidden;
-							border-radius: 12px;
+							width: 220px;
+							height: auto;
+							padding: 8px;
+							gap: 10px;
+							overflow: visible;
+							border: 1px solid #ded6cc;
+							border-radius: 6px;
+							background: #fbfaf7;
 							img {
 								width: 100%;
-								height: 100%;
+								aspect-ratio: 4 / 5;
+								height: auto;
+								object-fit: cover;
+								border-radius: 4px;
+							}
+							.image-color-panel {
+								width: 100%;
+								gap: 8px;
+								.image-color-title {
+									color: #151515;
+									font-family: $font;
+									font-size: 12px;
+									font-weight: 600;
+									line-height: 1.2;
+								}
+								.image-color-chips {
+									display: flex;
+									flex-wrap: wrap;
+									gap: 6px;
+									.image-color-chip {
+										display: inline-flex;
+										align-items: center;
+										gap: 5px;
+										min-height: 28px;
+										padding: 0 8px;
+										border: 1px solid #ded6cc;
+										border-radius: 6px;
+										background: #fff;
+										color: #151515;
+										font-family: $font;
+										font-size: 12px;
+										font-weight: 500;
+										cursor: pointer;
+										span {
+											width: 12px;
+											height: 12px;
+											border-radius: 50%;
+											border: 1px solid rgba(21, 21, 21, 0.16);
+										}
+										&.selected {
+											border-color: #7b1f2a;
+											box-shadow: inset 0 0 0 1px #7b1f2a;
+										}
+										&.light span {
+											border-color: #b8afa6;
+										}
+									}
+								}
 							}
 							.absolute-box {
 								position: absolute;
@@ -580,6 +673,137 @@
 							font-style: normal;
 							font-weight: 400;
 							cursor: pointer;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+#pc-wrap {
+	#my-page {
+		#add-product-page {
+			gap: 24px;
+			.main-title-box {
+				margin-bottom: 0;
+				.main-title {
+					color: #151515;
+					font-family: Georgia, 'Times New Roman', serif;
+					font-size: 34px;
+					font-weight: 400;
+					line-height: 1.12;
+					letter-spacing: 0;
+				}
+				.sub-title {
+					margin-top: 8px;
+					color: #605e5b;
+					font-size: 14px;
+					line-height: 1.55;
+				}
+			}
+			.config {
+				padding: 28px;
+				border: 1px solid #ded6cc;
+				border-radius: 6px;
+				box-shadow: none;
+				.description-box {
+					.config-column,
+					.config-row {
+						margin-top: 18px;
+					}
+					.config-column .title,
+					.config-row .price-year-after-price .title {
+						color: #151515;
+						font-size: 11px;
+						font-weight: 900;
+						letter-spacing: 0.08em;
+						text-transform: uppercase;
+					}
+					.config-column .description-input,
+					.config-row .price-year-after-price .description-input,
+					.config-row .price-year-after-price .select-description {
+						height: 48px;
+						border-color: #ded6cc;
+						border-radius: 4px;
+						background: #fbfaf7;
+						color: #151515;
+						font-size: 14px;
+					}
+					.config-row {
+						gap: 18px;
+					}
+					.config-row .price-year-after-price {
+						gap: 9px;
+						.divider {
+							top: 30px;
+							right: 46px;
+						}
+						.arrow-down {
+							top: 51px;
+							right: 17px;
+						}
+					}
+					.product-title {
+						margin-top: 34px;
+						color: #7b1f2a;
+						font-size: 11px;
+						font-weight: 900;
+						letter-spacing: 0.09em;
+						text-transform: uppercase;
+					}
+					.choice-chip-grid .choice-chip {
+						border-radius: 4px;
+						font-size: 12px;
+						font-weight: 800;
+						&.selected {
+							background: #151515;
+						}
+					}
+					.description-text {
+						border-color: #ded6cc;
+						border-radius: 4px;
+						background: #fbfaf7;
+						color: #151515;
+					}
+				}
+				.upload-title {
+					color: #7b1f2a;
+					font-size: 11px;
+					font-weight: 900;
+					letter-spacing: 0.09em;
+					text-transform: uppercase;
+				}
+				.images-box {
+					margin-bottom: 36px;
+					.upload-box {
+						height: 300px;
+						border-color: #7b1f2a;
+						border-radius: 6px;
+						background: #fbfaf7;
+						.browse-button {
+							height: 42px;
+							border-radius: 4px;
+						}
+					}
+					.gallery-box {
+						gap: 16px;
+						.image-box {
+							width: calc(33.333% - 11px);
+						}
+					}
+				}
+				.buttons-row {
+					.next-button {
+						width: 154px;
+						height: 44px;
+						border-radius: 4px;
+						background: #151515;
+						.next-button-text {
+							font-size: 12px;
+							font-weight: 900;
+							letter-spacing: 0.08em;
+							text-transform: uppercase;
 						}
 					}
 				}

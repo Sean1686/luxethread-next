@@ -697,6 +697,16 @@ const productImageUrl = (image?: string) => {
 	return image.startsWith('http') ? image : `${REACT_APP_API_URL}/${image}`;
 };
 
+const getProductImagesForColor = (product?: Product | null, color?: string) => {
+	if (!product || !color) return [];
+	const productImageSet = new Set(product.productImages ?? []);
+	return (
+		(product.productColorImages ?? [])
+			.find((item) => item.color === color)
+			?.images?.filter((image) => Boolean(image) && productImageSet.has(image)) ?? []
+	);
+};
+
 const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
@@ -719,7 +729,12 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 	});
 
 	const productImages = useMemo(() => product?.productImages ?? [], [product?.productImages]);
-	const activeImage = slideImage || productImages[0];
+	const selectedColorImages = useMemo(
+		() => getProductImagesForColor(product, selectedColor),
+		[product?.productColorImages, selectedColor],
+	);
+	const galleryImages = selectedColorImages.length ? selectedColorImages : productImages;
+	const activeImage = slideImage || galleryImages[0] || productImages[0];
 	const sizes = product?.productSizes ?? [];
 	const colors = product?.productColors ?? [];
 	const sellerName = product?.memberData?.memberNick ?? product?.memberData?.memberFullName ?? 'Luxethread seller';
@@ -803,8 +818,11 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 	}, [router.isReady, router.query.id, router.query.productId, router.query.product, initialComment]);
 
 	useEffect(() => {
+		const nextColor = product?.productColors?.[0] ?? '';
+
 		setSelectedSize(product?.productSizes?.[0] ?? '');
-		setSelectedColor(product?.productColors?.[0] ?? '');
+		setSelectedColor(nextColor);
+		setSlideImage(getProductImagesForColor(product, nextColor)[0] ?? product?.productImages?.[0] ?? '');
 	}, [product?._id]);
 
 	useEffect(() => {
@@ -881,6 +899,11 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 		await sweetTopSmallSuccessAlert('Added to bag', 900);
 	};
 
+	const selectColorHandler = (color: string) => {
+		setSelectedColor(color);
+		setSlideImage(getProductImagesForColor(product, color)[0] ?? productImages[0] ?? '');
+	};
+
 	const commentPaginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
 		setCommentInquiry({ ...commentInquiry, page: value });
 	};
@@ -922,22 +945,34 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 				<section className={'product-detail-main'}>
 					<div className={'detail-gallery'}>
 						<div className={'detail-thumbnails'}>
-							{productImages.map((image) => (
+							{galleryImages.map((image) => (
 								<button
 									type="button"
 									className={activeImage === image ? 'active' : ''}
 									onClick={() => setSlideImage(image)}
 									key={image}
 								>
-									<img src={productImageUrl(image)} alt={product.productTitle} />
+									<img
+										src={productImageUrl(image)}
+										alt={product.productTitle}
+										onError={(event) => {
+											event.currentTarget.src = '/img/luxethread/campaign-atelier.png';
+										}}
+									/>
 								</button>
 							))}
 						</div>
 
 						<div className={'detail-image-stack'}>
-							{(productImages.length ? productImages : [activeImage]).map((image, index) => (
+							{(galleryImages.length ? galleryImages : [activeImage]).map((image, index) => (
 								<div className={'detail-image-frame'} key={`${image}-${index}`}>
-									<img src={productImageUrl(image)} alt={`${product.productTitle} ${index + 1}`} />
+									<img
+										src={productImageUrl(image)}
+										alt={`${product.productTitle} ${index + 1}`}
+										onError={(event) => {
+											event.currentTarget.src = '/img/luxethread/campaign-atelier.png';
+										}}
+									/>
 									{index === 0 && (
 										<button
 											type="button"
@@ -1002,7 +1037,7 @@ const ProductDetailRedesign: NextPage = ({ initialComment, ...props }: any) => {
 													title={formatProductLabel(color)}
 													style={{ background: productColorHex[color] ?? '#d8cfc5' }}
 													className={`${color === 'WHITE' ? 'light' : ''} ${selectedColor === color ? 'selected' : ''}`}
-													onClick={() => setSelectedColor(color)}
+													onClick={() => selectColorHandler(color)}
 												/>
 											))
 										) : (

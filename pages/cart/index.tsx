@@ -19,6 +19,7 @@ import {
 } from '../../libs/cart';
 import { formatterStr } from '../../libs/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { formatProductLabel, getProductColorHex, getProductImageUrl } from '../../libs/components/product/MarketplaceProductCard';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -26,16 +27,8 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const formatProductLabel = (value?: string) => {
-	if (!value) return 'Ask seller';
-	return value
-		.toLowerCase()
-		.split('_')
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(' ');
-};
-
 const cartKey = (item: CartItem) => `${item.productId}-${item.productSize ?? 'size'}-${item.productColor ?? 'color'}`;
+const cartLabel = (value?: string) => formatProductLabel(value) || 'Ask seller';
 
 const CartPage: NextPage = () => {
 	const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -105,32 +98,35 @@ const CartPage: NextPage = () => {
 							{cartItems.map((item) => (
 								<article className={'cart-item'} key={cartKey(item)}>
 									<Link href={`/product/detail?id=${item.productId}`} className={'cart-item-image'}>
-										<img src={item.productImage || '/img/luxethread/campaign-atelier.png'} alt={item.productTitle} />
+										<img src={getProductImageUrl(item.productImage)} alt={item.productTitle} />
 									</Link>
 									<div className={'cart-item-body'}>
 										<div className={'cart-item-top'}>
 											<div>
-												<span>{formatProductLabel(item.productCategory)}</span>
+												<span>{[formatProductLabel(item.productCategory), formatProductLabel(item.productType)].filter(Boolean).join(' / ') || 'Product'}</span>
 												<Link href={`/product/detail?id=${item.productId}`}>{item.productTitle}</Link>
 											</div>
+											<strong>${formatterStr(item.productPrice * item.quantity)}</strong>
 											<button type="button" className={'remove-item'} onClick={() => removeItemHandler(item)} aria-label="Remove item">
 												<CloseIcon />
 											</button>
 										</div>
 
 										<div className={'cart-item-details'}>
-											<p>
-												Color <strong>{formatProductLabel(item.productColor)}</strong>
-											</p>
-											<p>
+											<span>
 												Size <strong>{item.productSize || 'Ask seller'}</strong>
-											</p>
-											<p>
-												Material <strong>{formatProductLabel(item.productMaterial)}</strong>
-											</p>
-											<p>
-												Fit <strong>{formatProductLabel(item.productFit)}</strong>
-											</p>
+											</span>
+											<span className={'cart-color-detail'}>
+												Color
+												<i style={{ background: getProductColorHex(item.productColor) }} />
+												<strong>{cartLabel(item.productColor)}</strong>
+											</span>
+											<span>
+												Material <strong>{cartLabel(item.productMaterial)}</strong>
+											</span>
+											<span>
+												Fit <strong>{cartLabel(item.productFit)}</strong>
+											</span>
 										</div>
 
 										<div className={'cart-material-ticket'}>
@@ -148,7 +144,7 @@ const CartPage: NextPage = () => {
 													<AddIcon />
 												</button>
 											</div>
-											<strong>${formatterStr(item.productPrice * item.quantity)}</strong>
+											<span>${formatterStr(item.productPrice)} each</span>
 										</div>
 									</div>
 								</article>

@@ -1,17 +1,29 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import withLayoutMain from '../libs/components/layout/LayoutHome';
-import CommunityBoards from '../libs/components/homepage/CommunityBoards';
-import PopularProducts from '../libs/components/homepage/PopularProducts';
-import TopAgents from '../libs/components/homepage/TopAgents';
-import TrendProducts from '../libs/components/homepage/TrendProducts';
-import TopProducts from '../libs/components/homepage/TopProducts';
 import { Stack } from '@mui/material';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Direction } from '../libs/enums/common.enum';
 import { ProductCategory, ProductFit, ProductMaterial, ProductType } from '../libs/enums/property.enum';
 import type { ProductsInquiry } from '../libs/types/property/property.input';
+
+const CommunityBoards = dynamic<any>(() => import('../libs/components/homepage/CommunityBoards').then((mod) => mod.default as any), {
+	ssr: false,
+});
+const PopularProducts = dynamic<any>(() => import('../libs/components/homepage/PopularProducts').then((mod) => mod.default as any), {
+	ssr: false,
+});
+const TopAgents = dynamic<any>(() => import('../libs/components/homepage/TopAgents').then((mod) => mod.default as any), {
+	ssr: false,
+});
+const TrendProducts = dynamic<any>(() => import('../libs/components/homepage/TrendProducts').then((mod) => mod.default as any), {
+	ssr: false,
+});
+const TopProducts = dynamic<any>(() => import('../libs/components/homepage/TopProducts').then((mod) => mod.default as any), {
+	ssr: false,
+});
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -33,21 +45,6 @@ const heroSlides = [
 	{
 		image: '/img/luxethread/hero-accessories-edit.png',
 		label: 'Detail Stories',
-		position: 'center center',
-	},
-	{
-		image: '/img/luxethread/vecteezy_ai-generated-fashion-store-advertisment-background-with-copy_37245905.jpg',
-		label: 'Showroom Mood',
-		position: 'center center',
-	},
-	{
-		image: '/img/luxethread/shimabdinzade-woman-8380758.jpg',
-		label: 'Modest Edit',
-		position: 'center top',
-	},
-	{
-		image: '/img/luxethread/vecteezy_pair-of-brown-leather-wingtip-shoes_1257146.jpeg',
-		label: 'Heritage Menswear',
 		position: 'center center',
 	},
 ];
@@ -181,7 +178,7 @@ const Home: NextPage = () => {
 				<div className={'lux-category-cards'}>
 					{categoryCards.map((category) => (
 						<Link href={category.href} className={'lux-category-card'} key={category.title}>
-							<img src={category.image} alt={category.title} />
+							<img src={category.image} alt={category.title} loading={'lazy'} />
 							<div>
 								<h3>{category.title}</h3>
 								<p>{category.copy}</p>
@@ -205,8 +202,8 @@ const Home: NextPage = () => {
 					</p>
 				</div>
 				<div className={'lux-atelier-gallery'} aria-hidden="true">
-					<img src={'/img/luxethread/campaign-accessories.png'} alt={''} />
-					<img src={'/img/luxethread/campaign-streetwear.png'} alt={''} />
+					<img src={'/img/luxethread/campaign-accessories.png'} alt={''} loading={'lazy'} />
+					<img src={'/img/luxethread/campaign-streetwear.png'} alt={''} loading={'lazy'} />
 				</div>
 			</section>
 
@@ -214,7 +211,7 @@ const Home: NextPage = () => {
 
 			<section className={'lux-editorial'}>
 				<div className={'lux-editorial-image'}>
-					<img src={'/img/luxethread/campaign-atelier.png'} alt={'Luxethread material craftsmanship'} />
+					<img src={'/img/luxethread/campaign-atelier.png'} alt={'Luxethread material craftsmanship'} loading={'lazy'} />
 				</div>
 				<div className={'lux-editorial-copy'}>
 					<span className={'lux-eyebrow'}>Material edit</span>
