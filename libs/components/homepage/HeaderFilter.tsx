@@ -315,7 +315,23 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	};
 
 	if (device === 'mobile') {
-		return <div>HEADER FILTER MOBILE</div>;
+		return (
+			<Stack className={'search-box mobile-search-box'}>
+				<Stack className={'select-box'}>
+					<Box className={'box'} onClick={() => router.push('/product')}>
+						<span>Shop products</span>
+					</Box>
+					<Box className={'box'} onClick={() => router.push('/agent')}>
+						<span>Explore sellers</span>
+					</Box>
+				</Stack>
+				<Stack className={'search-box-other'}>
+					<Box className={'search-btn'} onClick={() => router.push('/product')}>
+						<img src="/img/icons/search_white.svg" alt="" />
+					</Box>
+				</Stack>
+			</Stack>
+		);
 	} else {
 		return (
 			<>

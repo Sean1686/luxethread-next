@@ -31,7 +31,7 @@ const CommunityBoards = () => {
 		variables: { input: { ...searchCommunity, limit: 6, search: { articleCategory: BoardArticleCategory.NEWS } } },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setFreeArticles(data?.getBoardArticles?.list);
+			setNewsArticles(data?.getBoardArticles?.list ?? []);
 		},
 	});
 
@@ -45,18 +45,17 @@ const CommunityBoards = () => {
 		variables: { input: { ...searchCommunity, limit: 3, search: { articleCategory: BoardArticleCategory.FREE } } },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setNewsArticles(data?.getBoardArticles?.list);
+			setFreeArticles(data?.getBoardArticles?.list ?? []);
 		},
 	});
 
 	if (device === 'mobile') {
-		return <div>COMMUNITY BOARDS (MOBILE)</div>;
-	} else {
 		return (
 			<Stack className={'community-board'}>
 				<Stack className={'container'}>
-					<Stack>
-						<Typography variant={'h1'}>COMMUNITY BOARD HIGHLIGHTS</Typography>
+					<Stack className={'community-head'}>
+						<span>Community</span>
+						<Typography variant={'h1'}>Style notes from the Luxethread floor</Typography>
 					</Stack>
 					<Stack className="community-main">
 						<Stack className={'community-left'}>
@@ -67,9 +66,59 @@ const CommunityBoards = () => {
 								<img src="/img/icons/arrowBig.svg" alt="" />
 							</Stack>
 							<Stack className={'card-wrap'}>
-								{newsArticles.map((article, index) => {
-									return <CommunityCard vertical={true} article={article} index={index} key={article?._id} />;
-								})}
+								{newsArticles.length === 0 ? (
+									<div className={'community-empty'}>No news articles yet.</div>
+								) : (
+									newsArticles.slice(0, 3).map((article, index) => {
+										return <CommunityCard vertical={true} article={article} index={index} key={article?._id} />;
+									})
+								)}
+							</Stack>
+						</Stack>
+						<Stack className={'community-right'}>
+							<Stack className={'content-top'}>
+								<Link href={'/community?articleCategory=FREE'}>
+									<span>Community</span>
+								</Link>
+								<img src="/img/icons/arrowBig.svg" alt="" />
+							</Stack>
+							<Stack className={'card-wrap vertical'}>
+								{freeArticles.length === 0 ? (
+									<div className={'community-empty'}>No community posts yet.</div>
+								) : (
+									freeArticles.map((article, index) => {
+										return <CommunityCard vertical={false} article={article} index={index} key={article?._id} />;
+									})
+								)}
+							</Stack>
+						</Stack>
+					</Stack>
+				</Stack>
+			</Stack>
+		);
+	} else {
+		return (
+			<Stack className={'community-board'}>
+				<Stack className={'container'}>
+					<Stack>
+						<Typography variant={'h1'}>Community board highlights</Typography>
+					</Stack>
+					<Stack className="community-main">
+						<Stack className={'community-left'}>
+							<Stack className={'content-top'}>
+								<Link href={'/community?articleCategory=NEWS'}>
+									<span>News</span>
+								</Link>
+								<img src="/img/icons/arrowBig.svg" alt="" />
+							</Stack>
+							<Stack className={'card-wrap'}>
+								{newsArticles.length === 0 ? (
+									<div className={'community-empty'}>No news articles yet.</div>
+								) : (
+									newsArticles.map((article, index) => {
+										return <CommunityCard vertical={true} article={article} index={index} key={article?._id} />;
+									})
+								)}
 							</Stack>
 						</Stack>
 						<Stack className={'community-right'}>
@@ -80,9 +129,13 @@ const CommunityBoards = () => {
 								<img src="/img/icons/arrowBig.svg" alt="" />
 							</Stack>
 							<Stack className={'card-wrap vertical'}>
-								{freeArticles.map((article, index) => {
-									return <CommunityCard vertical={false} article={article} index={index} key={article?._id} />;
-								})}
+								{freeArticles.length === 0 ? (
+									<div className={'community-empty'}>No community posts yet.</div>
+								) : (
+									freeArticles.map((article, index) => {
+										return <CommunityCard vertical={false} article={article} index={index} key={article?._id} />;
+									})
+								)}
 							</Stack>
 						</Stack>
 					</Stack>

@@ -660,3 +660,81 @@ Could not find files for /account/join in .next/build-manifest.json
 Could not find files for /account/join in .next/build-manifest.json
 Could not find files for /account/join in .next/build-manifest.json
  ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 248
+    at JSON.parse (<anonymous>)
+    at loadManifest (C:\luxethread-next\node_modules\next\dist\server\load-manifest.js:35:27)
+    at loadManifestWithRetries (C:\luxethread-next\node_modules\next\dist\server\load-components.js:40:51)
+    at runNextTicks (node:internal/process/task_queues:60:5)
+    at listOnTimeout (node:internal/timers:545:9)
+    at process.processTimers (node:internal/timers:519:7)
+    at async Promise.all (index 1)
+    at async loadComponentsImpl (C:\luxethread-next\node_modules\next\dist\server\load-components.js:79:100)
+    at async DevServer.findPageComponentsImpl (C:\luxethread-next\node_modules\next\dist\server\next-server.js:710:36)
+    at async DevServer.findPageComponents (C:\luxethread-next\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\luxethread-next\node_modules\next\dist\server\base-server.js:1905:24)
+    at async DevServer.renderToResponseImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:1957:32)
+    at async DevServer.pipeImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:915:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\luxethread-next\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:811:17) {
+  page: '/'
+}
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 248
+    at JSON.parse (<anonymous>)
+    at loadManifest (C:\luxethread-next\node_modules\next\dist\server\load-manifest.js:35:27)
+    at loadManifestWithRetries (C:\luxethread-next\node_modules\next\dist\server\load-components.js:40:51)
+    at async Promise.all (index 1)
+    at async loadComponentsImpl (C:\luxethread-next\node_modules\next\dist\server\load-components.js:79:100)
+    at async DevServer.findPageComponentsImpl (C:\luxethread-next\node_modules\next\dist\server\next-server.js:710:36)
+    at async DevServer.findPageComponents (C:\luxethread-next\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\luxethread-next\node_modules\next\dist\server\base-server.js:1905:24)
+    at async DevServer.renderToResponseImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:1957:32)
+    at async DevServer.pipeImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:915:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\luxethread-next\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:811:17)
+    at async C:\luxethread-next\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\luxethread-next\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\luxethread-next\node_modules\next\dist\server\dev\next-dev-server.js:336:24) {
+  page: '/'
+}
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 248
+    at JSON.parse (<anonymous>)
+    at loadManifest (C:\luxethread-next\node_modules\next\dist\server\load-manifest.js:35:27)
+    at loadManifestWithRetries (C:\luxethread-next\node_modules\next\dist\server\load-components.js:40:51)
+    at runNextTicks (node:internal/process/task_queues:60:5)
+    at listOnTimeout (node:internal/timers:545:9)
+    at process.processTimers (node:internal/timers:519:7)
+    at async Promise.all (index 1)
+    at async loadComponentsImpl (C:\luxethread-next\node_modules\next\dist\server\load-components.js:79:100)
+    at async DevServer.findPageComponentsImpl (C:\luxethread-next\node_modules\next\dist\server\next-server.js:710:36)
+    at async DevServer.findPageComponents (C:\luxethread-next\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:2126:26)
+    at async pipe.req.req (C:\luxethread-next\node_modules\next\dist\server\base-server.js:2051:30)
+    at async DevServer.pipeImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:915:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\luxethread-next\node_modules\next\dist\server\next-server.js:287:21)
+    at async DevServer.handleRequestImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:811:17)
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 248
+    at JSON.parse (<anonymous>)
+    at loadManifest (C:\luxethread-next\node_modules\next\dist\server\load-manifest.js:35:27)
+    at loadManifestWithRetries (C:\luxethread-next\node_modules\next\dist\server\load-components.js:40:51)
+    at async Promise.all (index 1)
+    at async loadComponentsImpl (C:\luxethread-next\node_modules\next\dist\server\load-components.js:79:100)
+    at async DevServer.findPageComponentsImpl (C:\luxethread-next\node_modules\next\dist\server\next-server.js:710:36)
+    at async DevServer.findPageComponents (C:\luxethread-next\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:2126:26)
+    at async pipe.req.req (C:\luxethread-next\node_modules\next\dist\server\base-server.js:2051:30)
+    at async DevServer.pipeImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:915:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\luxethread-next\node_modules\next\dist\server\next-server.js:287:21)
+    at async DevServer.handleRequestImpl (C:\luxethread-next\node_modules\next\dist\server\base-server.js:811:17)
+    at async C:\luxethread-next\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\luxethread-next\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\luxethread-next\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\luxethread-next\.next\cache\webpack\client-development-fallback\0.pack.gz_' -> 'C:\luxethread-next\.next\cache\webpack\client-development-fallback\0.pack.gz'
+Could not find files for / in .next/build-manifest.json
+Could not find files for / in .next/build-manifest.json
+Could not find files for / in .next/build-manifest.json
+Could not find files for / in .next/build-manifest.json
+Could not find files for / in .next/build-manifest.json
+Could not find files for / in .next/build-manifest.json
+Could not find files for / in .next/build-manifest.json
+Could not find files for / in .next/build-manifest.json
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: invalid block type

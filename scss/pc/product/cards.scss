@@ -18,7 +18,7 @@
 
 	.market-product-card--carousel {
 		width: 100%;
-		min-height: 500px;
+		min-height: 560px;
 	}
 
 	.market-product-card--favorite {
@@ -37,7 +37,8 @@
 	.trend-products .trend-product-swiper,
 	.popular-products .popular-product-swiper,
 	.top-products .top-product-swiper {
-		height: 500px;
+		height: auto;
+		min-height: 578px;
 	}
 
 	.trend-products .trend-product-slide,
@@ -126,6 +127,10 @@
 		background: #fff;
 	}
 
+	.market-product-card--carousel .market-product-card__body {
+		min-height: 224px;
+	}
+
 	.market-product-card--owner-list .market-product-card__body {
 		padding: 18px 20px;
 		justify-content: space-between;
@@ -179,11 +184,15 @@
 		gap: 6px 10px;
 
 		span {
+			max-width: 100%;
 			color: #4e5558;
 			font-family: $font;
 			font-size: 12px;
 			font-weight: 700;
 			line-height: 1.35;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 	}
 
@@ -193,6 +202,7 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 12px;
+		flex-wrap: wrap;
 	}
 
 	.market-product-card__sizes,
@@ -200,6 +210,7 @@
 		display: flex;
 		align-items: center;
 		gap: 6px;
+		flex-wrap: wrap;
 	}
 
 	.market-product-card__sizes span {
@@ -228,13 +239,14 @@
 
 	.market-product-card__footer {
 		margin-top: auto;
-		min-height: 34px;
+		min-height: 42px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		gap: 12px;
 		border-top: 1px solid rgba(222, 214, 204, 0.7);
 		padding-top: 12px;
+		flex-shrink: 0;
 	}
 
 	.market-product-card__signals {

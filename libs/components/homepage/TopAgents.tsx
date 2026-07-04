@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Stack, Box } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -61,7 +62,7 @@ const TopAgents = (props: TopAgentsProps) => {
 							{topAgents.map((agent: Member) => {
 								return (
 									<SwiperSlide className={'top-agents-slide'} key={agent?._id}>
-										<TopAgentCard agent={agent} key={agent?.memberNick} />
+										<TopAgentCard agent={agent} />
 									</SwiperSlide>
 								);
 							})}
@@ -80,10 +81,10 @@ const TopAgents = (props: TopAgentsProps) => {
 							<p>Independent sellers shaping the Luxethread floor</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
-							<div className={'more-box'}>
+							<Link href={'/agent'} className={'more-box'}>
 								<span>See All Sellers</span>
 								<img src="/img/icons/rightup.svg" alt="" />
-							</div>
+							</Link>
 						</Box>
 					</Stack>
 					<Stack className={'wrapper'}>
@@ -104,7 +105,7 @@ const TopAgents = (props: TopAgentsProps) => {
 								{topAgents.map((agent: Member) => {
 									return (
 										<SwiperSlide className={'top-agents-slide'} key={agent?._id}>
-											<TopAgentCard agent={agent} key={agent?.memberNick} />
+											<TopAgentCard agent={agent} />
 										</SwiperSlide>
 									);
 								})}

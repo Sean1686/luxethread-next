@@ -1,5 +1,9 @@
+import decodeJWT from 'jwt-decode';
+import { CustomJwtPayload } from './types/customJwtPayload';
+
 export const CART_STORAGE_KEY = 'luxethread:cart';
 export const CART_UPDATED_EVENT = 'luxethread:cart-updated';
+const GUEST_CART_STORAGE_KEY = `${CART_STORAGE_KEY}:guest`;
 
 export interface CartItem {
 	productId: string;
@@ -31,45 +35,84 @@ const normalizeQuantity = (quantity?: number) => Math.max(1, Math.min(99, Number
 const cartItemKey = (item: Pick<CartItem, 'productId' | 'productSize' | 'productColor'>) =>
 	[item.productId, item.productSize ?? '', item.productColor ?? ''].join('::');
 
-export const notifyCartUpdated = () => {
-	if (!isBrowser()) return;
-	window.dispatchEvent(new CustomEvent(CART_UPDATED_EVENT));
-};
-
-export const getCartItems = (): CartItem[] => {
-	if (!isBrowser()) return [];
-
-	try {
-		const value = window.localStorage.getItem(CART_STORAGE_KEY);
-		if (!value) return [];
-		const parsed = JSON.parse(value);
-		if (!Array.isArray(parsed)) return [];
-
-		return parsed
-			.filter((item) => item?.productId && item?.productTitle)
-			.map((item) => ({
-				...item,
-				productPrice: Number(item.productPrice) || 0,
-				quantity: normalizeQuantity(item.quantity),
-			}));
-	} catch (error) {
-		console.warn('Unable to read Luxethread cart:', error);
-		return [];
-	}
-};
-
-export const saveCartItems = (items: CartItem[]) => {
-	if (!isBrowser()) return [];
-
-	const normalizedItems = items
-		.filter((item) => item.productId && item.productTitle)
+const normalizeCartItems = (items: any[]): CartItem[] =>
+	items
+		.filter((item) => item?.productId && item?.productTitle)
 		.map((item) => ({
 			...item,
 			productPrice: Number(item.productPrice) || 0,
 			quantity: normalizeQuantity(item.quantity),
 		}));
 
-	window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(normalizedItems));
+const readCartItemsFromKey = (storageKey: string): CartItem[] => {
+	try {
+		const value = window.localStorage.getItem(storageKey);
+		if (!value) return [];
+		const parsed = JSON.parse(value);
+		if (!Array.isArray(parsed)) return [];
+
+		return normalizeCartItems(parsed);
+	} catch (error) {
+		console.warn('Unable to read Luxethread cart:', error);
+		return [];
+	}
+};
+
+const getCurrentMemberId = () => {
+	if (!isBrowser()) return '';
+
+	try {
+		const jwtToken = window.localStorage.getItem('accessToken');
+		if (!jwtToken) return '';
+
+		const claims = decodeJWT<CustomJwtPayload>(jwtToken);
+		return claims?._id ?? '';
+	} catch (error) {
+		return '';
+	}
+};
+
+export const getCartStorageKey = () => {
+	const memberId = getCurrentMemberId();
+	return memberId ? `${CART_STORAGE_KEY}:${memberId}` : GUEST_CART_STORAGE_KEY;
+};
+
+export const notifyCartUpdated = () => {
+	if (!isBrowser()) return;
+	window.dispatchEvent(new CustomEvent(CART_UPDATED_EVENT));
+};
+
+const migrateLegacyCartIfNeeded = (activeStorageKey: string) => {
+	if (!isBrowser()) return;
+	if (activeStorageKey === CART_STORAGE_KEY) return;
+	if (!window.localStorage.getItem(CART_STORAGE_KEY)) return;
+
+	const activeItems = readCartItemsFromKey(activeStorageKey);
+	const legacyItems = readCartItemsFromKey(CART_STORAGE_KEY);
+
+	if (activeItems.length === 0 && legacyItems.length > 0) {
+		window.localStorage.setItem(activeStorageKey, JSON.stringify(legacyItems));
+	}
+
+	window.localStorage.removeItem(CART_STORAGE_KEY);
+	notifyCartUpdated();
+};
+
+export const getCartItems = (): CartItem[] => {
+	if (!isBrowser()) return [];
+
+	const activeStorageKey = getCartStorageKey();
+	migrateLegacyCartIfNeeded(activeStorageKey);
+
+	return readCartItemsFromKey(activeStorageKey);
+};
+
+export const saveCartItems = (items: CartItem[]) => {
+	if (!isBrowser()) return [];
+
+	const normalizedItems = normalizeCartItems(items);
+
+	window.localStorage.setItem(getCartStorageKey(), JSON.stringify(normalizedItems));
 	notifyCartUpdated();
 
 	return normalizedItems;

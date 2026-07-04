@@ -4,6 +4,7 @@ import { userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
 import { sweetMixinErrorAlert } from '../sweetAlert';
 import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
+import { notifyCartUpdated } from '../cart';
 
 export function getJwtToken(): any {
 	if (typeof window !== 'undefined') {
@@ -122,6 +123,7 @@ const requestSignUpJwtToken = async ({
 export const updateStorage = ({ jwtToken }: { jwtToken: any }) => {
 	setJwtToken(jwtToken);
 	window.localStorage.setItem('login', Date.now().toString());
+	notifyCartUpdated();
 };
 
 export const updateUserInfo = (jwtToken: any) => {
@@ -163,6 +165,7 @@ export const logOut = () => {
 const deleteStorage = () => {
 	localStorage.removeItem('accessToken');
 	window.localStorage.setItem('logout', Date.now().toString());
+	notifyCartUpdated();
 };
 
 const deleteUserInfo = () => {

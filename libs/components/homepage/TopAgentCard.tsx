@@ -1,7 +1,6 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Stack } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Member } from '../../types/member/member';
 
 interface TopAgentProps {
@@ -9,33 +8,23 @@ interface TopAgentProps {
 }
 const TopAgentCard = (props: TopAgentProps) => {
 	const { agent } = props;
-	const device = useDeviceDetect();
-	const router = useRouter();
 	const agentImage = agent?.memberImage
 		? `${process.env.REACT_APP_API_URL}/${agent?.memberImage}`
 		: '/img/profile/defaultUser.svg';
+	const sellerLabel = agent?.memberType === 'AGENT' ? 'Seller' : 'Member';
+	const sellerHref = agent?._id ? `/agent/detail?id=${agent._id}` : '/agent';
 
 	/** HANDLERS **/
 
-	if (device === 'mobile') {
-		return (
+	return (
+		<Link href={sellerHref} className="top-agent-card-link">
 			<Stack className="top-agent-card">
-				<img src={agentImage} alt="" />
-
+				<img src={agentImage} alt={agent?.memberNick || 'Luxethread seller'} />
 				<strong>{agent?.memberNick}</strong>
-				<span>{agent?.memberType}</span>
+				<span>{sellerLabel}</span>
 			</Stack>
-		);
-	} else {
-		return (
-			<Stack className="top-agent-card">
-				<img src={agentImage} alt="" />
-
-				<strong>{agent?.memberNick}</strong>
-				<span>{agent?.memberType}</span>
-			</Stack>
-		);
-	}
+		</Link>
+	);
 };
 
 export default TopAgentCard;
