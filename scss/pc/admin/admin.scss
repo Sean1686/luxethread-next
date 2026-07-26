@@ -1,4 +1,64 @@
 #pc-wrap {
+	&.admin {
+		.admin-nav {
+			display: flex;
+			flex-direction: column;
+			gap: 18px;
+		}
+
+		.admin-nav__eyebrow {
+			color: #7b1f2a;
+			font-family: $font;
+			font-size: 11px;
+			font-weight: 800;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+		}
+
+		.admin-nav__list {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.admin-nav__item {
+			min-height: 48px;
+			padding: 10px 14px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			border-radius: 14px;
+			color: #3d3934;
+			transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+
+			&:hover {
+				background: rgba(123, 31, 42, 0.08);
+				transform: translateX(2px);
+			}
+
+			&.active {
+				background: #151515;
+				color: #fff8f0;
+				box-shadow: 0 12px 26px rgba(21, 21, 21, 0.16);
+			}
+		}
+
+		.admin-nav__icon {
+			min-width: 0;
+			color: inherit;
+
+			svg {
+				font-size: 20px;
+			}
+		}
+
+		.admin-nav__item .MuiListItemText-primary {
+			font-family: $font;
+			font-size: 14px;
+			font-weight: 700;
+		}
+	}
+
   .MuiAppBar-root {
     height: 64px;
     display: flex;

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -31,6 +32,7 @@ const cartKey = (item: CartItem) => `${item.productId}-${item.productSize ?? 'si
 const cartLabel = (value?: string) => formatProductLabel(value) || 'Ask seller';
 
 const CartPage: NextPage = () => {
+	const router = useRouter();
 	const [cartItems, setCartItems] = useState<CartItem[]>([]);
 	const [promoCode, setPromoCode] = useState<string>('');
 	const cartCount = useMemo(() => cartItems.reduce((total, item) => total + item.quantity, 0), [cartItems]);
@@ -182,7 +184,7 @@ const CartPage: NextPage = () => {
 									<strong>${formatterStr(subtotal)}</strong>
 								</div>
 								<p>Taxes and seller delivery details are confirmed at checkout.</p>
-								<Button className={'checkout-btn'} disabled>
+								<Button className={'checkout-btn'} disabled={cartItems.length === 0} onClick={() => router.push('/checkout')}>
 									<span>Proceed to Checkout</span>
 									<ArrowForwardIcon />
 								</Button>
@@ -206,7 +208,9 @@ const CartPage: NextPage = () => {
 						<span>Total</span>
 						<strong>${formatterStr(subtotal)}</strong>
 					</div>
-					<Button disabled>Checkout</Button>
+					<Button disabled={cartItems.length === 0} onClick={() => router.push('/checkout')}>
+						Checkout
+					</Button>
 				</div>
 			)}
 		</div>

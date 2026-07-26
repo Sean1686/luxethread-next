@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { NextPage } from 'next';
 import { Button, Stack, Typography } from '@mui/material';
 import axios from 'axios';
@@ -14,6 +14,9 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 	const token = getJwtToken();
 	const user = useReactiveVar(userVar);
 	const [updateData, setUpdateData] = useState<MemberUpdate>(initialValues);
+	const [isUploading, setIsUploading] = useState(false);
+	const [isSaving, setIsSaving] = useState(false);
+	const imageInputRef = useRef<HTMLInputElement>(null);
 
 	/** APOLLO REQUESTS **/
 	const [updateMember] = useMutation(UPDATE_MEMBER);
@@ -27,19 +30,25 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		setUpdateData({
-			...updateData,
-			memberNick: user.memberNick,
-			memberPhone: user.memberPhone,
-			memberAddress: user.memberAddress,
-			memberImage: user.memberImage,
-		});
-	}, [user]);
+		setUpdateData((prev) => ({
+			...prev,
+			memberNick: user.memberNick ?? '',
+			memberPhone: user.memberPhone ?? '',
+			memberAddress: user.memberAddress ?? '',
+			memberImage: user.memberImage ?? '',
+		}));
+	}, [user.memberAddress, user.memberImage, user.memberNick, user.memberPhone]);
 
 	/** HANDLERS **/
-	const uploadImage = async (e: any) => {
+	const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		try {
-			const image = e.target.files[0];
+			const image = e.target.files?.[0];
+			if (!image) throw new Error(Messages.error5);
+
+			const validTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+			if (!validTypes.includes(image.type)) throw new Error(Messages.error5);
+
+			setIsUploading(true);
 
 			const formData = new FormData();
 			formData.append(
@@ -70,40 +79,64 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 				},
 			});
 
-			const responseImage = response.data.data.imageUploader;
-			updateData.memberImage = responseImage;
-			setUpdateData({ ...updateData });
+			const responseImage = response?.data?.data?.imageUploader;
+			if (!responseImage) throw new Error(Messages.error1);
+			setUpdateData((prev) => ({
+				...prev,
+				memberImage: responseImage,
+			}));
 
 			return `${REACT_APP_API_URL}/${responseImage}`;
 		} catch (err) {
-			console.log('Error, uploadImage:', err);
+			await sweetErrorHandling(err);
+		} finally {
+			setIsUploading(false);
+			if (imageInputRef.current) imageInputRef.current.value = '';
 		}
 	};
 
 	const updateProfileHandler = useCallback(async () => {
 		try {
+			setIsSaving(true);
 			if (!user._id) throw new Error(Messages.error2);
-			updateData._id = user._id;
+			const memberNick = updateData.memberNick?.trim() ?? '';
+			const memberPhone = updateData.memberPhone?.trim() ?? '';
+			const memberAddress = updateData.memberAddress?.trim() ?? '';
+			const memberImage =
+				updateData.memberImage && updateData.memberImage !== '/img/profile/defaultUser.svg'
+					? updateData.memberImage
+					: undefined;
+
 			const result = await updateMember({
 				variables: {
-					input: updateData,
+					input: {
+						_id: user._id,
+						memberNick,
+						memberPhone,
+						memberAddress,
+						memberImage,
+					},
 				},
 			});
 
-			const jwtToken = result.data.updateMember?.accessToken;
-			await updateStorage({ jwtToken });
-			updateUserInfo(result.data.updateMember?.accessToken);
+			const jwtToken = result?.data?.updateMember?.accessToken;
+			if (!jwtToken) throw new Error(Messages.error1);
+			updateStorage({ jwtToken });
+			updateUserInfo(jwtToken);
 			await sweetMixinSuccessAlert('Profile updated successfully!');
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
+		} finally {
+			setIsSaving(false);
 		}
 	}, [updateData]);
 
 	const doDisabledCheck = () =>
-			updateData.memberNick === '' ||
-			updateData.memberPhone === '' ||
-			updateData.memberAddress === '' ||
-			updateData.memberImage === '';
+		!user._id ||
+		(updateData.memberNick ?? '').trim() === '' ||
+		(updateData.memberPhone ?? '').trim() === '' ||
+		isUploading ||
+		isSaving;
 
 	return (
 			<div id="my-profile-page">
@@ -127,6 +160,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 								<input
 									type="file"
 									hidden
+									ref={imageInputRef}
 									id="profile-image-input"
 									onChange={uploadImage}
 									accept="image/jpg, image/jpeg, image/png"

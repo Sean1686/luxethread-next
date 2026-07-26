@@ -4641,6 +4641,434 @@
       object-position: center 42%;
     }
   }
+
+  #checkout-page,
+  #order-complete-page {
+    min-height: 100vh;
+    padding: 96px 0 96px;
+    background: #fbf9f8;
+
+    .checkout-shell,
+    .complete-shell {
+      width: 100%;
+      padding: 0 16px;
+      box-sizing: border-box;
+    }
+
+    .checkout-hero,
+    .complete-hero {
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+      border-bottom: 1px solid rgba(207, 196, 197, 0.58);
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      span {
+        color: #7b1f2a;
+        font-family: $font;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+      }
+
+      h1 {
+        color: #1b1c1c;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 38px;
+        font-weight: 400;
+        line-height: 1.08;
+      }
+
+      p {
+        color: #605e5b;
+        font-family: $font;
+        font-size: 14px;
+        line-height: 1.65;
+      }
+    }
+
+    .hero-step {
+      width: 100%;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(222, 214, 204, 0.95);
+      background: #fff;
+
+      svg {
+        font-size: 28px;
+        color: #7b1f2a;
+      }
+
+      strong {
+        display: block;
+        color: #1b1c1c;
+        font-family: $font;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      span {
+        color: #605e5b;
+        font-family: $font;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+    }
+
+    .checkout-layout,
+    .complete-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .checkout-form-panel,
+    .order-ledger-panel,
+    .receipt-card {
+      padding: 20px;
+      border: 1px solid rgba(222, 214, 204, 0.95);
+      background: #fff;
+    }
+
+    .panel-head {
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(207, 196, 197, 0.48);
+
+      span {
+        color: #7e7576;
+        font-family: $font;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      h2 {
+        margin-top: 8px;
+        color: #1b1c1c;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 1.2;
+      }
+    }
+
+    .field-grid,
+    .method-grid,
+    .receipt-meta-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .receipt-address {
+      padding-top: 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+      border-top: 1px solid rgba(207, 196, 197, 0.48);
+
+      span {
+        display: block;
+        margin-bottom: 7px;
+        color: #7e7576;
+        font-family: $font;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      strong,
+      p {
+        color: #1b1c1c;
+        font-family: $font;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      p {
+        margin-top: 6px;
+        color: #605e5b;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+
+      label {
+        color: #7e7576;
+        font-family: $font;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #ded8ce;
+        background: #fbfaf7;
+        color: #1b1c1c;
+        font-family: $font;
+        font-size: 14px;
+        outline: none;
+      }
+
+      input {
+        height: 46px;
+        padding: 0 12px;
+      }
+
+      textarea {
+        min-height: 104px;
+        padding: 12px;
+        resize: vertical;
+      }
+
+      small {
+        color: #7b1f2a;
+        font-family: $font;
+        font-size: 11px;
+      }
+    }
+
+    .field--full {
+      margin-top: 12px;
+    }
+
+    .delivery-block {
+      margin-top: 18px;
+    }
+
+    .method-card {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: flex-start;
+      border: 1px solid #ded8ce;
+      background: #fbfaf7;
+      text-align: left;
+
+      strong {
+        display: block;
+        margin-bottom: 6px;
+        color: #1b1c1c;
+        font-family: $font;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      span {
+        color: #605e5b;
+        font-family: $font;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      em {
+        color: #1b1c1c;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 17px;
+        font-style: normal;
+        font-weight: 400;
+      }
+
+      &.selected {
+        border-color: #1b1c1c;
+        background: #fff;
+      }
+    }
+
+    .checkout-actions,
+    .complete-actions {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .primary-action,
+    .secondary-action,
+    .checkout-cta {
+      width: 100%;
+      height: 48px;
+      border-radius: 0;
+      font-family: $font;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .primary-action,
+    .checkout-cta {
+      background: #1b1c1c;
+      color: #fff;
+    }
+
+    .secondary-action {
+      border: 1px solid #1b1c1c;
+      background: transparent;
+      color: #1b1c1c;
+    }
+
+    .ledger-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(207, 196, 197, 0.48);
+    }
+
+    .ledger-item,
+    .receipt-row {
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .ledger-copy,
+    .receipt-copy {
+      gap: 7px;
+
+      span {
+        color: #7e7576;
+        font-family: $font;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      strong {
+        color: #1b1c1c;
+        font-family: $font;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1.35;
+      }
+    }
+
+    .ledger-tags,
+    .receipt-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 8px;
+
+      em {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #605e5b;
+        font-family: $font;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 700;
+      }
+
+      i {
+        width: 12px;
+        height: 12px;
+        display: inline-flex;
+        border-radius: 50%;
+        border: 1px solid rgba(21, 21, 21, 0.18);
+      }
+    }
+
+    .ledger-price,
+    .receipt-price {
+      font-size: 16px;
+      white-space: nowrap;
+    }
+
+    .summary-grid,
+    .receipt-summary {
+      padding-top: 16px;
+      gap: 10px;
+
+      div {
+        span {
+          font-size: 12px;
+        }
+
+        strong {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .summary-grid .total-row,
+    .receipt-summary .total-row {
+      strong {
+        font-size: 24px;
+      }
+    }
+
+    .summary-note {
+      margin-top: 16px;
+      padding: 12px 14px;
+      gap: 10px;
+
+      p {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+    }
+
+    .hero-mark,
+    .empty-mark {
+      width: 60px;
+      height: 60px;
+
+      svg {
+        font-size: 28px;
+      }
+    }
+
+    .receipt-head {
+      padding-bottom: 16px;
+      flex-direction: column;
+
+      h2 {
+        font-size: 24px;
+      }
+    }
+
+    .empty-order-state {
+      margin-top: 24px;
+      padding: 28px 18px;
+
+      strong {
+        font-size: 28px;
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 1.65;
+      }
+    }
+  }
 }
 
 #mobile-wrap {

@@ -20,8 +20,6 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
 const normalizeMypageCategory = (category: any) => {
 	const value = Array.isArray(category) ? category[0] : category;
-	if (value === 'addProperty') return 'addProduct';
-	if (value === 'myProperties') return 'myProducts';
 	return value ?? 'myProfile';
 };
 

@@ -20,6 +20,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import { PropertyStatus } from '../../../enums/property.enum';
 
+const getProductStatus = (product: Property) => product.productStatus ?? product.propertyStatus;
+const getProductTitle = (product: Property) => product.productTitle ?? product.propertyTitle ?? 'Untitled product';
+const getProductPrice = (product: Property) => product.productPrice ?? product.propertyPrice ?? 0;
+const getProductLocation = (product: Property) => product.productLocation ?? product.propertyLocation ?? '';
+const getProductType = (product: Property) => product.productType ?? product.propertyType;
+const getProductImage = (product: Property) => product.productImages?.[0] ?? product.propertyImages?.[0] ?? '';
+
 interface Data {
 	id: string;
 	title: string;
@@ -158,38 +165,39 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 
 						{productList.length !== 0 &&
 							productList.map((property: Property, index: number) => {
-								const propertyImage = `${REACT_APP_API_URL}/${property?.propertyImages?.[0] ?? property?.productImages?.[0] ?? ''}`;
+								const productImage = `${REACT_APP_API_URL}/${getProductImage(property)}`;
+								const productStatus = getProductStatus(property);
 
 								return (
 									<TableRow hover key={property?._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
 										<TableCell align="left">{property._id}</TableCell>
 										<TableCell align="left" className={'name'}>
-											{property.propertyStatus === PropertyStatus.ACTIVE ? (
+											{productStatus === PropertyStatus.ACTIVE ? (
 											<Stack direction={'row'}>
-												<Link href={`/property/detail?id=${property?._id}`}>
+												<Link href={`/product/detail?id=${property?._id}`}>
 													<div>
-														<Avatar alt="Remy Sharp" src={propertyImage} sx={{ ml: '2px', mr: '10px' }} />
+														<Avatar alt="Remy Sharp" src={productImage} sx={{ ml: '2px', mr: '10px' }} />
 													</div>
 												</Link>
-												<Link href={`/property/detail?id=${property?._id}`}>
-													<div>{property.propertyTitle}</div>
+												<Link href={`/product/detail?id=${property?._id}`}>
+													<div>{getProductTitle(property)}</div>
 												</Link>
 											</Stack>
 											) : (
 												<Stack direction={'row'}>
 													<div>
-														<Avatar alt="Remy Sharp" src={propertyImage} sx={{ ml: '2px', mr: '10px' }} />
+														<Avatar alt="Remy Sharp" src={productImage} sx={{ ml: '2px', mr: '10px' }} />
 													</div>
-													<div>{property.propertyTitle}</div>
+													<div>{getProductTitle(property)}</div>
 											</Stack>
 							)}
 										</TableCell>
-										<TableCell align="center">{property.propertyPrice}</TableCell>
+										<TableCell align="center">{getProductPrice(property)}</TableCell>
 										<TableCell align="center">{property.memberData?.memberNick}</TableCell>
-										<TableCell align="center">{property.propertyLocation}</TableCell>
-										<TableCell align="center">{property.propertyType}</TableCell>
+										<TableCell align="center">{getProductLocation(property)}</TableCell>
+										<TableCell align="center">{getProductType(property)}</TableCell>
 										<TableCell align="center">
-											{property.propertyStatus === PropertyStatus.DELETE && (
+											{productStatus === PropertyStatus.DELETE && (
 												<Button
 													variant="outlined"
 													sx={{ p: '3px', border: 'none', ':hover': { border: '1px solid #000000' } }}
@@ -199,14 +207,14 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 												</Button>
 											)}
 
-											{property.propertyStatus === PropertyStatus.SOLD && (
-												<Button className={'badge warning'}>{property.propertyStatus}</Button>
+											{productStatus === PropertyStatus.SOLD && (
+												<Button className={'badge warning'}>{productStatus}</Button>
 											)}
 
-											{property.propertyStatus === PropertyStatus.ACTIVE && (
+											{productStatus === PropertyStatus.ACTIVE && (
 												<>
 													<Button onClick={(e: any) => menuIconClickHandler(e, index)} className={'badge success'}>
-														{property.propertyStatus}
+														{productStatus}
 													</Button>
 
 													<Menu
@@ -221,10 +229,10 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 														sx={{ p: 1 }}
 													>
 														{Object.values(PropertyStatus)
-															.filter((ele) => ele !== property.propertyStatus)
+															.filter((ele) => ele !== productStatus)
 															.map((status: string) => (
 																<MenuItem
-																	onClick={() => handleUpdateProduct({ _id: property._id, productStatus: status, propertyStatus: status })}
+																	onClick={() => handleUpdateProduct({ _id: property._id, productStatus: status })}
 																	key={status}
 																>
 																	<Typography variant={'subtitle1'} component={'span'}>

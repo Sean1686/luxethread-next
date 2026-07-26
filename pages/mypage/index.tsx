@@ -36,8 +36,6 @@ const primaryMypageCategories = [
 
 const normalizeMypageCategory = (category: any) => {
 	const value = Array.isArray(category) ? category[0] : category;
-	if (value === 'addProperty') return 'addProduct';
-	if (value === 'myProperties') return 'myProducts';
 	if (primaryMypageCategories.includes(value)) return value;
 	return 'myProfile';
 };
@@ -146,7 +144,7 @@ const MyPage: NextPage = () => {
 						</Stack>
 						<Stack className={'ledger-stats'}>
 							<div>
-								<strong>{user?.memberProducts ?? user?.memberProperties ?? 0}</strong>
+								<strong>{user?.memberProducts ?? 0}</strong>
 								<span>Products</span>
 							</div>
 							<div>

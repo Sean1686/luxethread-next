@@ -16,7 +16,7 @@ import { sweetConfirmAlert, sweetErrorHandling } from '../../../libs/sweetAlert'
 import { ProductUpdate } from '../../../libs/types/property/product.update';
 import { useMutation, useQuery } from '@apollo/client';
 import { REMOVE_PRODUCT_BY_ADMIN, UPDATE_PRODUCT_BY_ADMIN } from '../../../apollo/admin/mutation';
-import { GET_ALL_PROPERTIES_BY_ADMIN } from '../../../apollo/admin/query';
+import { GET_ALL_PRODUCTS_BY_ADMIN } from '../../../apollo/admin/query';
 import { T } from '../../../libs/types/common';
 
 const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
@@ -38,7 +38,7 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 		data: getAllProductsByAdminData,
 		error: getAllProductsByAdminError,
 		refetch: getAllProductsByAdminRefetch,
-	} = useQuery(GET_ALL_PROPERTIES_BY_ADMIN, {
+	} = useQuery(GET_ALL_PRODUCTS_BY_ADMIN, {
 		fetchPolicy: 'network-only',
 		variables: { input: productsInquiry },
 		notifyOnNetworkStatusChange: true,
